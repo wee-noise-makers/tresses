@@ -1,5 +1,5 @@
 with Tresses.Excitation; use Tresses.Excitation;
-with Tresses.SVF; use Tresses.SVF;
+with Tresses.Filters.SVF; use Tresses.Filters.SVF;
 with Tresses.Random; use Tresses.Random;
 with Tresses.DSP;
 
@@ -68,7 +68,7 @@ package body Tresses.Drums.Snare is
      (Buffer                         :    out Mono_Buffer;
       Tone_Param, Noise_Param        :        U16;
       Pulse0, Pulse1, Pulse2, Pulse3 : in out Excitation.Instance;
-      Filter0, Filter1, Filter2      : in out SVF.Instance;
+      Filter0, Filter1, Filter2      : in out Filters.SVF.Instance;
       Rng                            : in out Random.Instance;
       Pitch                          :        S16;
       Do_Init                        :        Boolean;
@@ -117,6 +117,7 @@ package body Tresses.Drums.Snare is
             Set_Resonance (Filter0, 29_000 + S16 (Decay / 2**5));
             Set_Resonance (Filter1, 26_500 + S16 (Decay / 2**5));
 
+            --  Pulse3 is used as an envelope
             Set_Decay (Pulse3, 4_092 + U16 (Decay / 2**14));
 
             Trigger (Pulse0, 15 * 32_768);
@@ -129,6 +130,9 @@ package body Tresses.Drums.Snare is
                if Snappy >= 14_336 then
                   Snappy := 14_336;
                end if;
+
+               --  High "Snappy" params means "harder" hit on the snare
+               --  envelope.
                Trigger (Pulse3, 512 + (Snappy * 2**1));
             end;
          end;
@@ -145,6 +149,7 @@ package body Tresses.Drums.Snare is
          Index : Natural := Buffer'First;
 
          Excitation_1, Excitation_2, Noise_Sample, SD : S32;
+         P3 : S32;
       begin
          while Index <= Buffer'Last loop
 
@@ -159,8 +164,9 @@ package body Tresses.Drums.Snare is
                                             then 13107
                                             else 0);
 
+            P3 := Process (Pulse3);
             Noise_Sample :=
-              (S32 (Get_Sample (Rng)) * Process (Pulse3)) / 2**15;
+              (S32 (Get_Sample (Rng)) * P3) / 2**15;
 
             SD := ((Process (Filter0, Excitation_1) + (Excitation_1 / 2**4)) *
                      G1) / 2**15;

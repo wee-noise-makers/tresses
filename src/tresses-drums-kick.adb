@@ -1,5 +1,5 @@
 with Tresses.Excitation; use Tresses.Excitation;
-with Tresses.SVF; use Tresses.SVF;
+with Tresses.Filters.SVF; use Tresses.Filters.SVF;
 with Tresses.DSP;
 
 package body Tresses.Drums.Kick is
@@ -65,7 +65,7 @@ package body Tresses.Drums.Kick is
    procedure Render_Kick (Buffer                 :    out Mono_Buffer;
                           Decay, Coefficient     :        U16;
                           Pulse0, Pulse1, Pulse2 : in out Excitation.Instance;
-                          Filter                 : in out SVF.Instance;
+                          Filter                 : in out Filters.SVF.Instance;
                           LP_State               : in out S32;
                           Pitch                  :        S16;
                           Do_Init                :        Boolean;

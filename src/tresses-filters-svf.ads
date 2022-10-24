@@ -1,7 +1,7 @@
 
 --  Static Value Filter
 
-package Tresses.SVF
+package Tresses.Filters.SVF
 with Preelaborate
 is
 
@@ -31,4 +31,4 @@ private
       Mode : Mode_Kind := Band_Pass;
    end record;
 
-end Tresses.SVF;
+end Tresses.Filters.SVF;

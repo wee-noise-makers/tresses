@@ -3,6 +3,15 @@ with Tresses.DSP;
 
 package body Tresses.Envelopes.AD is
 
+   ----------
+   -- Init --
+   ----------
+
+   procedure Init (This : in out Instance) is
+   begin
+      This := (others => <>);
+   end Init;
+
    ----------------
    -- Set_Attack --
    ----------------

@@ -5,6 +5,8 @@ is
 
    type Instance is private;
 
+   procedure Init (This : in out Instance);
+
    procedure Set_Attack (This : in out Instance; A : U7);
    procedure Set_Decay (This : in out Instance; D : U7);
 

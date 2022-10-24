@@ -1,7 +1,7 @@
 with Tresses.DSP;
 with Tresses.Lookup_Tables;
 
-package body Tresses.SVF is
+package body Tresses.Filters.SVF is
 
    ----------
    -- Init --
@@ -111,4 +111,4 @@ package body Tresses.SVF is
       end;
    end Process;
 
-end Tresses.SVF;
+end Tresses.Filters.SVF;

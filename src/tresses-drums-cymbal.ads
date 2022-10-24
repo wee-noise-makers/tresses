@@ -1,4 +1,5 @@
-with Tresses.SVF;
+with Tresses.Envelopes.AD;
+with Tresses.Filters.SVF;
 with Tresses.Random;
 
 package Tresses.Drums.Cymbal
@@ -22,7 +23,8 @@ is
    procedure Render_Cymbal
      (Buffer                    :    out Mono_Buffer;
       Cutoff_Param, Noise_Param :        U16;
-      Filter0, Filter1          : in out SVF.Instance;
+      Filter0, Filter1          : in out Filters.SVF.Instance;
+      Env                       : in out Envelopes.AD.Instance;
       State                     : in out Cymbal_State;
       Phase                     : in out U32;
       Pitch                     :        S16;
@@ -39,12 +41,13 @@ private
    end record;
 
    type Instance is record
-      Filter0 : SVF.Instance;
-      Filter1 : SVF.Instance;
+      Env : Envelopes.AD.Instance;
+
+      Filter0, Filter1 : Filters.SVF.Instance;
 
       State : Cymbal_State;
 
-      Pitch : S16 := 12 * 128 * 4;
+      Pitch : S16 := 12 * 128 * 6;
       Phase : U32 := 0;
 
       Do_Strike : Boolean := False;

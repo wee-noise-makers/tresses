@@ -1,5 +1,5 @@
 with Tresses.Excitation;
-with Tresses.SVF;
+with Tresses.Filters.SVF;
 
 package Tresses.Drums.Kick
 with Preelaborate
@@ -19,7 +19,7 @@ is
    procedure Render_Kick (Buffer                 :     out Mono_Buffer;
                           Decay, Coefficient     :        U16;
                           Pulse0, Pulse1, Pulse2 : in out Excitation.Instance;
-                          Filter                 : in out SVF.Instance;
+                          Filter                 : in out Filters.SVF.Instance;
                           LP_State               : in out S32;
                           Pitch                  :        S16;
                           Do_Init                :        Boolean;
@@ -27,10 +27,8 @@ is
 private
 
    type Instance is record
-      Pulse0 : Excitation.Instance;
-      Pulse1 : Excitation.Instance;
-      Pulse2 : Excitation.Instance;
-      Filter : SVF.Instance;
+      Pulse0, Pulse1, Pulse2 : Excitation.Instance;
+      Filter : Filters.SVF.Instance;
 
       Pitch : S16 := 3000;
       LP_State : S32 := 0;

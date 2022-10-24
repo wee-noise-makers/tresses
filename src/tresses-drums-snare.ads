@@ -1,5 +1,5 @@
 with Tresses.Excitation;
-with Tresses.SVF;
+with Tresses.Filters.SVF;
 with Tresses.Random;
 
 package Tresses.Drums.Snare
@@ -22,7 +22,7 @@ is
      (Buffer                         :    out Mono_Buffer;
       Tone_Param, Noise_Param        :        U16;
       Pulse0, Pulse1, Pulse2, Pulse3 : in out Excitation.Instance;
-      Filter0, Filter1, Filter2      : in out SVF.Instance;
+      Filter0, Filter1, Filter2      : in out Filters.SVF.Instance;
       Rng                            : in out Random.Instance;
       Pitch                          :        S16;
       Do_Init                        :        Boolean;
@@ -30,13 +30,8 @@ is
 private
 
    type Instance is record
-      Pulse0 : Excitation.Instance;
-      Pulse1 : Excitation.Instance;
-      Pulse2 : Excitation.Instance;
-      Pulse3 : Excitation.Instance;
-      Filter0 : SVF.Instance;
-      Filter1 : SVF.Instance;
-      Filter2 : SVF.Instance;
+      Pulse0, Pulse1, Pulse2, Pulse3 : Excitation.Instance;
+      Filter0, Filter1, Filter2 : Filters.SVF.Instance;
       Rng : Random.Instance;
 
       Pitch : S16 := 12 * 128 * 4;

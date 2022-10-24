@@ -1,4 +1,5 @@
-with Tresses.SVF; use Tresses.SVF;
+with Tresses.Envelopes.AD; use Tresses.Envelopes.AD;
+with Tresses.Filters.SVF; use Tresses.Filters.SVF;
 with Tresses.Random; use Tresses.Random;
 with Tresses.DSP;
 
@@ -51,6 +52,7 @@ package body Tresses.Drums.Cymbal is
       Render_Cymbal (Buffer,
                      This.Cutoff_Param, This.Noise_Param,
                      This.Filter0, This.Filter1,
+                     This.Env,
                      This.State,
                      This.Phase,
                      This.Pitch,
@@ -66,15 +68,14 @@ package body Tresses.Drums.Cymbal is
    procedure Render_Cymbal
      (Buffer                    :    out Mono_Buffer;
       Cutoff_Param, Noise_Param :        U16;
-      Filter0, Filter1          : in out SVF.Instance;
+      Filter0, Filter1          : in out Filters.SVF.Instance;
+      Env                       : in out Envelopes.AD.Instance;
       State                     : in out Cymbal_State;
       Phase                     : in out U32;
       Pitch                     :        S16;
       Do_Init                   :        Boolean;
       Do_Strike                 :        Boolean)
    is
-      pragma Unreferenced (Do_Strike);
-
       Increments : array (0 .. 6) of U32;
       Note : constant S32 := (40 * 2**7) + (S32 (Pitch) / 2**1);
       Root : U32;
@@ -88,6 +89,34 @@ package body Tresses.Drums.Cymbal is
          Init (Filter1);
          Set_Mode (Filter1, High_Pass);
          Set_Resonance (Filter1, 2_000);
+
+         Init (Env);
+         Set_Attack (Env, 0);
+      end if;
+
+      if Do_Strike then
+         --  The original MI Braids cymbal did not feature an envelope. We add
+         --  one here for ease of use and to match the behavior of the other
+         --  drum sounds.
+
+         declare
+            To_U7_Div : constant := 512;
+            --  U16'Last / U7'Last = ~516.023 then rounded to the nearest
+            --  power of 2.
+
+            Limit : constant U32 := U32 (U7'Last) * To_U7_Div;
+            --  Maximum value to be converted to U7
+
+            Decay : U32 := U32 (Noise_Param) + 20_000;
+            --  Add a base value to have a minimum decay
+         begin
+            if Decay > Limit then
+               Decay := Limit;
+            end if;
+
+            Set_Decay (Env, U7 (Decay / To_U7_Div));
+            Trigger (Env, Attack);
+         end;
       end if;
 
       Increments (0) := DSP.Compute_Phase_Increment (S16 (Note));
@@ -105,6 +134,7 @@ package body Tresses.Drums.Cymbal is
          Hat_Noise, Noise : S32;
          Index : Natural := Buffer'First;
 
+         SD : S32;
       begin
          Set_Frequency (Filter0, S16 (Cutoff_Param / 2));
          Set_Frequency (Filter1, S16 (Cutoff_Param / 2));
@@ -139,8 +169,13 @@ package body Tresses.Drums.Cymbal is
             Noise := Process (Filter1, Noise / 2**1);
             DSP.Clip_S16 (Noise);
 
-            Buffer (Index) :=
-              S16 (Hat_Noise + ((Noise - Hat_Noise) * Xfade) / 2**15);
+            SD := Hat_Noise + ((Noise - Hat_Noise) * Xfade) / 2**15;
+            DSP.Clip_S16 (SD);
+
+            SD := (SD * S32 (Render (Env))) / 2**15;
+            DSP.Clip_S16 (SD);
+
+            Buffer (Index) := S16 (SD);
             Index := Index + 1;
          end loop;
       end;
