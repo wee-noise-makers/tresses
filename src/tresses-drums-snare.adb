@@ -56,8 +56,6 @@ package body Tresses.Drums.Snare is
                     This.Rng,
                     This.Pitch,
                     This.Do_Init, This.Do_Strike);
-      This.Do_Init := False;
-      This.Do_Strike := False;
    end Render;
 
    ------------------
@@ -71,12 +69,14 @@ package body Tresses.Drums.Snare is
       Filter0, Filter1, Filter2      : in out Filters.SVF.Instance;
       Rng                            : in out Random.Instance;
       Pitch                          :        S16;
-      Do_Init                        :        Boolean;
-      Do_Strike                      :        Boolean)
+      Do_Init                        : in out Boolean;
+      Do_Strike                      : in out Boolean)
    is
 
    begin
       if Do_Init then
+
+         Do_Init := False;
 
          Init (Pulse0);
          Set_Delay (Pulse0, 0);
@@ -103,6 +103,9 @@ package body Tresses.Drums.Snare is
 
       --  Strike
       if Do_Strike then
+
+         Do_Strike := False;
+
          declare
             Decay : S32 := 49_152 - S32 (Pitch);
          begin
@@ -131,8 +134,8 @@ package body Tresses.Drums.Snare is
                   Snappy := 14_336;
                end if;
 
-               --  High "Snappy" params means "harder" hit on the snare
-               --  envelope.
+               --  Higher "Snappy" params means harder hit on the snare
+               --  "envelope".
                Trigger (Pulse3, 512 + (Snappy * 2**1));
             end;
          end;

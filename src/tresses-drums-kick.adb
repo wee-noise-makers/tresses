@@ -54,8 +54,6 @@ package body Tresses.Drums.Kick is
                    This.Filter,
                    This.LP_State, This.Pitch,
                    This.Do_Init, This.Do_Strike);
-      This.Do_Init := False;
-      This.Do_Strike := False;
    end Render;
 
    -----------------
@@ -68,12 +66,13 @@ package body Tresses.Drums.Kick is
                           Filter                 : in out Filters.SVF.Instance;
                           LP_State               : in out S32;
                           Pitch                  :        S16;
-                          Do_Init                :        Boolean;
-                          Do_Strike              :        Boolean)
+                          Do_Init                : in out Boolean;
+                          Do_Strike              : in out Boolean)
    is
 
    begin
       if Do_Init then
+         Do_Init := False;
          Excitation.Init (Pulse0);
          Set_Delay (Pulse0, 0);
          Set_Decay (Pulse0, 3340);
@@ -93,6 +92,8 @@ package body Tresses.Drums.Kick is
 
       --  Strike
       if Do_Strike then
+         Do_Strike := False;
+
          Trigger (Pulse0, S32 (12.0 * 32768.0 * 0.7));
          Trigger (Pulse1, S32 (-19662.0 * 0.7));
          Trigger (Pulse2, S32 (18000));

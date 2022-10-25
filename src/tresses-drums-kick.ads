@@ -22,8 +22,8 @@ is
                           Filter                 : in out Filters.SVF.Instance;
                           LP_State               : in out S32;
                           Pitch                  :        S16;
-                          Do_Init                :        Boolean;
-                          Do_Strike              :        Boolean);
+                          Do_Init                : in out Boolean;
+                          Do_Strike              : in out Boolean);
 private
 
    type Instance is record

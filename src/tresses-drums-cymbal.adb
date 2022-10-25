@@ -57,8 +57,6 @@ package body Tresses.Drums.Cymbal is
                      This.Phase,
                      This.Pitch,
                      This.Do_Init, This.Do_Strike);
-      This.Do_Init := False;
-      This.Do_Strike := False;
    end Render;
 
    ------------------
@@ -73,14 +71,16 @@ package body Tresses.Drums.Cymbal is
       State                     : in out Cymbal_State;
       Phase                     : in out U32;
       Pitch                     :        S16;
-      Do_Init                   :        Boolean;
-      Do_Strike                 :        Boolean)
+      Do_Init                   : in out Boolean;
+      Do_Strike                 : in out Boolean)
    is
       Increments : array (0 .. 6) of U32;
       Note : constant S32 := (40 * 2**7) + (S32 (Pitch) / 2**1);
       Root : U32;
    begin
       if Do_Init then
+
+         Do_Init := False;
 
          Init (Filter0);
          Set_Mode (Filter0, Band_Pass);
@@ -95,6 +95,9 @@ package body Tresses.Drums.Cymbal is
       end if;
 
       if Do_Strike then
+
+         Do_Strike := False;
+
          --  The original MI Braids cymbal did not feature an envelope. We add
          --  one here for ease of use and to match the behavior of the other
          --  drum sounds.
@@ -121,13 +124,13 @@ package body Tresses.Drums.Cymbal is
 
       Increments (0) := DSP.Compute_Phase_Increment (S16 (Note));
 
-      Root := Shift_Right  (Increments (0), 10);
-      Increments (1) :=  Shift_Left (Root * 24_273, 4);
-      Increments (2) :=  Shift_Left (Root * 12_561, 4);
-      Increments (3) :=  Shift_Left (Root * 18_417, 4);
-      Increments (4) :=  Shift_Left (Root * 22_452, 4);
-      Increments (5) :=  Shift_Left (Root * 31_858, 4);
-      Increments (6) :=  Increments (0) * 24;
+      Root := Shift_Right (Increments (0), 10);
+      Increments (1) := Shift_Right (Root * 24_273, 4);
+      Increments (2) := Shift_Right (Root * 12_561, 4);
+      Increments (3) := Shift_Right (Root * 18_417, 4);
+      Increments (4) := Shift_Right (Root * 22_452, 4);
+      Increments (5) := Shift_Right (Root * 31_858, 4);
+      Increments (6) := Increments (0) * 24;
 
       declare
          Xfade : constant S32 := S32 (Noise_Param);
@@ -142,7 +145,7 @@ package body Tresses.Drums.Cymbal is
          while Index <= Buffer'Last loop
             Phase := Phase + Increments (6);
             if Phase < Increments (6) then
-               State.Last_Noise := Get_Sample (State.Rng);
+               State.Last_Noise := Get_Word (State.Rng);
             end if;
 
             State.Phase (0) := State.Phase (0) + Increments (0);
@@ -153,19 +156,19 @@ package body Tresses.Drums.Cymbal is
             State.Phase (5) := State.Phase (5) + Increments (5);
 
             Hat_Noise := 0;
-            Hat_Noise := Hat_Noise + S32 (Shift_Left (State.Phase (0), 31));
-            Hat_Noise := Hat_Noise + S32 (Shift_Left (State.Phase (1), 31));
-            Hat_Noise := Hat_Noise + S32 (Shift_Left (State.Phase (2), 31));
-            Hat_Noise := Hat_Noise + S32 (Shift_Left (State.Phase (3), 31));
-            Hat_Noise := Hat_Noise + S32 (Shift_Left (State.Phase (4), 31));
-            Hat_Noise := Hat_Noise + S32 (Shift_Left (State.Phase (5), 31));
+            Hat_Noise := Hat_Noise + S32 (Shift_Right (State.Phase (0), 31));
+            Hat_Noise := Hat_Noise + S32 (Shift_Right (State.Phase (1), 31));
+            Hat_Noise := Hat_Noise + S32 (Shift_Right (State.Phase (2), 31));
+            Hat_Noise := Hat_Noise + S32 (Shift_Right (State.Phase (3), 31));
+            Hat_Noise := Hat_Noise + S32 (Shift_Right (State.Phase (4), 31));
+            Hat_Noise := Hat_Noise + S32 (Shift_Right (State.Phase (5), 31));
             Hat_Noise := Hat_Noise - 3;
             Hat_Noise := Hat_Noise * 5_461;
             Hat_Noise := Process (Filter0, Hat_Noise);
 
             DSP.Clip_S16 (Hat_Noise);
 
-            Noise := S32 (State.Last_Noise) - 32_768;
+            Noise := S32 (State.Last_Noise / 2**16) - 32_768;
             Noise := Process (Filter1, Noise / 2**1);
             DSP.Clip_S16 (Noise);
 

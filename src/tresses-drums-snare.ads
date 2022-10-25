@@ -25,8 +25,8 @@ is
       Filter0, Filter1, Filter2      : in out Filters.SVF.Instance;
       Rng                            : in out Random.Instance;
       Pitch                          :        S16;
-      Do_Init                        :        Boolean;
-      Do_Strike                      :        Boolean);
+      Do_Init                        : in out Boolean;
+      Do_Strike                      : in out Boolean);
 private
 
    type Instance is record

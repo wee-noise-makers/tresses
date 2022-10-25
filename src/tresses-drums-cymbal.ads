@@ -28,8 +28,8 @@ is
       State                     : in out Cymbal_State;
       Phase                     : in out U32;
       Pitch                     :        S16;
-      Do_Init                   :        Boolean;
-      Do_Strike                 :        Boolean);
+      Do_Init                   : in out Boolean;
+      Do_Strike                 : in out Boolean);
 private
 
    type Cymbal_Phase_Array is array (0 .. 5) of U32;
@@ -37,7 +37,7 @@ private
    type Cymbal_State is record
       Phase : Cymbal_Phase_Array := (others => 0);
       Rng : Random.Instance;
-      Last_Noise : S16 := 0;
+      Last_Noise : U32 := 0;
    end record;
 
    type Instance is record
