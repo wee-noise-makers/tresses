@@ -11,11 +11,25 @@ package body Tresses.DSP is
       A : constant U32 := U32 (T (P));
       B : constant U32 := U32 (T (P + 1));
 
-      I : constant U32 :=
+      V : constant U32 :=
         Shift_Right (Shift_Right (Phase, 8) and 16#FFFF#, 16);
    begin
-      return U16 (A + ((B - A) * I));
+      return U16 (A + ((B - A) * V));
    end Interpolate824;
+
+   -------------------
+   -- Interpolate88 --
+   -------------------
+
+   function Interpolate88 (T : Table_257_S16; Index : U16) return S16 is
+      I : constant U16 := Shift_Right (Index, 8);
+      A : constant S32 := S32 (T (I));
+      B : constant S32 := S32 (T (I + 1));
+
+      V : constant S32 := S32 (Index and 16#FF#) / 2**8;
+   begin
+      return S16 (A + ((B - A) * V));
+   end Interpolate88;
 
    --------------
    -- Clip_S16 --

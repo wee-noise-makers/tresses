@@ -1,6 +1,8 @@
 with Tresses.Drums.Kick;
 with Tresses.Drums.Snare;
 with Tresses.Drums.Cymbal;
+with Tresses.Voices.Saw_Swarm;
+
 with GNAT.OS_Lib;
 
 with Interfaces; use Interfaces;
@@ -9,12 +11,13 @@ procedure Tests is
    K : Tresses.Drums.Kick.Instance;
    S : Tresses.Drums.Snare.Instance;
    C : Tresses.Drums.Cymbal.Instance;
+   Swarm : Tresses.Voices.Saw_Swarm.Instance;
 
    MAX_PARAM : constant := 32767;
 
    P : constant := MAX_PARAM / 2;
 
-   Buffer : Tresses.Mono_Buffer (1 .. 48_000 / 2);
+   Buffer : Tresses.Mono_Buffer (1 .. 48_000 / 4);
 
    Ignore : Integer;
 
@@ -28,6 +31,19 @@ begin
       Tresses.Drums.Cymbal.Render (C, Buffer);
       for Elt of Buffer loop
 
+         Ignore := GNAT.OS_Lib.Write
+           (GNAT.OS_Lib.Standout,
+            Elt'Address,
+            Elt'Size / 8);
+      end loop;
+   end loop;
+
+   for X in Unsigned_16 range 0 .. 65 loop
+      Tresses.Voices.Saw_Swarm.Set_Detune (Swarm, X * 1_000);
+      Tresses.Voices.Saw_Swarm.Set_High_Pass (Swarm, X * 1_000);
+      Tresses.Voices.Saw_Swarm.Strike (Swarm);
+      Tresses.Voices.Saw_Swarm.Render (Swarm, Buffer);
+      for Elt of Buffer loop
          Ignore := GNAT.OS_Lib.Write
            (GNAT.OS_Lib.Standout,
             Elt'Address,

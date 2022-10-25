@@ -8,6 +8,10 @@ is
      with Inline_Always;
    --  Why 824? I don't know, yet...
 
+   function Interpolate88 (T : Table_257_S16; Index : U16) return S16
+     with Inline_Always;
+   --  Why 88? I don't know, yet...
+
    procedure Clip_S16 (V : in out S32)
      with Inline_Always,
      Post => V in -32_767 .. 32_767;
