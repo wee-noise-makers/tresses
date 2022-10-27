@@ -2,6 +2,7 @@ with Tresses.Drums.Kick;
 with Tresses.Drums.Snare;
 with Tresses.Drums.Cymbal;
 with Tresses.Voices.Saw_Swarm;
+with Tresses.Voices.Plucked;
 
 with GNAT.OS_Lib;
 
@@ -12,6 +13,7 @@ procedure Tests is
    S : Tresses.Drums.Snare.Instance;
    C : Tresses.Drums.Cymbal.Instance;
    Swarm : Tresses.Voices.Saw_Swarm.Instance;
+   Pluck : Tresses.Voices.Plucked.Instance;
 
    MAX_PARAM : constant := 32767;
 
@@ -22,6 +24,19 @@ procedure Tests is
    Ignore : Integer;
 
 begin
+
+   for X in Unsigned_16 range 0 .. 65 loop
+      Tresses.Voices.Plucked.Set_Decay (Pluck, 30_000);
+      Tresses.Voices.Plucked.Set_Position (Pluck, X * 1_000);
+      Tresses.Voices.Plucked.Strike (Pluck);
+      Tresses.Voices.Plucked.Render (Pluck, Buffer);
+      for Elt of Buffer loop
+         Ignore := GNAT.OS_Lib.Write
+           (GNAT.OS_Lib.Standout,
+            Elt'Address,
+            Elt'Size / 8);
+      end loop;
+   end loop;
 
    Tresses.Drums.Cymbal.Init (C);
    for X in Unsigned_16 range 0 .. 65 loop
