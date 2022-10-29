@@ -22,4 +22,15 @@ is
    subtype Mono_Point is S16;
    type Mono_Buffer is array (Natural range <>) of Mono_Point;
 
+
+   type Engines is (Drum_Kick,
+                    Drum_Snare,
+                    Drum_Cymbal,
+
+                    Voice_Plucked,
+                    Voice_Saw_Swarm);
+
+   subtype Drum_Engines is Engines range Drum_Kick .. Drum_Cymbal;
+   subtype Synth_Engines is Engines range Voice_Plucked .. Voice_Saw_Swarm;
+
 end Tresses;

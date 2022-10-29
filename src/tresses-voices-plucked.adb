@@ -28,7 +28,6 @@ package body Tresses.Voices.Plucked is
    procedure Strike (This : in out Instance) is
    begin
       This.Do_Strike := True;
-      This.Pitch := This.Pitch + 100;
    end Strike;
 
    ------------

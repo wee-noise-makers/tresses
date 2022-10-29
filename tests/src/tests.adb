@@ -1,8 +1,10 @@
 with Tresses.Drums.Kick;
 with Tresses.Drums.Snare;
 with Tresses.Drums.Cymbal;
+with Tresses.Drums.Macro;
 with Tresses.Voices.Saw_Swarm;
 with Tresses.Voices.Plucked;
+with Tresses.Voices.Macro;
 
 with GNAT.OS_Lib;
 
@@ -12,8 +14,11 @@ procedure Tests is
    K : Tresses.Drums.Kick.Instance;
    S : Tresses.Drums.Snare.Instance;
    C : Tresses.Drums.Cymbal.Instance;
+   DM : Tresses.Drums.Macro.Instance;
+
    Swarm : Tresses.Voices.Saw_Swarm.Instance;
    Pluck : Tresses.Voices.Plucked.Instance;
+   VM    : Tresses.Voices.Macro.Instance;
 
    MAX_PARAM : constant := 32767;
 
@@ -24,6 +29,34 @@ procedure Tests is
    Ignore : Integer;
 
 begin
+
+   for X in Unsigned_16 range 0 .. 65 loop
+      VM.Set_Param1 (X * 1_000);
+      VM.Set_Param2 (X * 1_000);
+      VM.Strike;
+      VM.Render (Buffer);
+      VM.Next_Engine;
+      for Elt of Buffer loop
+         Ignore := GNAT.OS_Lib.Write
+           (GNAT.OS_Lib.Standout,
+            Elt'Address,
+            Elt'Size / 8);
+      end loop;
+   end loop;
+
+   for X in Unsigned_16 range 0 .. 65 loop
+      DM.Set_Param1 (X * 1_000);
+      DM.Set_Param2 (X * 1_000);
+      DM.Strike;
+      DM.Render (Buffer);
+      DM.Next_Engine;
+      for Elt of Buffer loop
+         Ignore := GNAT.OS_Lib.Write
+           (GNAT.OS_Lib.Standout,
+            Elt'Address,
+            Elt'Size / 8);
+      end loop;
+   end loop;
 
    for X in Unsigned_16 range 0 .. 65 loop
       Tresses.Voices.Plucked.Set_Decay (Pluck, 30_000);

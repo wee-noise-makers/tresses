@@ -35,10 +35,23 @@ package body Tresses.Drums.Kick is
    -- Strike --
    ------------
 
+   overriding
    procedure Strike (This : in out Instance) is
    begin
       This.Do_Strike := True;
    end Strike;
+
+   ---------------
+   -- Set_Pitch --
+   ---------------
+
+   overriding
+   procedure Set_Pitch (This : in out Instance;
+                        Pitch : S16)
+   is
+   begin
+      This.Pitch := Pitch;
+   end Set_Pitch;
 
    ------------
    -- Render --
