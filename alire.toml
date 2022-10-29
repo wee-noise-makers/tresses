@@ -1,5 +1,5 @@
 name = "tresses"
-description = "Shiny new project"
+description = "Synth library inspired by Mutable Instruments Braids"
 version = "0.1.0-dev"
 
 authors = ["Fabien Chouteau"]
