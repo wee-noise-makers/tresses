@@ -31,10 +31,23 @@ package body Tresses.Voices.Plucked is
    -- Strike --
    ------------
 
+   overriding
    procedure Strike (This : in out Instance) is
    begin
       This.Do_Strike := True;
    end Strike;
+
+   ---------------
+   -- Set_Pitch --
+   ---------------
+
+   overriding
+   procedure Set_Pitch (This  : in out Instance;
+                        Pitch :        Pitch_Range)
+   is
+   begin
+      This.Pitch := Pitch;
+   end Set_Pitch;
 
    ------------
    -- Render --
@@ -217,10 +230,13 @@ package body Tresses.Voices.Plucked is
 
             DSP.Clip_S16 (Sample);
             Buffer (Index) := S16 ((Previous_Sample + Sample) / 2**1);
+            Previous_Sample := Sample;
             Index := Index + 1;
+            exit when Index > Buffer'Last;
+
             Buffer (Index) := S16 (Sample);
             Index := Index + 1;
-            Previous_Sample := Sample;
+            exit when Index > Buffer'Last;
          end loop;
       end;
 

@@ -28,23 +28,27 @@ package body Tresses.Voices.Saw_Swarm is
       This.High_Pass_Param := P1;
    end Set_High_Pass;
 
-   ---------------
-   -- Set_Pitch --
-   ---------------
-
-   procedure Set_Pitch (This : in out Instance; Pitch : Pitch_Range) is
-   begin
-      This.Pitch := Pitch;
-   end Set_Pitch;
-
    ------------
    -- Strike --
    ------------
 
+   overriding
    procedure Strike (This : in out Instance) is
    begin
       This.Do_Strike := True;
    end Strike;
+
+   ---------------
+   -- Set_Pitch --
+   ---------------
+
+   overriding
+   procedure Set_Pitch (This  : in out Instance;
+                        Pitch :        Pitch_Range)
+   is
+   begin
+      This.Pitch := Pitch;
+   end Set_Pitch;
 
    ------------
    -- Render --

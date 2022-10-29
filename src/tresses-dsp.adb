@@ -37,13 +37,23 @@ package body Tresses.DSP is
 
    procedure Clip_S16 (V : in out S32) is
    begin
-      if V < -32_767 then
-         V := -32_767;
-      elsif V > 32_767 then
-         V := 32_767;
-      end if;
+      V := Clip_S16 (V);
    end Clip_S16;
 
+   --------------
+   -- Clip_S16 --
+   --------------
+
+   function Clip_S16 (V : S32) return S32 is
+   begin
+      if V < -32_767 then
+         return  -32_767;
+      elsif V > 32_767 then
+         return 32_767;
+      else
+         return V;
+      end if;
+   end Clip_S16;
    ---------
    -- Mix --
    ---------
@@ -74,7 +84,7 @@ package body Tresses.DSP is
       Pitch_Table_Start : constant := 128 * 128;
       Octave : constant := 12 * 128;
 
-      P : S16 := S16 (Pitch);
+      P : S16 := Pitch;
 
       Ref_Pitch : S32;
       Num_Shifts : Natural := 0;

@@ -17,6 +17,11 @@ is
      Post => V in -32_767 .. 32_767;
    --  Clip a value to fit in a signed 16bit
 
+   function Clip_S16 (V : S32) return S32
+     with Inline_Always,
+     Post => Clip_S16'Result in -32_767 .. 32_767;
+   --  Clip a value to fit in a signed 16bit
+
    function Mix (A, B, Balance : U16) return U16;
 
    function "and" (A : S32; B : U32) return S32;

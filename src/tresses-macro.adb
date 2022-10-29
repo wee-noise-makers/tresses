@@ -1,0 +1,176 @@
+with Tresses.Drums.Kick;
+with Tresses.Drums.Snare;
+
+package body Tresses.Macro is
+
+   ------------
+   -- Engine --
+   ------------
+
+   function Engine (This : Instance) return Engines
+   is (This.Engine);
+
+   ----------------
+   -- Set_Engine --
+   ----------------
+
+   procedure Set_Engine (This : in out Instance; E : Engines) is
+   begin
+      if E /= This.Engine then
+         This.Engine := E;
+         Init (This);
+      end if;
+   end Set_Engine;
+
+   -----------------
+   -- Next_Engine --
+   -----------------
+
+   procedure Next_Engine (This : in out Instance) is
+   begin
+      if This.Engine = Engines'Last then
+         Set_Engine (This, Engines'First);
+      else
+         Set_Engine (This, Engines'Succ (This.Engine));
+      end if;
+   end Next_Engine;
+
+   -----------------
+   -- Prev_Engine --
+   -----------------
+
+   procedure Prev_Engine (This : in out Instance) is
+   begin
+      if This.Engine = Engines'First then
+         Set_Engine (This, Engines'Last);
+      else
+         Set_Engine (This, Engines'Pred (This.Engine));
+      end if;
+   end Prev_Engine;
+
+   ----------
+   -- Init --
+   ----------
+
+   procedure Init (This : in out Instance) is
+   begin
+      This.Do_Init := True;
+   end Init;
+
+   ------------
+   -- Render --
+   ------------
+
+   procedure Render (This   : in out Instance;
+                     Buffer :    out Mono_Buffer)
+   is
+   begin
+      case This.Engine is
+         when Drum_Kick =>
+            Drums.Kick.Render_Kick (Buffer,
+                                    Decay => This.P1,
+                                    Coefficient => This.P2,
+                                    Pulse0      => This.Pulse0,
+                                    Pulse1      => This.Pulse1,
+                                    Pulse2      => This.Pulse2,
+                                    Filter      => This.Filter0,
+                                    LP_State    => This.LP_State,
+                                    Pitch       => This.Pitch,
+                                    Do_Init     => This.Do_Init,
+                                    Do_Strike   => This.Do_Strike);
+         when Drum_Snare =>
+            Drums.Snare.Render_Snare (Buffer,
+                                      Tone_Param => This.P1,
+                                      Noise_Param => This.P2,
+                                      Pulse0 => This.Pulse0,
+                                      Pulse1 => This.Pulse1,
+                                      Pulse2 => This.Pulse2,
+                                      Pulse3 => This.Pulse3,
+                                      Filter0 => This.Filter0,
+                                      Filter1 => This.Filter1,
+                                      Filter2 => This.Filter3,
+                                      Rng =>  This.Rng,
+                                      Pitch => This.Pitch,
+                                      Do_Init => This.Do_Init,
+                                      Do_Strike => This.Do_Strike);
+         when Drum_Cymbal =>
+            Drums.Cymbal.Render_Cymbal (Buffer,
+                                        Cutoff_Param => This.P1,
+                                        Noise_Param => This.P2,
+                                        Filter0 => This.Filter0,
+                                        Filter1 => This.Filter1,
+                                        Env => This.Env,
+                                        State => This.Cym_State,
+                                        Phase => This.Phase,
+                                        Pitch => This.Pitch,
+                                        Do_Init => This.Do_Init,
+                                        Do_Strike => This.Do_Strike);
+
+         when Voice_Saw_Swarm =>
+            Voices.Saw_Swarm.Render_Saw_Swarm
+              (Buffer,
+               Detune_Param    => This.P1,
+               High_Pass_Param => This.P1,
+               Rng             => This.Rng,
+               State           => This.Saw_Swarm_State,
+               Phase           => This.Phase,
+               Pitch           => This.Pitch,
+               Do_Strike       => This.Do_Strike);
+
+         when Voice_Plucked =>
+            Voices.Plucked.Render_Plucked
+              (Buffer,
+               Decay_Param    => This.P1,
+               Position_Param => This.P1,
+               Rng            =>  This.Rng,
+               State          =>  This.Pluck_State,
+               KS             =>  This.KS,
+               Pitch          =>  This.Pitch,
+               Do_Strike      =>  This.Do_Strike);
+
+      end case;
+   end Render;
+
+   ------------
+   -- Strike --
+   ------------
+
+   overriding
+   procedure Strike (This : in out Instance) is
+   begin
+      This.Do_Strike := True;
+   end Strike;
+
+   ---------------
+   -- Set_Pitch --
+   ---------------
+
+   overriding
+   procedure Set_Pitch (This  : in out Instance;
+                        Pitch :        Pitch_Range)
+   is
+   begin
+      This.Pitch := Pitch;
+   end Set_Pitch;
+
+   ----------------
+   -- Set_Param1 --
+   ----------------
+
+   overriding
+   procedure Set_Param1 (This : in out Instance; P : Param_Range) is
+   begin
+      This.P1 := P;
+   end Set_Param1;
+
+   ----------------
+   -- Set_Param2 --
+   ----------------
+
+   overriding
+   procedure Set_Param2 (This : in out Instance; P : Param_Range) is
+   begin
+      This.P2 := P;
+   end Set_Param2;
+
+end Tresses.Macro;

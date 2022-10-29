@@ -42,10 +42,23 @@ package body Tresses.Drums.Snare is
    -- Strike --
    ------------
 
+   overriding
    procedure Strike (This : in out Instance) is
    begin
       This.Do_Strike := True;
    end Strike;
+
+   ---------------
+   -- Set_Pitch --
+   ---------------
+
+   overriding
+   procedure Set_Pitch (This  : in out Instance;
+                        Pitch :        Pitch_Range)
+   is
+   begin
+      This.Pitch := Pitch;
+   end Set_Pitch;
 
    ------------
    -- Render --
@@ -160,7 +173,7 @@ package body Tresses.Drums.Snare is
          Excitation_1, Excitation_2, Noise_Sample, SD : S32;
          P3 : S32;
       begin
-         while Index <= Buffer'Last loop
+         loop
 
             Excitation_1 := Process (Pulse0);
             Excitation_1 := Excitation_1 + Process (Pulse1);
@@ -192,8 +205,11 @@ package body Tresses.Drums.Snare is
 
             Buffer (Index) := S16 (SD);
             Index := Index + 1;
+            exit when Index > Buffer'Last;
+
             Buffer (Index) := S16 (SD);
             Index := Index + 1;
+            exit when Index > Buffer'Last;
          end loop;
       end;
    end Render_Snare;

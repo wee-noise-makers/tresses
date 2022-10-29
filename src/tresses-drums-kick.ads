@@ -1,6 +1,7 @@
 with Tresses.Excitation;
 with Tresses.Filters.SVF;
 with Tresses.Interfaces; use Tresses.Interfaces;
+
 package Tresses.Drums.Kick
 with Preelaborate
 is

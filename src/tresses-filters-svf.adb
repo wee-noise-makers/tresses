@@ -100,7 +100,7 @@ package body Tresses.Filters.SVF is
          DSP.Clip_S16 (This.LP);
 
          declare
-            HP : constant S32 := Notch - This.LP;
+            HP : constant S32 := DSP.Clip_S16 (Notch - This.LP);
          begin
             This.BP := This.BP + ((F * HP) / 2**15);
             DSP.Clip_S16 (This.BP);
