@@ -14,7 +14,7 @@ package body Tresses.Voices.Saw_Swarm is
    -- Set_Cutoff --
    ----------------
 
-   procedure Set_Detune (This : in out Instance; P0 : U16) is
+   procedure Set_Detune (This : in out Instance; P0 : Param_Range) is
    begin
       This.Detune_Param := P0;
    end Set_Detune;
@@ -23,7 +23,7 @@ package body Tresses.Voices.Saw_Swarm is
    -- Set_Noise --
    ---------------
 
-   procedure Set_High_Pass (This : in out Instance; P1 : U16) is
+   procedure Set_High_Pass (This : in out Instance; P1 : Param_Range) is
    begin
       This.High_Pass_Param := P1;
    end Set_High_Pass;
@@ -59,13 +59,13 @@ package body Tresses.Voices.Saw_Swarm is
    ------------------
 
    procedure Render_Saw_Swarm
-     (Buffer                    :    out Mono_Buffer;
-      Detune_Param, High_Pass_Param :        U16;
-      Rng                       : in out Random.Instance;
-      State                     : in out Saw_Swarm_State;
-      Phase                     : in out U32;
-      Pitch                     :        S16;
-      Do_Strike                 : in out Boolean)
+     (Buffer                        :    out Mono_Buffer;
+      Detune_Param, High_Pass_Param :        Param_Range;
+      Rng                           : in out Random.Instance;
+      State                         : in out Saw_Swarm_State;
+      Phase                         : in out U32;
+      Pitch                         :        S16;
+      Do_Strike                     : in out Boolean)
    is
       Increments : array (0 .. 6) of U32;
 

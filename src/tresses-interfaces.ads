@@ -15,10 +15,10 @@ is
 
    type Two_Params_Voice is interface;
 
-   procedure Set_Param1 (This : in out Pitched_Voice; P : U16)
+   procedure Set_Param1 (This : in out Pitched_Voice; P : Param_Range)
    is abstract;
 
-   procedure Set_Param2 (This : in out Pitched_Voice; P : U16)
+   procedure Set_Param2 (This : in out Pitched_Voice; P : Param_Range)
    is abstract;
 
 end Tresses.Interfaces;

@@ -141,7 +141,7 @@ package body Tresses.Drums.Macro is
    ----------------
 
    overriding
-   procedure Set_Param1 (This : in out Instance; P : U16) is
+   procedure Set_Param1 (This : in out Instance; P : Param_Range) is
    begin
       This.P1 := P;
    end Set_Param1;
@@ -151,7 +151,7 @@ package body Tresses.Drums.Macro is
    ----------------
 
    overriding
-   procedure Set_Param2 (This : in out Instance; P : U16) is
+   procedure Set_Param2 (This : in out Instance; P : Param_Range) is
    begin
       This.P2 := P;
    end Set_Param2;

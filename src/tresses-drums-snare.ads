@@ -9,9 +9,9 @@ is
 
    procedure Init (This : in out Instance);
 
-   procedure Set_Tone (This : in out Instance; P0 : U16);
+   procedure Set_Tone (This : in out Instance; P0 : Param_Range);
 
-   procedure Set_Noise (This : in out Instance; P1 : U16);
+   procedure Set_Noise (This : in out Instance; P1 : Param_Range);
 
    procedure Strike (This : in out Instance);
 
@@ -20,7 +20,7 @@ is
 
    procedure Render_Snare
      (Buffer                         :    out Mono_Buffer;
-      Tone_Param, Noise_Param        :        U16;
+      Tone_Param, Noise_Param        :        Param_Range;
       Pulse0, Pulse1, Pulse2, Pulse3 : in out Excitation.Instance;
       Filter0, Filter1, Filter2      : in out Filters.SVF.Instance;
       Rng                            : in out Random.Instance;
@@ -39,8 +39,8 @@ private
       Do_Strike : Boolean := False;
       Do_Init : Boolean := True;
 
-      Tone_Param : U16 := 0;
-      Noise_Param : U16 := 0;
+      Tone_Param : Param_Range := 0;
+      Noise_Param : Param_Range := 0;
    end record;
 
 end Tresses.Drums.Snare;

@@ -23,7 +23,7 @@ package body Tresses.Drums.Kick is
    -- Set_Decay --
    ---------------
 
-   procedure Set_Decay (This : in out Instance; Decay : U16) is
+   procedure Set_Decay (This : in out Instance; Decay : Param_Range) is
    begin
       This.Decay := Decay;
    end Set_Decay;
@@ -32,7 +32,7 @@ package body Tresses.Drums.Kick is
    -- Set_Coefficient --
    ---------------------
 
-   procedure Set_Coefficient (This : in out Instance; Coef : U16) is
+   procedure Set_Coefficient (This : in out Instance; Coef : Param_Range) is
    begin
       This.Coefficient := Coef;
    end Set_Coefficient;
@@ -80,7 +80,7 @@ package body Tresses.Drums.Kick is
    -----------------
 
    procedure Render_Kick (Buffer                 :    out Mono_Buffer;
-                          Decay, Coefficient     :        U16;
+                          Decay, Coefficient     :        Param_Range;
                           Pulse0, Pulse1, Pulse2 : in out Excitation.Instance;
                           Filter                 : in out Filters.SVF.Instance;
                           LP_State               : in out S32;
@@ -92,7 +92,10 @@ package body Tresses.Drums.Kick is
    begin
       if Do_Init then
          Do_Init := False;
-         Excitation.Init (Pulse0);
+
+         LP_State := 0;
+
+         Init (Pulse0);
          Set_Delay (Pulse0, 0);
          Set_Decay (Pulse0, 3340);
 
@@ -113,14 +116,14 @@ package body Tresses.Drums.Kick is
       if Do_Strike then
          Do_Strike := False;
 
-         Trigger (Pulse0, S32 (12.0 * 32768.0 * 0.7));
-         Trigger (Pulse1, S32 (-19662.0 * 0.7));
-         Trigger (Pulse2, S32 (18000));
-         Set_Punch (Filter, 24000);
+         Trigger (Pulse0, S32 (12.0 * 32_768.0 * 0.7));
+         Trigger (Pulse1, S32 (-19_662.0 * 0.7));
+         Trigger (Pulse2, S32 (18_000));
+         Set_Punch (Filter, 24_000);
       end if;
 
       declare
-         Scaled : U32 := 65535 - (Shift_Left (U32 (Decay), 1));
+         Scaled : U32 := 65_535 - (Shift_Left (U32 (Decay), 1));
          Squared : constant U32 := Shift_Right (Scaled * Scaled, 16);
       begin
          Scaled := Shift_Right (Squared * Scaled, 18);
@@ -162,13 +165,13 @@ package body Tresses.Drums.Kick is
                           Process (Filter, Excitation);
 
                         LP_State := LP_State +
-                          ((Resonator_Output - LP_State) * LP_Coef) / 2**15;
+                          (((Resonator_Output - LP_State) * LP_Coef) / 2**15);
 
                         DSP.Clip_S16 (LP_State);
 
                         Buffer (Index) := S16 (LP_State);
-
                         Index := Index + 1;
+
                         exit when Index > Buffer'Last;
                      end;
                   end loop;

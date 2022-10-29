@@ -10,14 +10,14 @@ is
 
    procedure Init (This : in out Instance);
 
-   procedure Set_Decay (This : in out Instance; Decay : U16);
-   procedure Set_Coefficient (This : in out Instance; Coef : U16);
+   procedure Set_Decay (This : in out Instance; Decay : Param_Range);
+   procedure Set_Coefficient (This : in out Instance; Coef : Param_Range);
 
    procedure Render (This   : in out Instance;
                      Buffer :    out Mono_Buffer);
 
    procedure Render_Kick (Buffer                 :     out Mono_Buffer;
-                          Decay, Coefficient     :        U16;
+                          Decay, Coefficient     :        Param_Range;
                           Pulse0, Pulse1, Pulse2 : in out Excitation.Instance;
                           Filter                 : in out Filters.SVF.Instance;
                           LP_State               : in out S32;
@@ -35,11 +35,11 @@ is
                         Pitch : S16);
 
    overriding
-   procedure Set_Param1 (This : in out Instance; P : U16)
+   procedure Set_Param1 (This : in out Instance; P : Param_Range)
    renames Set_Decay;
 
    overriding
-   procedure Set_Param2 (This : in out Instance; P : U16)
+   procedure Set_Param2 (This : in out Instance; P : Param_Range)
    renames Set_Coefficient;
 
 private
@@ -56,8 +56,8 @@ private
       Do_Strike : Boolean := False;
       Do_Init : Boolean := True;
 
-      Decay : U16 := 0;
-      Coefficient : U16 := 0;
+      Decay : Param_Range := 0;
+      Coefficient : Param_Range := 0;
    end record;
 
 end Tresses.Drums.Kick;

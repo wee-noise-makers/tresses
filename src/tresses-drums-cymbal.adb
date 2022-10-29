@@ -24,7 +24,7 @@ package body Tresses.Drums.Cymbal is
    -- Set_Cutoff --
    ----------------
 
-   procedure Set_Cutoff (This : in out Instance; P0 : U16) is
+   procedure Set_Cutoff (This : in out Instance; P0 : Param_Range) is
    begin
       This.Cutoff_Param := P0;
    end Set_Cutoff;
@@ -33,7 +33,7 @@ package body Tresses.Drums.Cymbal is
    -- Set_Noise --
    ---------------
 
-   procedure Set_Noise (This : in out Instance; P1 : U16) is
+   procedure Set_Noise (This : in out Instance; P1 : Param_Range) is
    begin
       This.Noise_Param := P1;
    end Set_Noise;
@@ -71,7 +71,7 @@ package body Tresses.Drums.Cymbal is
 
    procedure Render_Cymbal
      (Buffer                    :    out Mono_Buffer;
-      Cutoff_Param, Noise_Param :        U16;
+      Cutoff_Param, Noise_Param :        Param_Range;
       Filter0, Filter1          : in out Filters.SVF.Instance;
       Env                       : in out Envelopes.AD.Instance;
       State                     : in out Cymbal_State;
@@ -87,6 +87,8 @@ package body Tresses.Drums.Cymbal is
       if Do_Init then
 
          Do_Init := False;
+
+         Phase := 0;
 
          Init (Filter0);
          Set_Mode (Filter0, Band_Pass);
@@ -140,13 +142,14 @@ package body Tresses.Drums.Cymbal is
 
       declare
          Xfade : constant S32 := S32 (Noise_Param);
+
          Hat_Noise, Noise : S32;
          Index : Natural := Buffer'First;
 
          SD : S32;
       begin
-         Set_Frequency (Filter0, S16 (Cutoff_Param / 2));
-         Set_Frequency (Filter1, S16 (Cutoff_Param / 2));
+         Set_Frequency (Filter0, S16 (Cutoff_Param) / 2);
+         Set_Frequency (Filter1, S16 (Cutoff_Param) / 2);
 
          while Index <= Buffer'Last loop
             Phase := Phase + Increments (6);

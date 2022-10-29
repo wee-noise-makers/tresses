@@ -38,10 +38,10 @@ is
                         Pitch : S16);
 
    overriding
-   procedure Set_Param1 (This : in out Instance; P : U16);
+   procedure Set_Param1 (This : in out Instance; P : Param_Range);
 
    overriding
-   procedure Set_Param2 (This : in out Instance; P : U16);
+   procedure Set_Param2 (This : in out Instance; P : Param_Range);
 
 private
 
@@ -65,8 +65,7 @@ private
       Do_Strike : Boolean := False;
       Do_Init : Boolean := True;
 
-      P1 : U16 := 0;
-      P2 : U16 := 0;
+      P1, P2 : Param_Range := 0;
    end record;
 
 end Tresses.Drums.Macro;

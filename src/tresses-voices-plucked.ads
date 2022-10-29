@@ -5,9 +5,9 @@ with Preelaborate
 is
    type Instance is private;
 
-   procedure Set_Decay (This : in out Instance; P0 : U16);
+   procedure Set_Decay (This : in out Instance; P0 : Param_Range);
 
-   procedure Set_Position (This : in out Instance; P1 : U16);
+   procedure Set_Position (This : in out Instance; P1 : Param_Range);
 
    procedure Strike (This : in out Instance);
 
@@ -17,11 +17,11 @@ is
    type Pluck_State is private;
 
    Number_Of_Voices : constant := 4;
-   type KS_Array is array (U32 range 0 .. Number_Of_Voices * 1025 - 1) of S16;
+   type KS_Array is array (U32 range 0 .. (Number_Of_Voices * 1025) - 1) of S16;
 
    procedure Render_Plucked
      (Buffer                      :    out Mono_Buffer;
-      Decay_Param, Position_Param :        U16;
+      Decay_Param, Position_Param :        Param_Range;
       Rng                         : in out Random.Instance;
       State                       : in out Pluck_State;
       KS                          : in out KS_Array;
@@ -61,8 +61,8 @@ private
 
       Do_Strike : Boolean := False;
 
-      Decay_Param : U16 := 0;
-      Position_Param : U16 := 0;
+      Decay_Param : Param_Range := 0;
+      Position_Param : Param_Range := 0;
    end record;
 
 end Tresses.Voices.Plucked;

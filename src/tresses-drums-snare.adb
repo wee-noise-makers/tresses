@@ -24,7 +24,7 @@ package body Tresses.Drums.Snare is
    -- Set_Tone --
    --------------
 
-   procedure Set_Tone (This : in out Instance; P0 : U16) is
+   procedure Set_Tone (This : in out Instance; P0 : Param_Range) is
    begin
       This.Tone_Param := P0;
    end Set_Tone;
@@ -33,7 +33,7 @@ package body Tresses.Drums.Snare is
    -- Set_Noise --
    ---------------
 
-   procedure Set_Noise (This : in out Instance; P1 : U16) is
+   procedure Set_Noise (This : in out Instance; P1 : Param_Range) is
    begin
       This.Noise_Param := P1;
    end Set_Noise;
@@ -70,7 +70,7 @@ package body Tresses.Drums.Snare is
 
    procedure Render_Snare
      (Buffer                         :    out Mono_Buffer;
-      Tone_Param, Noise_Param        :        U16;
+      Tone_Param, Noise_Param        :        Param_Range;
       Pulse0, Pulse1, Pulse2, Pulse3 : in out Excitation.Instance;
       Filter0, Filter1, Filter2      : in out Filters.SVF.Instance;
       Rng                            : in out Random.Instance;

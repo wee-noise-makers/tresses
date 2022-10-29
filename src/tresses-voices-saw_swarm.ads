@@ -5,9 +5,9 @@ with Preelaborate
 is
    type Instance is private;
 
-   procedure Set_Detune (This : in out Instance; P0 : U16);
+   procedure Set_Detune (This : in out Instance; P0 : Param_Range);
 
-   procedure Set_High_Pass (This : in out Instance; P1 : U16);
+   procedure Set_High_Pass (This : in out Instance; P1 : Param_Range);
 
    procedure Strike (This : in out Instance);
 
@@ -18,7 +18,7 @@ is
 
    procedure Render_Saw_Swarm
      (Buffer                        :    out Mono_Buffer;
-      Detune_Param, High_Pass_Param :        U16;
+      Detune_Param, High_Pass_Param :        Param_Range;
       Rng                           : in out Random.Instance;
       State                         : in out Saw_Swarm_State;
       Phase                         : in out U32;
@@ -46,8 +46,8 @@ private
 
       Do_Strike : Boolean := False;
 
-      Detune_Param : U16 := 0;
-      High_Pass_Param : U16 := 0;
+      Detune_Param : Param_Range := 0;
+      High_Pass_Param : Param_Range := 0;
    end record;
 
 end Tresses.Voices.Saw_Swarm;

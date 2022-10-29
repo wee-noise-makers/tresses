@@ -19,6 +19,8 @@ is
    subtype S16 is Interfaces.Integer_16;
    subtype S32 is Interfaces.Integer_32;
 
+   type Param_Range is new S16 range 0 .. S16'Last;
+
    subtype Mono_Point is S16;
    type Mono_Buffer is array (Natural range <>) of Mono_Point;
 

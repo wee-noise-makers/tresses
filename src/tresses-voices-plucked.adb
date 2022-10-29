@@ -13,7 +13,7 @@ package body Tresses.Voices.Plucked is
    -- Set_Decay --
    ---------------
 
-   procedure Set_Decay (This : in out Instance; P0 : U16) is
+   procedure Set_Decay (This : in out Instance; P0 : Param_Range) is
    begin
       This.Decay_Param := P0;
    end Set_Decay;
@@ -22,7 +22,7 @@ package body Tresses.Voices.Plucked is
    -- Set_Position --
    ------------------
 
-   procedure Set_Position (This : in out Instance; P1 : U16) is
+   procedure Set_Position (This : in out Instance; P1 : Param_Range) is
    begin
       This.Position_Param := P1;
    end Set_Position;
@@ -59,7 +59,7 @@ package body Tresses.Voices.Plucked is
 
    procedure Render_Plucked
      (Buffer                      :    out Mono_Buffer;
-      Decay_Param, Position_Param :        U16;
+      Decay_Param, Position_Param :        Param_Range;
       Rng                         : in out Random.Instance;
       State                       : in out Pluck_State;
       KS                          : in out KS_Array;
@@ -144,7 +144,7 @@ package body Tresses.Voices.Plucked is
          end if;
 
          if Decay_Param < 16_384 then
-            Loss := Loss * (S16 (16_384 - Decay_Param) / 2**14);
+            Loss := S16 ((S32 (Loss) * (16_384 - S32 (Decay_Param))) / 2**14);
          else
             Loss := 0;
          end if;
