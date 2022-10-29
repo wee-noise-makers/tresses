@@ -30,8 +30,8 @@ is
    procedure Strike (This : in out Instance);
 
    overriding
-   procedure Set_Pitch (This : in out Instance;
-                        Pitch : S16);
+   procedure Set_Pitch (This  : in out Instance;
+                        Pitch :        Pitch_Range);
 
    overriding
    procedure Set_Param1 (This : in out Instance; P : Param_Range);
@@ -52,7 +52,7 @@ private
       KS          : Plucked.KS_Array;
       Rng : Random.Instance;
 
-      Pitch : S16 := 12 * 128 * 4;
+      Pitch : Pitch_Range := Init_Pitch;
       Phase : U32 := 0;
 
       Do_Strike : Boolean := False;

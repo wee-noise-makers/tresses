@@ -21,6 +21,6 @@ is
 
    function "and" (A : S32; B : U32) return S32;
 
-   function Compute_Phase_Increment (Midi_Pitch : S16) return U32;
+   function Compute_Phase_Increment (Pitch : S16) return U32;
 
 end Tresses.DSP;

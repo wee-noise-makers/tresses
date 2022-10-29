@@ -1,7 +1,3 @@
-with Tresses.Voices.Saw_Swarm;
-with Tresses.Voices.Plucked;
-with Tresses.Random;
-
 package body Tresses.Voices.Macro is
 
    ------------
@@ -68,14 +64,15 @@ package body Tresses.Voices.Macro is
    begin
       case This.Engine is
          when Voice_Saw_Swarm =>
-            Saw_Swarm.Render_Saw_Swarm (Buffer,
-                                        Detune_Param    => This.P1,
-                                        High_Pass_Param => This.P1,
-                                        Rng             => This.Rng,
-                                        State           => This.Saw_Swarm_State,
-                                        Phase           => This.Phase,
-                                        Pitch           => This.Pitch,
-                                        Do_Strike       => This.Do_Strike);
+            Saw_Swarm.Render_Saw_Swarm
+              (Buffer,
+               Detune_Param    => This.P1,
+               High_Pass_Param => This.P1,
+               Rng             => This.Rng,
+               State           => This.Saw_Swarm_State,
+               Phase           => This.Phase,
+               Pitch           => This.Pitch,
+               Do_Strike       => This.Do_Strike);
          when Voice_Plucked =>
             Plucked.Render_Plucked (Buffer,
                                     Decay_Param    => This.P1,
@@ -103,8 +100,8 @@ package body Tresses.Voices.Macro is
    ---------------
 
    overriding
-   procedure Set_Pitch (This : in out Instance;
-                        Pitch : S16)
+   procedure Set_Pitch (This  : in out Instance;
+                        Pitch :        Pitch_Range)
    is
    begin
       This.Pitch := Pitch;

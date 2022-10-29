@@ -27,7 +27,7 @@ is
       Env                       : in out Envelopes.AD.Instance;
       State                     : in out Cymbal_State;
       Phase                     : in out U32;
-      Pitch                     :        S16;
+      Pitch                     :        Pitch_Range;
       Do_Init                   : in out Boolean;
       Do_Strike                 : in out Boolean);
 private
@@ -47,7 +47,7 @@ private
 
       State : Cymbal_State;
 
-      Pitch : S16 := 12 * 128 * 6;
+      Pitch : Pitch_Range := Init_Pitch;
       Phase : U32 := 0;
 
       Do_Strike : Boolean := False;

@@ -24,7 +24,7 @@ is
       Pulse0, Pulse1, Pulse2, Pulse3 : in out Excitation.Instance;
       Filter0, Filter1, Filter2      : in out Filters.SVF.Instance;
       Rng                            : in out Random.Instance;
-      Pitch                          :        S16;
+      Pitch                          :        Pitch_Range;
       Do_Init                        : in out Boolean;
       Do_Strike                      : in out Boolean);
 private
@@ -34,7 +34,7 @@ private
       Filter0, Filter1, Filter2 : Filters.SVF.Instance;
       Rng : Random.Instance;
 
-      Pitch : S16 := 12 * 128 * 4;
+      Pitch : Pitch_Range := Init_Pitch;
 
       Do_Strike : Boolean := False;
       Do_Init : Boolean := True;

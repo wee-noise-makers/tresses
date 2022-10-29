@@ -52,8 +52,8 @@ package body Tresses.Drums.Kick is
    ---------------
 
    overriding
-   procedure Set_Pitch (This : in out Instance;
-                        Pitch : S16)
+   procedure Set_Pitch (This  : in out Instance;
+                        Pitch :        Pitch_Range)
    is
    begin
       This.Pitch := Pitch;
@@ -84,7 +84,7 @@ package body Tresses.Drums.Kick is
                           Pulse0, Pulse1, Pulse2 : in out Excitation.Instance;
                           Filter                 : in out Filters.SVF.Instance;
                           LP_State               : in out S32;
-                          Pitch                  :        S16;
+                          Pitch                  :        Pitch_Range;
                           Do_Init                : in out Boolean;
                           Do_Strike              : in out Boolean)
    is
@@ -153,9 +153,9 @@ package body Tresses.Drums.Kick is
 
                   Unused := Process (Pulse2);
 
-                  Set_Frequency (Filter, Pitch + (if Done (Pulse2)
-                                                  then 0
-                                                  else 17 * 2**7));
+                  Set_Frequency (Filter, S16 (Pitch) + (if Done (Pulse2)
+                                                        then 0
+                                                        else 17 * 2**7));
                   for X in 0 .. 1 loop
                      declare
                         Resonator_Output : S32;

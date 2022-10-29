@@ -1,11 +1,5 @@
 with Tresses.Drums.Kick;
 with Tresses.Drums.Snare;
-with Tresses.Drums.Cymbal;
-
-with Tresses.Excitation;
-with Tresses.Random;
-with Tresses.Filters.SVF;
-with Tresses.Interfaces; use Tresses.Interfaces;
 
 package body Tresses.Drums.Macro is
 
@@ -129,8 +123,8 @@ package body Tresses.Drums.Macro is
    ---------------
 
    overriding
-   procedure Set_Pitch (This : in out Instance;
-                        Pitch : S16)
+   procedure Set_Pitch (This  : in out Instance;
+                        Pitch :        Pitch_Range)
    is
    begin
       This.Pitch := Pitch;

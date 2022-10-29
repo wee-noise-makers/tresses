@@ -21,7 +21,7 @@ is
                           Pulse0, Pulse1, Pulse2 : in out Excitation.Instance;
                           Filter                 : in out Filters.SVF.Instance;
                           LP_State               : in out S32;
-                          Pitch                  :        S16;
+                          Pitch                  :        Pitch_Range;
                           Do_Init                : in out Boolean;
                           Do_Strike              : in out Boolean);
 
@@ -31,8 +31,8 @@ is
    procedure Strike (This : in out Instance);
 
    overriding
-   procedure Set_Pitch (This : in out Instance;
-                        Pitch : S16);
+   procedure Set_Pitch (This  : in out Instance;
+                        Pitch :        Pitch_Range);
 
    overriding
    procedure Set_Param1 (This : in out Instance; P : Param_Range)
@@ -50,7 +50,7 @@ private
       Pulse0, Pulse1, Pulse2 : Excitation.Instance;
       Filter : Filters.SVF.Instance;
 
-      Pitch : S16 := 3000;
+      Pitch : Pitch_Range := Init_Pitch;
       LP_State : S32 := 0;
 
       Do_Strike : Boolean := False;

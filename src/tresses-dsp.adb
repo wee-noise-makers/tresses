@@ -70,22 +70,22 @@ package body Tresses.DSP is
    -- Compute_Phase_Increment --
    -----------------------------
 
-   function Compute_Phase_Increment (Midi_Pitch : S16) return U32 is
+   function Compute_Phase_Increment (Pitch : S16) return U32 is
       Pitch_Table_Start : constant := 128 * 128;
       Octave : constant := 12 * 128;
 
-      Pitch : S16 := Midi_Pitch;
+      P : S16 := S16 (Pitch);
 
       Ref_Pitch : S32;
       Num_Shifts : Natural := 0;
 
       A, B, Phase_Increment : U32;
    begin
-      if Pitch >= Pitch_Table_Start then
-         Pitch := Pitch_Table_Start - 1;
+      if P >= Pitch_Table_Start then
+         P := Pitch_Table_Start - 1;
       end if;
 
-      Ref_Pitch := S32 (Pitch) - Pitch_Table_Start;
+      Ref_Pitch := S32 (P) - Pitch_Table_Start;
 
       while Ref_Pitch < 0 loop
          Ref_Pitch := Ref_Pitch + Octave;

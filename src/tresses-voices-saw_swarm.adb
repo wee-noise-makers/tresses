@@ -28,6 +28,15 @@ package body Tresses.Voices.Saw_Swarm is
       This.High_Pass_Param := P1;
    end Set_High_Pass;
 
+   ---------------
+   -- Set_Pitch --
+   ---------------
+
+   procedure Set_Pitch (This : in out Instance; Pitch : Pitch_Range) is
+   begin
+      This.Pitch := Pitch;
+   end Set_Pitch;
+
    ------------
    -- Strike --
    ------------
@@ -64,7 +73,7 @@ package body Tresses.Voices.Saw_Swarm is
       Rng                           : in out Random.Instance;
       State                         : in out Saw_Swarm_State;
       Phase                         : in out U32;
-      Pitch                         :        S16;
+      Pitch                         :        Pitch_Range;
       Do_Strike                     : in out Boolean)
    is
       Increments : array (0 .. 6) of U32;
@@ -85,9 +94,12 @@ package body Tresses.Voices.Saw_Swarm is
             Detune_Fractional : constant S32 := Saw_Detune and 16#FFFF#;
 
             Increment_A : constant S32 :=
-              S32 (Compute_Phase_Increment (Pitch + Detune_Integral));
+              S32 (Compute_Phase_Increment
+                   (S16 (Pitch) + Detune_Integral));
+
             Increment_B : constant S32 :=
-              S32 (Compute_Phase_Increment (Pitch + Detune_Integral + 1));
+              S32 (Compute_Phase_Increment
+                   (S16 (Pitch) + Detune_Integral + 1));
          begin
             Increments (X) := U32
               (Increment_A +

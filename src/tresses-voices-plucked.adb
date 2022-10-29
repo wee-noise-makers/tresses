@@ -63,7 +63,7 @@ package body Tresses.Voices.Plucked is
       Rng                         : in out Random.Instance;
       State                       : in out Pluck_State;
       KS                          : in out KS_Array;
-      Pitch                       :        S16;
+      Pitch                       :        Pitch_Range;
       Do_Strike                   : in out Boolean)
    is
 
@@ -79,7 +79,7 @@ package body Tresses.Voices.Plucked is
          return A + (((B - A) * V) / 2**16);
       end Interpolate;
 
-      Phase_Increment : U32 := DSP.Compute_Phase_Increment (Pitch);
+      Phase_Increment : U32 := DSP.Compute_Phase_Increment (S16 (Pitch));
    begin
       Phase_Increment := Phase_Increment * 2;
 

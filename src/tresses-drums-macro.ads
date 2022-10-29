@@ -1,5 +1,3 @@
-with Tresses.Drums.Kick;
-with Tresses.Drums.Snare;
 with Tresses.Drums.Cymbal;
 
 with Tresses.Excitation;
@@ -34,8 +32,8 @@ is
    procedure Strike (This : in out Instance);
 
    overriding
-   procedure Set_Pitch (This : in out Instance;
-                        Pitch : S16);
+   procedure Set_Pitch (This  : in out Instance;
+                        Pitch :        Pitch_Range);
 
    overriding
    procedure Set_Param1 (This : in out Instance; P : Param_Range);
@@ -56,7 +54,7 @@ private
       Rng : Random.Instance;
       Env : Envelopes.AD.Instance;
 
-      Pitch : S16 := 12 * 128 * 4;
+      Pitch : Pitch_Range := Init_Pitch;
 
       LP_State : S32 := 0;
       Cym_State : Cymbal.Cymbal_State;

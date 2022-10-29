@@ -4,8 +4,8 @@ is
 
    type Pitched_Voice is interface;
 
-   procedure Set_Pitch (This : in out Pitched_Voice;
-                        Pitch : S16)
+   procedure Set_Pitch (This  : in out Pitched_Voice;
+                        Pitch :        Pitch_Range)
    is abstract;
 
    type Strike_Voice is interface;

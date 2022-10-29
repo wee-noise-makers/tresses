@@ -76,12 +76,13 @@ package body Tresses.Drums.Cymbal is
       Env                       : in out Envelopes.AD.Instance;
       State                     : in out Cymbal_State;
       Phase                     : in out U32;
-      Pitch                     :        S16;
+      Pitch                     :        Pitch_Range;
       Do_Init                   : in out Boolean;
       Do_Strike                 : in out Boolean)
    is
       Increments : array (0 .. 6) of U32;
-      Note : constant S32 := (40 * 2**7) + (S32 (Pitch) / 2**1);
+      Note : constant Pitch_Range :=
+        Pitch_Range ((40 * 2**7) + (S32 (Pitch) / 2**1));
       Root : U32;
    begin
       if Do_Init then
@@ -148,8 +149,8 @@ package body Tresses.Drums.Cymbal is
 
          SD : S32;
       begin
-         Set_Frequency (Filter0, S16 (Cutoff_Param) / 2);
-         Set_Frequency (Filter1, S16 (Cutoff_Param) / 2);
+         Set_Frequency (Filter0, S16 (Cutoff_Param / 2));
+         Set_Frequency (Filter1, S16 (Cutoff_Param / 2));
 
          while Index <= Buffer'Last loop
             Phase := Phase + Increments (6);

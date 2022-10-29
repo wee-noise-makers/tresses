@@ -17,7 +17,8 @@ is
    type Pluck_State is private;
 
    Number_Of_Voices : constant := 4;
-   type KS_Array is array (U32 range 0 .. (Number_Of_Voices * 1025) - 1) of S16;
+   type KS_Array
+   is array (U32 range 0 .. (Number_Of_Voices * 1025) - 1) of S16;
 
    procedure Render_Plucked
      (Buffer                      :    out Mono_Buffer;
@@ -25,7 +26,7 @@ is
       Rng                         : in out Random.Instance;
       State                       : in out Pluck_State;
       KS                          : in out KS_Array;
-      Pitch                       :        S16;
+      Pitch                       :        Pitch_Range;
       Do_Strike                   : in out Boolean);
 private
 
@@ -57,7 +58,7 @@ private
 
       Rng   : Random.Instance;
 
-      Pitch : S16 := 12 * 128 * 4;
+      Pitch : Pitch_Range := Init_Pitch;
 
       Do_Strike : Boolean := False;
 

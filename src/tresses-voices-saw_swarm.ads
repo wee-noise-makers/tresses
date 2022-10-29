@@ -9,6 +9,8 @@ is
 
    procedure Set_High_Pass (This : in out Instance; P1 : Param_Range);
 
+   procedure Set_Pitch (This : in out Instance; Pitch : Pitch_Range);
+
    procedure Strike (This : in out Instance);
 
    procedure Render (This   : in out Instance;
@@ -22,7 +24,7 @@ is
       Rng                           : in out Random.Instance;
       State                         : in out Saw_Swarm_State;
       Phase                         : in out U32;
-      Pitch                         :        S16;
+      Pitch                         :        Pitch_Range;
       Do_Strike                     : in out Boolean);
 private
 
@@ -41,7 +43,7 @@ private
 
       Rng   : Random.Instance;
 
-      Pitch : S16 := 12 * 128 * 4;
+      Pitch : Pitch_Range := Init_Pitch;
       Phase : U32 := 0;
 
       Do_Strike : Boolean := False;

@@ -74,7 +74,7 @@ package body Tresses.Drums.Snare is
       Pulse0, Pulse1, Pulse2, Pulse3 : in out Excitation.Instance;
       Filter0, Filter1, Filter2      : in out Filters.SVF.Instance;
       Rng                            : in out Random.Instance;
-      Pitch                          :        S16;
+      Pitch                          :        Pitch_Range;
       Do_Init                        : in out Boolean;
       Do_Strike                      : in out Boolean)
    is
@@ -147,9 +147,9 @@ package body Tresses.Drums.Snare is
          end;
       end if;
 
-      Set_Frequency (Filter0, Pitch + (12 * 2**7));
-      Set_Frequency (Filter1, Pitch + (24 * 2**7));
-      Set_Frequency (Filter2, Pitch + (60 * 2**7));
+      Set_Frequency (Filter0, S16 (Pitch) + (12 * 2**7));
+      Set_Frequency (Filter1, S16 (Pitch) + (24 * 2**7));
+      Set_Frequency (Filter2, S16 (Pitch) + (60 * 2**7));
 
       declare
          G1 : constant S32 := 22_000 - S32 (Tone_Param / 2**1);
