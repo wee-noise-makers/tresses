@@ -1,3 +1,9 @@
+--
+--  SPDX-License-Identifier: MIT
+--
+--  Based on Braids from Mutable Instruments:
+--  Copyright 2012 Emilie Gillet.
+
 package body Tresses.Excitation is
 
    ----------

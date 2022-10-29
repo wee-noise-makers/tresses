@@ -1,3 +1,9 @@
+--
+--  SPDX-License-Identifier: MIT
+--
+--  Based on Braids from Mutable Instruments:
+--  Copyright 2012 Emilie Gillet.
+
 with Tresses.Lookup_Tables; use Tresses.Lookup_Tables;
 with Tresses.DSP;
 

@@ -1,3 +1,9 @@
+--
+--  SPDX-License-Identifier: MIT
+--
+--  Based on Braids from Mutable Instruments:
+--  Copyright 2012 Emilie Gillet.
+
 with Tresses.Envelopes.AD; use Tresses.Envelopes.AD;
 with Tresses.Filters.SVF; use Tresses.Filters.SVF;
 with Tresses.Random; use Tresses.Random;
