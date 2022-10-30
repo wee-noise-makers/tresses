@@ -1,14 +1,18 @@
-with Tresses.Lookup_Tables; use Tresses.Lookup_Tables;
+with Tresses.Resources;
 
 package Tresses.DSP
 with Preelaborate
 is
 
-   function Interpolate824 (T : Table_257_U16; Phase : U32) return U16
+   function Interpolate824 (T     : Resources.Table_257_U16;
+                            Phase : U32)
+                            return U16
      with Inline_Always;
    --  Why 824? I don't know, yet...
 
-   function Interpolate88 (T : Table_257_S16; Index : U16) return S16
+   function Interpolate88 (T     : Resources.Table_257_S16;
+                           Index : U16)
+                           return S16
      with Inline_Always;
    --  Why 88? I don't know, yet...
 

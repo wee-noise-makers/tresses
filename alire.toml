@@ -8,3 +8,8 @@ maintainers-logins = ["Fabien-Chouteau"]
 
 [[depends-on]]
 midi = "~0.2.0"
+
+[configuration.variables]
+Sample_Rate = {type = "Enum", values = ["SR8000", "SR11025", "SR22050",
+                                        "SR32000", "SR44100", "SR48000",
+                                        "SR96000"], default = "SR44100"}

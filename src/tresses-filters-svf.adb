@@ -5,7 +5,7 @@
 --  Copyright 2012 Emilie Gillet.
 
 with Tresses.DSP;
-with Tresses.Lookup_Tables;
+with Tresses.Resources;
 
 package body Tresses.Filters.SVF is
 
@@ -70,10 +70,10 @@ package body Tresses.Filters.SVF is
       F, Damp : S32;
    begin
       if This.Dirty then
-         This.F := S32 (DSP.Interpolate824 (Lookup_Tables.SVF_Cutoff,
+         This.F := S32 (DSP.Interpolate824 (Resources.LUT_Svf_Cutoff,
                         Shift_Left (U32 (This.Frequency), 17)));
 
-         This.Damp := S32 (DSP.Interpolate824 (Lookup_Tables.SVF_Damp,
+         This.Damp := S32 (DSP.Interpolate824 (Resources.LUT_Svf_Damp,
                            Shift_Left (U32 (This.Resonance), 17)));
          This.Dirty := False;
       end if;

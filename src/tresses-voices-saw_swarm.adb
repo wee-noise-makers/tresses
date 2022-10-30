@@ -6,7 +6,7 @@
 
 with Tresses.Random; use Tresses.Random;
 with Tresses.DSP;
-with Tresses.Lookup_Tables;
+with Tresses.Resources;
 
 package body Tresses.Voices.Saw_Swarm is
 
@@ -143,10 +143,10 @@ package body Tresses.Voices.Saw_Swarm is
             HP_Cutoff := 32_767;
          end if;
 
-         F := S32 (DSP.Interpolate824 (Lookup_Tables.SVF_Cutoff,
+         F := S32 (DSP.Interpolate824 (Resources.LUT_Svf_Cutoff,
                                        Shift_Left (U32 (HP_Cutoff), 17)));
 
-         Damp := S32 (Lookup_Tables.SVF_Damp (0));
+         Damp := S32 (Resources.LUT_Svf_Damp (0));
 
          while Index <= Buffer'Last loop
 
@@ -169,7 +169,7 @@ package body Tresses.Voices.Saw_Swarm is
             Sample := Sample + S32 (Shift_Right (State.Phase (4), 19));
             Sample := Sample + S32 (Shift_Right (State.Phase (5), 19));
             Sample := S32 (DSP.Interpolate88
-                           (Lookup_Tables.Moderate_Overdrive,
+                           (Resources.WS_Moderate_Overdrive,
                               U16 (Sample + 32_768)));
 
             Notch := Sample - ((BP * Damp) / 2**15);

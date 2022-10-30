@@ -4,7 +4,7 @@
 --  Based on Braids from Mutable Instruments:
 --  Copyright 2012 Emilie Gillet.
 
-with Tresses.Lookup_Tables; use Tresses.Lookup_Tables;
+with Tresses.Resources; use Tresses.Resources;
 with Tresses.DSP;
 
 package body Tresses.Envelopes.AD is
@@ -24,7 +24,7 @@ package body Tresses.Envelopes.AD is
 
    procedure Set_Attack (This : in out Instance; A : U7) is
    begin
-      This.Increment (Attack) := Portamento_Increments (A);
+      This.Increment (Attack) := LUT_Env_Portamento_Increments (U8 (A));
    end Set_Attack;
 
    ---------------
@@ -33,7 +33,7 @@ package body Tresses.Envelopes.AD is
 
    procedure Set_Decay (This : in out Instance; D : U7) is
    begin
-      This.Increment (Decay) := Portamento_Increments (D);
+      This.Increment (Decay) := LUT_Env_Portamento_Increments (U8 (D));
    end Set_Decay;
 
    -------------
@@ -74,7 +74,8 @@ package body Tresses.Envelopes.AD is
 
       if This.Increment (This.Segement) /= 0 then
          This.Value := DSP.Mix (This.A, This.B,
-                                DSP.Interpolate824 (Env_Expo, This.Phase));
+                                DSP.Interpolate824 (LUT_Env_Expo,
+                                  This.Phase));
       end if;
 
       return This.Value;

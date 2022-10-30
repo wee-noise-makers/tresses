@@ -1,4 +1,5 @@
 with Ada.Unchecked_Conversion;
+with Tresses.Resources; use Tresses.Resources;
 
 package body Tresses.DSP is
 
@@ -7,7 +8,7 @@ package body Tresses.DSP is
    --------------------
 
    function Interpolate824 (T : Table_257_U16; Phase : U32) return U16 is
-      P : constant U32 := Shift_Right (Phase, 24);
+      P : constant U16 := U16 (Shift_Right (Phase, 24));
       A : constant U32 := U32 (T (P));
       B : constant U32 := U32 (T (P + 1));
 
@@ -102,8 +103,8 @@ package body Tresses.DSP is
          Num_Shifts := Num_Shifts + 1;
       end loop;
 
-      A := Oscillator_Increments (U32 (Ref_Pitch / 2**4));
-      B := Oscillator_Increments (U32 (Ref_Pitch / 2**4) + 1);
+      A := LUT_Oscillator_Increments (U8 (Ref_Pitch / 2**4));
+      B := LUT_Oscillator_Increments (U8 (Ref_Pitch / 2**4) + 1);
       Phase_Increment  := A +
         U32 ((S32 (B - A) * (Ref_Pitch and 16#F#)) / 2**4);
 
