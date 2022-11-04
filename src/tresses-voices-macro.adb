@@ -69,6 +69,7 @@ package body Tresses.Voices.Macro is
                Detune_Param    => This.P1,
                High_Pass_Param => This.P1,
                Rng             => This.Rng,
+               Env             => This.Env,
                State           => This.Saw_Swarm_State,
                Phase           => This.Phase,
                Pitch           => This.Pitch,
@@ -77,13 +78,32 @@ package body Tresses.Voices.Macro is
             Plucked.Render_Plucked (Buffer,
                                     Decay_Param    => This.P1,
                                     Position_Param => This.P1,
-                                    Rng            =>  This.Rng,
-                                    State          =>  This.Pluck_State,
-                                    KS             =>  This.KS,
-                                    Pitch          =>  This.Pitch,
-                                    Do_Strike      =>  This.Do_Strike);
+                                    Rng            => This.Rng,
+                                    Env            => This.Env,
+                                    State          => This.Pluck_State,
+                                    KS             => This.KS,
+                                    Pitch          => This.Pitch,
+                                    Do_Strike      => This.Do_Strike);
       end case;
    end Render;
+
+   ----------------
+   -- Set_Attack --
+   ----------------
+
+   procedure Set_Attack (This : in out Instance; A : U7) is
+   begin
+      Envelopes.AD.Set_Attack (This.Env, A);
+   end Set_Attack;
+
+   ---------------
+   -- Set_Decay --
+   ---------------
+
+   procedure Set_Decay (This : in out Instance; D : U7) is
+   begin
+      Envelopes.AD.Set_Decay (This.Env, D);
+   end Set_Decay;
 
    ------------
    -- Strike --

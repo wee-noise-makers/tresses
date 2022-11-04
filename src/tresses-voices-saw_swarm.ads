@@ -1,12 +1,15 @@
 with Tresses.Random;
-
+with Tresses.Envelopes.AD;
 with Tresses.Interfaces; use Tresses.Interfaces;
 
 package Tresses.Voices.Saw_Swarm
 with Preelaborate
 is
    type Instance
-   is new Pitched_Voice and Strike_Voice and Two_Params_Voice
+   is new Pitched_Voice
+      and Strike_Voice
+      and Two_Params_Voice
+      and Envelope_Voice
    with private;
 
    procedure Set_Detune (This : in out Instance; P0 : Param_Range);
@@ -22,6 +25,7 @@ is
      (Buffer                        :    out Mono_Buffer;
       Detune_Param, High_Pass_Param :        Param_Range;
       Rng                           : in out Random.Instance;
+      Env                           : in out Envelopes.AD.Instance;
       State                         : in out Saw_Swarm_State;
       Phase                         : in out U32;
       Pitch                         :        Pitch_Range;
@@ -43,6 +47,12 @@ is
    procedure Set_Param2 (This : in out Instance; P : Param_Range)
    renames Set_High_Pass;
 
+   overriding
+   procedure Set_Attack (This : in out Instance; A : U7);
+
+   overriding
+   procedure Set_Decay (This : in out Instance; D : U7);
+
 private
 
    type Phase_Array is array (0 .. 5) of U32;
@@ -56,10 +66,14 @@ private
    end record;
 
    type Instance
-   is new Pitched_Voice and Strike_Voice and Two_Params_Voice
+   is new Pitched_Voice
+      and Strike_Voice
+      and Two_Params_Voice
+      and Envelope_Voice
    with record
       State : Saw_Swarm_State;
 
+      Env   : Envelopes.AD.Instance;
       Rng   : Random.Instance;
 
       Pitch : Pitch_Range := Init_Pitch;

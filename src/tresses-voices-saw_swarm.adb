@@ -5,6 +5,7 @@
 --  Copyright 2012 Emilie Gillet.
 
 with Tresses.Random; use Tresses.Random;
+with Tresses.Envelopes.AD; use Tresses.Envelopes.AD;
 with Tresses.DSP;
 with Tresses.Resources;
 
@@ -50,6 +51,26 @@ package body Tresses.Voices.Saw_Swarm is
       This.Pitch := Pitch;
    end Set_Pitch;
 
+   ----------------
+   -- Set_Attack --
+   ----------------
+
+   overriding
+   procedure Set_Attack (This : in out Instance; A : U7) is
+   begin
+      Envelopes.AD.Set_Attack (This.Env, A);
+   end Set_Attack;
+
+   ---------------
+   -- Set_Decay --
+   ---------------
+
+   overriding
+   procedure Set_Decay (This : in out Instance; D : U7) is
+   begin
+      Envelopes.AD.Set_Decay (This.Env, D);
+   end Set_Decay;
+
    ------------
    -- Render --
    ------------
@@ -61,6 +82,7 @@ package body Tresses.Voices.Saw_Swarm is
       Render_Saw_Swarm (Buffer,
                         This.Detune_Param, This.High_Pass_Param,
                         This.Rng,
+                        This.Env,
                         This.State,
                         This.Phase,
                         This.Pitch,
@@ -75,6 +97,7 @@ package body Tresses.Voices.Saw_Swarm is
      (Buffer                        :    out Mono_Buffer;
       Detune_Param, High_Pass_Param :        Param_Range;
       Rng                           : in out Random.Instance;
+      Env                           : in out Envelopes.AD.Instance;
       State                         : in out Saw_Swarm_State;
       Phase                         : in out U32;
       Pitch                         :        Pitch_Range;
@@ -118,6 +141,8 @@ package body Tresses.Voices.Saw_Swarm is
          for Elt of State.Phase loop
             Elt := Get_Word (Rng);
          end loop;
+
+         Trigger (Env, Attack);
       end if;
 
       declare
@@ -180,6 +205,11 @@ package body Tresses.Voices.Saw_Swarm is
             BP := BP + ((F * HP) / 2**15);
 
             DSP.Clip_S16 (HP);
+
+            HP := (HP * S32 (Render (Env))) / 2**15;
+
+            DSP.Clip_S16 (HP);
+
             Buffer (Index) := S16 (HP);
             Index := Index + 1;
          end loop;

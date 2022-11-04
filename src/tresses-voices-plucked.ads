@@ -1,12 +1,16 @@
 with Tresses.Random;
-
+with Tresses.Envelopes.AD;
 with Tresses.Interfaces; use Tresses.Interfaces;
 
 package Tresses.Voices.Plucked
 with Preelaborate
 is
+
    type Instance
-   is new Pitched_Voice and Strike_Voice and Two_Params_Voice
+   is new Pitched_Voice
+      and Strike_Voice
+      and Two_Params_Voice
+      and Envelope_Voice
    with private;
 
    procedure Set_Decay (This : in out Instance; P0 : Param_Range);
@@ -19,13 +23,15 @@ is
    type Pluck_State is private;
 
    Number_Of_Voices : constant := 4;
+   Elt_Per_Voice    : constant := 1024 + 1;
    type KS_Array
-   is array (U32 range 0 .. (Number_Of_Voices * 1025) - 1) of S16;
+   is array (U32 range 0 .. (Number_Of_Voices * Elt_Per_Voice) - 1) of S16;
 
    procedure Render_Plucked
      (Buffer                      :    out Mono_Buffer;
       Decay_Param, Position_Param :        Param_Range;
       Rng                         : in out Random.Instance;
+      Env                         : in out Envelopes.AD.Instance;
       State                       : in out Pluck_State;
       KS                          : in out KS_Array;
       Pitch                       :        Pitch_Range;
@@ -47,6 +53,12 @@ is
    overriding
    procedure Set_Param2 (This : in out Instance; P : Param_Range)
    renames Set_Position;
+
+   overriding
+   procedure Set_Attack (This : in out Instance; A : U7);
+
+   overriding
+   procedure Set_Decay (This : in out Instance; D : U7);
 
 private
 
@@ -73,11 +85,15 @@ private
    end record;
 
    type Instance
-   is new Pitched_Voice and Strike_Voice and Two_Params_Voice
+   is new Pitched_Voice
+      and Strike_Voice
+      and Two_Params_Voice
+      and Envelope_Voice
    with record
       State : Pluck_State;
       KS    : KS_Array;
 
+      Env   : Envelopes.AD.Instance;
       Rng   : Random.Instance;
 
       Pitch : Pitch_Range := Init_Pitch;

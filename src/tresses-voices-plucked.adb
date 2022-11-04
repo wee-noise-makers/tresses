@@ -5,6 +5,7 @@
 --  Copyright 2012 Emilie Gillet.
 
 with Tresses.Random; use Tresses.Random;
+with Tresses.Envelopes.AD; use Tresses.Envelopes.AD;
 with Tresses.DSP;
 
 package body Tresses.Voices.Plucked is
@@ -49,6 +50,26 @@ package body Tresses.Voices.Plucked is
       This.Pitch := Pitch;
    end Set_Pitch;
 
+   ----------------
+   -- Set_Attack --
+   ----------------
+
+   overriding
+   procedure Set_Attack (This : in out Instance; A : U7) is
+   begin
+      Envelopes.AD.Set_Attack (This.Env, A);
+   end Set_Attack;
+
+   ---------------
+   -- Set_Decay --
+   ---------------
+
+   overriding
+   procedure Set_Decay (This : in out Instance; D : U7) is
+   begin
+      Envelopes.AD.Set_Decay (This.Env, D);
+   end Set_Decay;
+
    ------------
    -- Render --
    ------------
@@ -60,6 +81,7 @@ package body Tresses.Voices.Plucked is
       Render_Plucked (Buffer,
                       This.Decay_Param, This.Position_Param,
                       This.Rng,
+                      This.Env,
                       This.State,
                       This.KS,
                       This.Pitch,
@@ -74,6 +96,7 @@ package body Tresses.Voices.Plucked is
      (Buffer                      :    out Mono_Buffer;
       Decay_Param, Position_Param :        Param_Range;
       Rng                         : in out Random.Instance;
+      Env                         : in out Envelopes.AD.Instance;
       State                       : in out Pluck_State;
       KS                          : in out KS_Array;
       Pitch                       :        Pitch_Range;
@@ -117,7 +140,7 @@ package body Tresses.Voices.Plucked is
                P.Shift := P.Shift + 1;
             end loop;
 
-            P.Size := Shift_Right (1024, P.Shift);
+            P.Size := Shift_Right (Elt_Per_Voice - 1, P.Shift);
             P.Mask := P.Size - 1;
             P.Write_Ptr := 0;
             P.Max_Phase_Increment := Phase_Increment * 2;
@@ -128,6 +151,7 @@ package body Tresses.Voices.Plucked is
             P.Initialization_Ptr := (P.Size * (8_192 + Width)) / 2**16;
          end;
 
+         Trigger (Env, Attack);
       end if;
 
       declare
@@ -170,7 +194,7 @@ package body Tresses.Voices.Plucked is
             for I in State.Voices'Range loop
                declare
                   P : Pluck_Voice renames State.Voices (I);
-                  Offset : constant U32 := I * 1025;
+                  Offset : constant U32 := I * Elt_Per_Voice;
                   Excitation_Sample : S32;
                begin
                   --  Initialization: Just use a white noise sample and fill
@@ -209,7 +233,10 @@ package body Tresses.Voices.Plucked is
                            if (Probability and 16#FFFF#) < Update_Probability
                            then
                               Sum := A + B;
-                              Sum := (abs Sum) / 2**1;
+                              Sum := (if Sum < 0
+                                      then -(-Sum / 2)
+                                      else Sum / 2);
+
                               if Loss /= 0 then
                                  Sum := (Sum * (32_768 - S32 (Loss))) / 2**15;
                               end if;
@@ -229,6 +256,9 @@ package body Tresses.Voices.Plucked is
             end loop;
 
             DSP.Clip_S16 (Sample);
+            Sample := (Sample * S32 (Render (Env))) / 2**15;
+            DSP.Clip_S16 (Sample);
+
             Buffer (Index) := S16 ((Previous_Sample + Sample) / 2**1);
             Previous_Sample := Sample;
             Index := Index + 1;

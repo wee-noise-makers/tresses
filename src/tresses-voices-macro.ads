@@ -2,6 +2,7 @@ with Tresses.Voices.Saw_Swarm;
 with Tresses.Voices.Plucked;
 
 with Tresses.Random;
+with Tresses.Envelopes.AD;
 
 with Tresses.Interfaces; use Tresses.Interfaces;
 
@@ -23,6 +24,9 @@ is
 
    procedure Render (This   : in out Instance;
                      Buffer :    out Mono_Buffer);
+
+   procedure Set_Attack (This : in out Instance; A : U7);
+   procedure Set_Decay (This : in out Instance; D : U7);
 
    --  Interfaces --
 
@@ -50,7 +54,8 @@ private
       Saw_Swarm_State : Saw_Swarm.Saw_Swarm_State;
       Pluck_State : Plucked.Pluck_State;
       KS          : Plucked.KS_Array;
-      Rng : Random.Instance;
+      Rng         : Random.Instance;
+      Env         : Envelopes.AD.Instance;
 
       Pitch : Pitch_Range := Init_Pitch;
       Phase : U32 := 0;

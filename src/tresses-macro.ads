@@ -31,6 +31,9 @@ is
    procedure Render (This   : in out Instance;
                      Buffer :    out Mono_Buffer);
 
+   procedure Set_Attack (This : in out Instance; A : U7);
+   procedure Set_Decay (This : in out Instance; D : U7);
+
    --  Interfaces --
 
    overriding
