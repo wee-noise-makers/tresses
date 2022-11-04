@@ -1,4 +1,6 @@
 with Tresses.Drums.Cymbal;
+with Tresses.Drums.Percussion;
+with Tresses.Drums.Bell;
 
 with Tresses.Excitation;
 with Tresses.Random;
@@ -56,6 +58,8 @@ private
 
       Pitch : Pitch_Range := Init_Pitch;
 
+      Bell_State : Bell.Additive_State;
+      Perc_State : Percussion.Additive_State;
       LP_State : S32 := 0;
       Cym_State : Cymbal.Cymbal_State;
       Phase : U32 := 0;

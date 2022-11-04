@@ -142,10 +142,10 @@ Wavetables
 -----------------------------------------------------------------------------"""
 
 wavetable_data = []
-waves = map(ord, file('braids/data/waves.bin', 'rb').read())
+waves = map(ord, file('waves.bin', 'rb').read())
 wavetable_data.append(('waves', waves))
 
-wave_map = map(ord, file('braids/data/map.bin', 'rb').read())
+wave_map = map(ord, file('map.bin', 'rb').read())
 wavetable_data.append(('map', wave_map))
 
 

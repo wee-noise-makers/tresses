@@ -105,6 +105,23 @@ package body Tresses.Drums.Macro is
                                   Pitch => This.Pitch,
                                   Do_Init => This.Do_Init,
                                   Do_Strike => This.Do_Strike);
+
+         when Drum_Percussion =>
+            Percussion.Render_Percussion (Buffer,
+                                          Damping     => This.P1,
+                                          Coefficient => This.P2,
+                                          State       => This.Perc_State,
+                                          Rng         => This.Rng,
+                                          Pitch       => This.Pitch,
+                                          Do_Strike   => This.Do_Strike);
+
+         when Drum_Bell =>
+            Bell.Render_Bell (Buffer,
+                              Damping     => This.P1,
+                              Coefficient => This.P2,
+                              State       => This.Bell_State,
+                              Pitch       => This.Pitch,
+                              Do_Strike   => This.Do_Strike);
       end case;
    end Render;
 

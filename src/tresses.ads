@@ -35,11 +35,13 @@ is
    type Engines is (Drum_Kick,
                     Drum_Snare,
                     Drum_Cymbal,
+                    Drum_Percussion,
+                    Drum_Bell,
 
                     Voice_Plucked,
                     Voice_Saw_Swarm);
 
-   subtype Drum_Engines is Engines range Drum_Kick .. Drum_Cymbal;
+   subtype Drum_Engines is Engines range Drum_Kick .. Drum_Bell;
    subtype Synth_Engines is Engines range Voice_Plucked .. Voice_Saw_Swarm;
 
 private

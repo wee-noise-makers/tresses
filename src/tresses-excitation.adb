@@ -65,6 +65,10 @@ package body Tresses.Excitation is
          end if;
       end if;
 
+      if This.State > 32_767 then
+         This.State := 32_767;
+      end if;
+
       return (if This.Level < 0
               then -This.State
               else This.State);

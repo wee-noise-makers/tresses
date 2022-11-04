@@ -1,4 +1,6 @@
 with Tresses.Drums.Cymbal;
+with Tresses.Drums.Percussion;
+with Tresses.Drums.Bell;
 
 with Tresses.Excitation;
 with Tresses.Random;
@@ -61,6 +63,8 @@ private
 
       LP_State : S32 := 0;
       Cym_State : Drums.Cymbal.Cymbal_State;
+      Bell_State : Drums.Bell.Additive_State;
+      Perc_State : Drums.Percussion.Additive_State;
       Phase : U32 := 0;
 
       Saw_Swarm_State : Voices.Saw_Swarm.Saw_Swarm_State;

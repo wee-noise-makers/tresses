@@ -10,20 +10,30 @@ is
      with Inline_Always;
    --  Why 824? I don't know, yet...
 
+   function Interpolate824 (T     : Resources.Table_257_S16;
+                            Phase : U32)
+                            return S16
+     with Inline_Always;
+   --  Why 824? I don't know, yet...
+
    function Interpolate88 (T     : Resources.Table_257_S16;
                            Index : U16)
                            return S16
      with Inline_Always;
    --  Why 88? I don't know, yet...
 
+   function Clip (V : S32; First, Last : S32) return S32
+     with Post => Clip'Result in First .. Last;
+
+   procedure Clip (V : in out S32; First, Last : S32)
+     with Post => V in First .. Last;
+
    procedure Clip_S16 (V : in out S32)
-     with Inline_Always,
-     Post => V in -32_767 .. 32_767;
+     with Post => V in -32_767 .. 32_767;
    --  Clip a value to fit in a signed 16bit
 
    function Clip_S16 (V : S32) return S32
-     with Inline_Always,
-     Post => Clip_S16'Result in -32_767 .. 32_767;
+     with Post => Clip_S16'Result in -32_767 .. 32_767;
    --  Clip a value to fit in a signed 16bit
 
    function Mix (A, B, Balance : U16) return U16;

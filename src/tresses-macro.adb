@@ -106,6 +106,24 @@ package body Tresses.Macro is
                                         Do_Init => This.Do_Init,
                                         Do_Strike => This.Do_Strike);
 
+         when Drum_Percussion =>
+            Drums.Percussion.Render_Percussion
+              (Buffer,
+               Damping     => This.P1,
+               Coefficient => This.P2,
+               State       => This.Perc_State,
+               Rng         => This.Rng,
+               Pitch       => This.Pitch,
+               Do_Strike   => This.Do_Strike);
+
+         when Drum_Bell =>
+            Drums.Bell.Render_Bell (Buffer,
+                                    Damping     => This.P1,
+                                    Coefficient => This.P2,
+                                    State       => This.Bell_State,
+                                    Pitch       => This.Pitch,
+                                    Do_Strike   => This.Do_Strike);
+
          when Voice_Saw_Swarm =>
             Voices.Saw_Swarm.Render_Saw_Swarm
               (Buffer,

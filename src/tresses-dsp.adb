@@ -18,6 +18,21 @@ package body Tresses.DSP is
       return U16 (A + ((B - A) * V));
    end Interpolate824;
 
+   --------------------
+   -- Interpolate824 --
+   --------------------
+
+   function Interpolate824 (T : Table_257_S16; Phase : U32) return S16 is
+      P : constant U16 := U16 (Shift_Right (Phase, 24));
+      A : constant S32 := S32 (T (P));
+      B : constant S32 := S32 (T (P + 1));
+
+      V : constant S32 :=
+        S32 (Shift_Right (Shift_Right (Phase, 8) and 16#FFFF#, 16));
+   begin
+      return S16 (A + ((B - A) * V));
+   end Interpolate824;
+
    -------------------
    -- Interpolate88 --
    -------------------
@@ -32,6 +47,22 @@ package body Tresses.DSP is
       return S16 (A + ((B - A) * V));
    end Interpolate88;
 
+   ----------
+   -- Clip --
+   ----------
+
+   function Clip (V : S32; First, Last : S32) return S32
+   is (S32'Min (S32'Max (V, First), Last));
+
+   ----------
+   -- Clip --
+   ----------
+
+   procedure Clip (V : in out S32; First, Last : S32) is
+   begin
+      V := Clip (V, First, Last);
+   end Clip;
+
    --------------
    -- Clip_S16 --
    --------------
@@ -45,16 +76,9 @@ package body Tresses.DSP is
    -- Clip_S16 --
    --------------
 
-   function Clip_S16 (V : S32) return S32 is
-   begin
-      if V < -32_767 then
-         return  -32_767;
-      elsif V > 32_767 then
-         return 32_767;
-      else
-         return V;
-      end if;
-   end Clip_S16;
+   function Clip_S16 (V : S32) return S32
+   is (Clip (V, -32_767, 32_767));
+
    ---------
    -- Mix --
    ---------

@@ -46,7 +46,7 @@ includes = """
 import characters
 import lookup_tables
 # import samples
-# import waveforms
+import waveforms
 import waveshapers
 
 create_specialized_manager = True
@@ -59,8 +59,8 @@ resources = [
    'lookup_table_signed', 'LUT', 'S16', int, False),
   (lookup_tables.lookup_tables_32,
    'lookup_table_hr', 'LUT', 'U32', int, False),
-  # (waveforms.waveforms,
-  #  'waveform', 'WAV', 'int16_t', int, True),
+  (waveforms.waveforms,
+   'waveform', 'WAV', 'S16', int, True),
   (waveshapers.waveshapers,
    'waveshaper', 'WS', 'S16', int, True),
   # (waveforms.wavetable_data,
