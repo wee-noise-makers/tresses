@@ -1,5 +1,6 @@
 with Tresses.Drums.Kick;
 with Tresses.Drums.Snare;
+with Tresses.Voices.Analog_Macro;
 
 package body Tresses.Macro is
 
@@ -61,8 +62,8 @@ package body Tresses.Macro is
    -- Render --
    ------------
 
-   procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer)
+   procedure Render (This               : in out Instance;
+                     Buffer, Aux_Buffer :    out Mono_Buffer)
    is
    begin
       case This.Engine is
@@ -128,7 +129,7 @@ package body Tresses.Macro is
             Voices.Saw_Swarm.Render_Saw_Swarm
               (Buffer,
                Detune_Param    => This.P1,
-               High_Pass_Param => This.P1,
+               High_Pass_Param => This.P2,
                Rng             => This.Rng,
                Env             => This.Env,
                State           => This.Saw_Swarm_State,
@@ -140,13 +141,26 @@ package body Tresses.Macro is
             Voices.Plucked.Render_Plucked
               (Buffer,
                Decay_Param    => This.P1,
-               Position_Param => This.P1,
+               Position_Param => This.P2,
                Rng            => This.Rng,
                Env            => This.Env,
                State          => This.Pluck_State,
                KS             => This.KS,
                Pitch          => This.Pitch,
                Do_Strike      => This.Do_Strike);
+
+         when Voice_Analog_Buzz =>
+            Voices.Analog_Macro.Render_Analog_Macro
+              (Buffer_A =>  Buffer,
+               Buffer_B =>  Aux_Buffer,
+               Shape =>  Voices.Analog_Macro.Buzz,
+               Param1 =>  This.P1,
+               Param2 => This.P2,
+               Osc0 => This.Osc0,
+               Osc1 => This.Osc1,
+               Env => This.Env,
+               Pitch => This.Pitch,
+               Do_Strike => This.Do_Strike);
 
       end case;
    end Render;

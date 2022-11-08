@@ -6,6 +6,7 @@ with Tresses.Excitation;
 with Tresses.Random;
 with Tresses.Filters.SVF;
 with Tresses.Envelopes.AD;
+with Tresses.Analog_Oscillator;
 
 with Tresses.Voices.Saw_Swarm;
 with Tresses.Voices.Plucked;
@@ -28,8 +29,8 @@ is
 
    procedure Init (This : in out Instance);
 
-   procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer);
+   procedure Render (This               : in out Instance;
+                     Buffer, Aux_Buffer :    out Mono_Buffer);
 
    procedure Set_Attack (This : in out Instance; A : U7);
    procedure Set_Decay (This : in out Instance; D : U7);
@@ -59,6 +60,7 @@ private
 
       Pulse0, Pulse1, Pulse2, Pulse3 : Excitation.Instance;
       Filter0, Filter1, Filter3 : Filters.SVF.Instance;
+      Osc0, Osc1 : Analog_Oscillator.Instance;
       Rng : Random.Instance;
       Env : Envelopes.AD.Instance;
 

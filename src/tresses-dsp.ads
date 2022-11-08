@@ -22,6 +22,11 @@ is
      with Inline_Always;
    --  Why 88? I don't know, yet...
 
+   function Crossfade (Table_A, Table_B : Resources.Table_257_S16;
+                       Phase            : U32;
+                       Balance          : U16)
+                       return S16;
+
    function Clip (V : S32; First, Last : S32) return S32
      with Post => Clip'Result in First .. Last;
 

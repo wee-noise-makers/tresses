@@ -39,7 +39,8 @@ is
                     Drum_Bell,
 
                     Voice_Plucked,
-                    Voice_Saw_Swarm);
+                    Voice_Saw_Swarm,
+                    Voice_Analog_Buzz);
 
    subtype Drum_Engines is Engines range Drum_Kick .. Drum_Bell;
    subtype Synth_Engines is Engines range Voice_Plucked .. Voice_Saw_Swarm;

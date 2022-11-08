@@ -65,11 +65,11 @@ class ResourceEntry(object):
       return ""
     else:
       size = len(self._value)
-      if size < 2**8:
+      if size <= 2**8:
         index_type = "U8"
-      elif size < 2**16:
+      elif size <= 2**16:
         index_type = "U16"
-      elif size < 2**32:
+      elif size <= 2**32:
         index_type = "U32"
       else:
         raise Exception("table size:%d" % size)
@@ -86,7 +86,7 @@ class ResourceEntry(object):
     array_type = self.array_type
     name = self.variable_name
     storage = ' IN_RAM' if self._in_ram else ''
-    return '   %(name)s : constant %(array_type)s %(storage)s' % locals()
+    return '   %(name)s : aliased constant %(array_type)s %(storage)s' % locals()
     
   def Declare(self, f):
     if self._dupe_of == self._key:
