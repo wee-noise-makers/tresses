@@ -118,17 +118,17 @@ package body Tresses.Voices.Saw_Swarm is
 
             Saw_Detune : constant S32 := Detune * S32 (X - 3);
             Detune_Integral : constant S16 := S16 (Saw_Detune / 2**16);
-            Detune_Fractional : constant S32 := Saw_Detune and 16#FFFF#;
+            Detune_Fractional : constant U32 := U32 (Saw_Detune and 16#FFFF#);
 
-            Increment_A : constant S32 :=
-              S32 (Compute_Phase_Increment
-                   (S16 (Pitch) + Detune_Integral));
+            Increment_A : constant U32 :=
+              Compute_Phase_Increment
+                (S16 (Pitch) + Detune_Integral);
 
-            Increment_B : constant S32 :=
-              S32 (Compute_Phase_Increment
-                   (S16 (Pitch) + Detune_Integral + 1));
+            Increment_B : constant U32 :=
+              Compute_Phase_Increment
+                (S16 (Pitch) + Detune_Integral + 1);
          begin
-            Increments (X) := U32
+            Increments (X) :=
               (Increment_A +
                  (((Increment_B - Increment_A) * Detune_Fractional) / 2**16));
          end;
@@ -198,13 +198,15 @@ package body Tresses.Voices.Saw_Swarm is
                               U16 (Sample + 32_768)));
 
             Notch := Sample - ((BP * Damp) / 2**15);
+
             LP := LP + ((F * BP) / 2**15);
             DSP.Clip_S16 (LP);
 
             HP := Notch - LP;
-            BP := BP + ((F * HP) / 2**15);
-
             DSP.Clip_S16 (HP);
+
+            BP := BP + ((F * HP) / 2**15);
+            DSP.Clip_S16 (BP);
 
             HP := (HP * S32 (Render (Env))) / 2**15;
 

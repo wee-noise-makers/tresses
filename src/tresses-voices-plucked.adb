@@ -158,7 +158,7 @@ package body Tresses.Voices.Plucked is
          Current_String : Pluck_Voice renames State.Voices (State.Active);
 
          Update_Probability : U32;
-         Loss : S16;
+         Loss : S32;
 
          Index : Natural := Buffer'First;
          Previous_Sample : S32;
@@ -175,13 +175,13 @@ package body Tresses.Voices.Plucked is
             then 65535
             else 131_072 - (Shift_Right (U32 (Decay_Param), 3) * 31));
 
-         Loss := 4_096 - S16 (Shift_Right (Phase_Increment, 14));
+         Loss := 4_096 - S32 (Shift_Right (Phase_Increment, 14));
          if Loss < 256 then
             Loss := 256;
          end if;
 
          if Decay_Param < 16_384 then
-            Loss := S16 ((S32 (Loss) * (16_384 - S32 (Decay_Param))) / 2**14);
+            Loss := (Loss * (16_384 - S32 (Decay_Param))) / 2**14;
          else
             Loss := 0;
          end if;
@@ -238,7 +238,7 @@ package body Tresses.Voices.Plucked is
                                       else Sum / 2);
 
                               if Loss /= 0 then
-                                 Sum := (Sum * (32_768 - S32 (Loss))) / 2**15;
+                                 Sum := (Sum * (32_768 - Loss)) / 2**15;
                               end if;
                               KS (Offset + Write_Ptr) := S16 (Sum);
                            end if;

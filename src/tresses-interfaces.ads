@@ -10,15 +10,15 @@ is
 
    type Strike_Voice is interface;
 
-   procedure Strike (This : in out Pitched_Voice)
+   procedure Strike (This : in out Strike_Voice)
    is abstract;
 
    type Two_Params_Voice is interface;
 
-   procedure Set_Param1 (This : in out Pitched_Voice; P : Param_Range)
+   procedure Set_Param1 (This : in out Two_Params_Voice; P : Param_Range)
    is abstract;
 
-   procedure Set_Param2 (This : in out Pitched_Voice; P : Param_Range)
+   procedure Set_Param2 (This : in out Two_Params_Voice; P : Param_Range)
    is abstract;
 
    type Envelope_Voice is interface;

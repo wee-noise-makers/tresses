@@ -15,4 +15,4 @@ tresses = "~0.1.0-dev"
 tresses = { path='..' }
 
 [build-profiles]
-tresses = "development"
+tresses = "validation"
