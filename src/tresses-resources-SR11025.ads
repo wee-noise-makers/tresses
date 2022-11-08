@@ -11,16 +11,16 @@ with Preelaborate
 is
    SAMPLE_RATE : constant := 11025;
    type Table_257_S16 is array (U16 range 0 .. 256) of S16;
+   type Table_256_S16 is array (U8 range 0 .. 255) of S16;
    type Table_513_U16 is array (U16 range 0 .. 512) of U16;
    type Table_72_U16 is array (U8 range 0 .. 71) of U16;
    type Table_113_U16 is array (U8 range 0 .. 112) of U16;
    type Table_128_U32 is array (U8 range 0 .. 127) of U32;
    type Table_128_U16 is array (U8 range 0 .. 127) of U16;
-   type Table_256_S16 is array (U16 range 0 .. 255) of S16;
    type Table_97_U32 is array (U8 range 0 .. 96) of U32;
    type Table_129_U16 is array (U8 range 0 .. 128) of U16;
    type Table_257_U16 is array (U16 range 0 .. 256) of U16;
-   LUT_Resonator_Coefficient : constant Table_129_U16 := (
+   LUT_Resonator_Coefficient : aliased constant Table_129_U16 := (
       65533,  65532,  65532,  65531,
       65531,  65530,  65530,  65529,
       65528,  65527,  65526,  65525,
@@ -54,7 +54,7 @@ is
           0,      0,      0,      0,
           0,      0,      0,      0,
           0);
-   LUT_Resonator_Scale : constant Table_129_U16 := (
+   LUT_Resonator_Scale : aliased constant Table_129_U16 := (
           8,      9,     10,     11,
          11,     13,     14,     15,
          16,     18,     20,     21,
@@ -88,7 +88,7 @@ is
         256,    256,    256,    256,
         256,    256,    256,    256,
         256);
-   LUT_Svf_Cutoff : constant Table_257_U16 := (
+   LUT_Svf_Cutoff : aliased constant Table_257_U16 := (
         152,    161,    171,    181,
         192,    203,    215,    228,
         242,    256,    272,    288,
@@ -154,7 +154,7 @@ is
       25078,  25078,  25078,  25078,
       25078,  25078,  25078,  25078,
       25078);
-   LUT_Svf_Damp : constant Table_257_U16 := (
+   LUT_Svf_Damp : aliased constant Table_257_U16 := (
       65534,  49213,  46125,  44055,
       42453,  41129,  39991,  38988,
       38086,  37266,  36512,  35812,
@@ -220,7 +220,7 @@ is
         769,    704,    639,    574,
         510,    445,    381,    317,
         253);
-   LUT_Svf_Scale : constant Table_257_U16 := (
+   LUT_Svf_Scale : aliased constant Table_257_U16 := (
       32767,  28395,  27490,  26866,
       26373,  25958,  25596,  25273,
       24979,  24709,  24458,  24222,
@@ -286,7 +286,7 @@ is
        3550,   3397,   3236,   3068,
        2890,   2701,   2499,   2280,
        2038);
-   LUT_Granular_Envelope : constant Table_513_U16 := (
+   LUT_Granular_Envelope : aliased constant Table_513_U16 := (
           0,      4,     19,     44,
          78,    123,    177,    241,
         314,    398,    490,    593,
@@ -416,7 +416,7 @@ is
           0,      0,      0,      0,
           0,      0,      0,      0,
           0);
-   LUT_Granular_Envelope_Rate : constant Table_257_U16 := (
+   LUT_Granular_Envelope_Rate : aliased constant Table_257_U16 := (
        2048,   2070,   2092,   2115,
        2138,   2161,   2185,   2209,
        2233,   2257,   2282,   2307,
@@ -482,7 +482,7 @@ is
       30048,  30375,  30706,  31040,
       31378,  31720,  32065,  32415,
       32768);
-   LUT_Bowing_Envelope : constant Table_113_U16 := (
+   LUT_Bowing_Envelope : aliased constant Table_113_U16 := (
           0,     97,    195,    293,
         391,    489,    586,    684,
         782,    880,    978,   1075,
@@ -512,7 +512,7 @@ is
        5242,   5242,   5242,   5242,
        5242,   5242,   5242,   5242,
        5242);
-   LUT_Bowing_Friction : constant Table_257_U16 := (
+   LUT_Bowing_Friction : aliased constant Table_257_U16 := (
       32768,  32768,  32768,  32768,
       32768,  32768,  32768,  32768,
       32768,  32768,  32768,  32768,
@@ -578,7 +578,7 @@ is
          71,     70,     69,     68,
          67,     66,     66,     65,
          64);
-   LUT_Blowing_Envelope : constant Table_72_U16 := (
+   LUT_Blowing_Envelope : aliased constant Table_72_U16 := (
           0,   1774,   3549,   5324,
        7099,   8874,  10649,  12424,
       14199,  15974,  17749,  19524,
@@ -597,7 +597,7 @@ is
       17039,  17039,  17039,  17039,
       17039,  17039,  17039,  17039,
       17039,  17039,  17039,  17039);
-   LUT_Flute_Body_Filter : constant Table_128_U16 := (
+   LUT_Flute_Body_Filter : aliased constant Table_128_U16 := (
          30,     32,     34,     36,
          38,     40,     43,     45,
          48,     51,     54,     57,
@@ -630,7 +630,7 @@ is
        2867,   2867,   2867,   2867,
        2867,   2867,   2867,   2867,
        2867,   2867,   2867,   2867);
-   LUT_Fm_Frequency_Quantizer : constant Table_129_U16 := (
+   LUT_Fm_Frequency_Quantizer : aliased constant Table_129_U16 := (
        7168,   7168,   7168,   7360,
        7552,   7744,   7936,   8128,
        8320,   8512,   8704,   8896,
@@ -664,7 +664,7 @@ is
       24064,  24064,  24448,  24832,
       25216,  25600,  25600,  25600,
       25600);
-   LUT_Vco_Detune : constant Table_257_U16 := (
+   LUT_Vco_Detune : aliased constant Table_257_U16 := (
          10,     10,     10,     47,
         116,    184,    252,    321,
         389,    456,    524,    592,
@@ -730,7 +730,7 @@ is
       15681,  15739,  15797,  15855,
       15913,  15971,  16029,  16086,
       16143);
-   LUT_Bell : constant Table_257_U16 := (
+   LUT_Bell : aliased constant Table_257_U16 := (
           0,    670,   2655,   5873,
       10191,  15434,  21387,  27805,
       34427,  40980,  47198,  52824,
@@ -796,7 +796,7 @@ is
         138,    101,     70,     45,
          25,     11,      2,      0,
           0);
-   LUT_Env_Expo : constant Table_257_U16 := (
+   LUT_Env_Expo : aliased constant Table_257_U16 := (
           0,   1034,   2053,   3057,
        4044,   5016,   5974,   6916,
        7844,   8757,   9656,  10542,
@@ -862,7 +862,7 @@ is
       65372,  65393,  65414,  65435,
       65456,  65476,  65496,  65515,
       65535);
-   LUT_Blowing_Jet : constant Table_257_S16 := (
+   LUT_Blowing_Jet : aliased constant Table_257_S16 := (
           0,   -255,   -511,   -767,
       -1022,  -1278,  -1532,  -1786,
       -2039,  -2292,  -2544,  -2795,
@@ -928,7 +928,7 @@ is
       32767,  32767,  32767,  32767,
       32767,  32767,  32767,  32767,
       32767);
-   LUT_Oscillator_Increments : constant Table_97_U32 := (
+   LUT_Oscillator_Increments : aliased constant Table_97_U32 := (
      5177237460, 5214753857, 5252542113, 5290604199,
      5328942098, 5367557809, 5406453345, 5445630735,
      5485092020, 5524839258, 5564874521, 5605199896,
@@ -954,7 +954,7 @@ is
      9773322900, 9844144426, 9915479155, 9987330804,
      10059703120, 10132599876, 10206024871, 10279981935,
      10354474921);
-   LUT_Oscillator_Delays : constant Table_97_U32 := (
+   LUT_Oscillator_Delays : aliased constant Table_97_U32 := (
      222690481, 221088384, 219497812, 217918683,
      216350916, 214794427, 213249135, 211714962,
      210191825, 208679646, 207178347, 205687848,
@@ -980,7 +980,7 @@ is
      117966173, 117117491, 116274915, 115438401,
      114607905, 113783384, 112964794, 112152094,
      111345240);
-   LUT_Env_Portamento_Increments : constant Table_128_U32 := (
+   LUT_Env_Portamento_Increments : aliased constant Table_128_U32 := (
      1431655765, 1268044523, 1125969046, 1002235527,
      894175039, 799549174, 716474041, 643358801,
      578855747, 521819601, 471274193, 426385099,
@@ -1013,7 +1013,7 @@ is
      1132594, 1093597, 1056169, 1020237,
      985732, 952591, 920751, 890155,
      860746, 832472, 805283, 779132);
-   WAV_Formant_Sine : constant Table_256_S16 := (
+   WAV_Formant_Sine : aliased constant Table_256_S16 := (
           0,      0,      0,      0,
           0,      0,      0,      0,
           0,      0,      0,      0,
@@ -1078,7 +1078,7 @@ is
          -3,     -4,     -5,     -6,
          -7,     -8,    -10,    -12,
         -14,    -17,    -20,    -24);
-   WAV_Formant_Square : constant Table_256_S16 := (
+   WAV_Formant_Square : aliased constant Table_256_S16 := (
           0,      1,      1,      2,
           2,      3,      3,      4,
           4,      5,      6,      8,
@@ -1143,7 +1143,7 @@ is
          -2,     -3,     -3,     -4,
          -4,     -5,     -6,     -8,
          -9,    -11,    -13,    -16);
-   WAV_Sine : constant Table_257_S16 := (
+   WAV_Sine : aliased constant Table_257_S16 := (
      -32512, -32502, -32473, -32423,
      -32356, -32265, -32160, -32031,
      -31885, -31719, -31533, -31331,
@@ -1209,7 +1209,7 @@ is
      -31885, -32031, -32160, -32265,
      -32356, -32423, -32473, -32502,
      -32512);
-   WAV_Bandlimited_Comb_0 : constant Table_257_S16 := (
+   WAV_Bandlimited_Comb_0 : aliased constant Table_257_S16 := (
        -137,   -161,   -168,   -156,
        -130,    -90,    -45,     -3,
          26,     43,     36,     10,
@@ -1275,7 +1275,7 @@ is
         -26,      3,     20,     22,
           6,    -23,    -61,   -102,
        -137);
-   WAV_Bandlimited_Comb_1 : constant Table_257_S16 := (
+   WAV_Bandlimited_Comb_1 : aliased constant Table_257_S16 := (
        -218,    -71,    -60,   -231,
          53,   -260,    -12,   -119,
        -189,     42,   -286,     44,
@@ -1341,7 +1341,7 @@ is
          15,   -250,      9,   -166,
        -129,    -13,   -252,     41,
        -218);
-   WAV_Bandlimited_Comb_2 : constant Table_257_S16 := (
+   WAV_Bandlimited_Comb_2 : aliased constant Table_257_S16 := (
        -347,     76,   -338,   -201,
          36,   -432,    -30,   -104,
        -415,     90,   -287,   -287,
@@ -1407,7 +1407,7 @@ is
        -280,     48,   -368,   -130,
         -33,   -409,      9,   -182,
        -347);
-   WAV_Bandlimited_Comb_3 : constant Table_257_S16 := (
+   WAV_Bandlimited_Comb_3 : aliased constant Table_257_S16 := (
        -553,   -586,    -60,     91,
        -415,   -683,   -224,    156,
        -232,   -711,   -417,    142,
@@ -1473,7 +1473,7 @@ is
        -633,   -279,     87,   -189,
        -628,   -442,     48,    -33,
        -553);
-   WAV_Bandlimited_Comb_4 : constant Table_257_S16 := (
+   WAV_Bandlimited_Comb_4 : aliased constant Table_257_S16 := (
           0,    185,   -125,   -700,
       -1083,   -963,   -428,    116,
         225,   -197,   -827,  -1171,
@@ -1539,7 +1539,7 @@ is
        -610,   -103,    142,    -74,
        -588,   -999,   -974,   -526,
           0);
-   WAV_Bandlimited_Comb_5 : constant Table_257_S16 := (
+   WAV_Bandlimited_Comb_5 : aliased constant Table_257_S16 := (
       -1419,  -1704,  -1670,  -1320,
        -759,   -165,    267,    393,
         162,   -364,  -1014,  -1588,
@@ -1605,7 +1605,7 @@ is
       -1291,   -809,   -284,    114,
         255,     80,   -353,   -912,
       -1419);
-   WAV_Bandlimited_Comb_6 : constant Table_257_S16 := (
+   WAV_Bandlimited_Comb_6 : aliased constant Table_257_S16 := (
       -2331,  -1858,  -1285,   -683,
        -123,    320,    587,    639,
         466,     80,   -477,  -1138,
@@ -1671,7 +1671,7 @@ is
        -448,   -954,  -1500,  -2013,
       -2428,  -2695,  -2771,  -2648,
       -2330);
-   WAV_Bandlimited_Comb_7 : constant Table_257_S16 := (
+   WAV_Bandlimited_Comb_7 : aliased constant Table_257_S16 := (
           0,    399,    686,    844,
         862,    730,    459,     53,
        -469,  -1077,  -1748,  -2443,
@@ -1737,7 +1737,7 @@ is
       -3897,  -3603,  -3205,  -2722,
       -2180,  -1608,  -1032,   -486,
           0);
-   WAV_Bandlimited_Comb_8 : constant Table_257_S16 := (
+   WAV_Bandlimited_Comb_8 : aliased constant Table_257_S16 := (
           0,    457,    858,   1194,
        1456,   1640,   1738,   1748,
        1666,   1490,   1224,    864,
@@ -1803,7 +1803,7 @@ is
       -4508,  -3956,  -3384,  -2793,
       -2203,  -1616,  -1046,   -505,
           0);
-   WAV_Bandlimited_Comb_9 : constant Table_257_S16 := (
+   WAV_Bandlimited_Comb_9 : aliased constant Table_257_S16 := (
      -10865, -11388, -11877, -12336,
      -12752, -13130, -13458, -13740,
      -13967, -14139, -14252, -14305,
@@ -1869,7 +1869,7 @@ is
       -6103,  -6717,  -7332,  -7948,
       -8558,  -9161,  -9747, -10317,
      -10866);
-   WAV_Bandlimited_Comb_10 : constant Table_257_S16 := (
+   WAV_Bandlimited_Comb_10 : aliased constant Table_257_S16 := (
      -16288, -15866, -15406, -14909,
      -14370, -13796, -13184, -12537,
      -11852, -11136, -10384,  -9599,
@@ -1935,7 +1935,7 @@ is
      -18234, -18127, -17982, -17800,
      -17576, -17313, -17011, -16670,
      -16287);
-   WAV_Bandlimited_Comb_11 : constant Table_257_S16 := (
+   WAV_Bandlimited_Comb_11 : aliased constant Table_257_S16 := (
           0,    804,   1608,   2410,
        3212,   4011,   4808,   5601,
        6393,   7178,   7963,   8738,
@@ -2001,7 +2001,7 @@ is
       -6393,  -5601,  -4808,  -4012,
       -3210,  -2411,  -1608,   -804,
           0);
-   WS_Moderate_Overdrive : constant Table_257_S16 := (
+   WS_Moderate_Overdrive : aliased constant Table_257_S16 := (
      -32766, -32728, -32689, -32648,
      -32607, -32564, -32519, -32474,
      -32427, -32378, -32328, -32277,
@@ -2067,7 +2067,7 @@ is
       32427,  32474,  32520,  32564,
       32607,  32648,  32689,  32728,
       32728);
-   WS_Violent_Overdrive : constant Table_257_S16 := (
+   WS_Violent_Overdrive : aliased constant Table_257_S16 := (
      -32766, -32766, -32766, -32766,
      -32766, -32766, -32766, -32766,
      -32766, -32766, -32766, -32766,
@@ -2133,7 +2133,7 @@ is
       32766,  32766,  32766,  32766,
       32766,  32766,  32766,  32766,
       32766);
-   WS_Sine_Fold : constant Table_257_S16 := (
+   WS_Sine_Fold : aliased constant Table_257_S16 := (
      -32766, -32682, -32595, -32504,
      -32410, -32315, -32218, -32121,
      -32025, -31931, -31840, -31754,
@@ -2199,7 +2199,7 @@ is
       32025,  32121,  32218,  32315,
       32410,  32504,  32595,  32682,
       32682);
-   WS_Tri_Fold : constant Table_257_S16 := (
+   WS_Tri_Fold : aliased constant Table_257_S16 := (
         -78, -20070, -31636, -30481,
      -17545,   1825,  20257,  31198,
       31144,  20555,   3335, -14748,

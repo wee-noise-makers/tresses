@@ -47,6 +47,21 @@ package body Tresses.DSP is
       return S16 (A + ((B - A) * V));
    end Interpolate88;
 
+   ---------------
+   -- Crossfade --
+   ---------------
+
+   function Crossfade (Table_A, Table_B : Resources.Table_257_S16;
+                       Phase            : U32;
+                       Balance          : U16)
+                       return S16
+   is
+      A : constant S32 := S32 (Interpolate824 (Table_A, Phase));
+      B : constant S32 := S32 (Interpolate824 (Table_B, Phase));
+   begin
+      return S16 (A + ((B - A) * S32 (Balance)) / 2**16);
+   end Crossfade;
+
    ----------
    -- Clip --
    ----------
