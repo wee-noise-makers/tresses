@@ -1,3 +1,5 @@
+with Tresses.Resources;
+
 package Tresses.Envelopes.AD
 with Preelaborate
 is
@@ -23,8 +25,15 @@ private
    type Target_Array is array (Segment_Kind) of U16;
 
    type Instance is record
-      Increment : Incr_Array := (others => 0);
-      Target : Target_Array := (Attack => 65_535, Decay => 0, Dead => 0);
+      Increment : Incr_Array :=
+        (Attack =>
+           Resources.LUT_Env_Portamento_Increments (U8 (U7'First)),
+         Decay =>
+           Resources.LUT_Env_Portamento_Increments (U8 (U7'Last)),
+         others => 0);
+      Target : Target_Array := (Attack => U16 (S16'Last),
+                                Decay => 0,
+                                Dead => 0);
       Segement : Segment_Kind := Segment_Kind'First;
       A, B, Value : U16 := 0;
       Phase : U32 := 0;
