@@ -59,6 +59,8 @@ private
       Env         : Envelopes.AD.Instance;
       Osc0, Osc1  : Analog_Oscillator.Instance;
 
+      LP_State : S32 := 0;
+
       Pitch : Pitch_Range := Init_Pitch;
       Phase : U32 := 0;
 

@@ -23,6 +23,36 @@ package body Tresses.Analog_Oscillator is
       13 => WAV_Bandlimited_Comb_13'Access,
       14 => WAV_Bandlimited_Comb_14'Access);
 
+   ----------------------
+   -- This_Blep_Sample --
+   ----------------------
+
+   function This_Blep_Sample (T : U32) return S32 is
+      X : U32 := T;
+   begin
+      if X > 65_535 then
+         X := 65_535;
+      end if;
+
+      return S32 ((X * X) / 2**18);
+   end This_Blep_Sample;
+
+   ----------------------
+   -- Next_Blep_Sample --
+   ----------------------
+
+   function Next_Blep_Sample (T : U32) return S32 is
+      X : U32 := T;
+   begin
+      if X > 65_535 then
+         X := 65_535;
+      end if;
+
+      X := 65_535 - X;
+
+      return -S32 ((X * X) / 2**18);
+   end Next_Blep_Sample;
+
    ----------
    -- Init --
    ----------
@@ -36,7 +66,6 @@ package body Tresses.Analog_Oscillator is
       This.Params := (others => 0);
       This.Prev_Params := (others => 0);
       This.Discontinuity_Depth := -16_383;
-      This.Pitch := Init_Pitch;
       This.Next_Sample := 0;
    end Init;
 
@@ -66,6 +95,10 @@ package body Tresses.Analog_Oscillator is
         DSP.Compute_Phase_Increment (S16 (This.Pitch));
 
       case This.Shape is
+         when Saw =>
+            This.Render_Saw (Buffer);
+         when Square =>
+            This.Render_Square (Buffer);
          when Triangle =>
             This.Render_Triangle (Buffer);
          when Sine =>
@@ -75,8 +108,6 @@ package body Tresses.Analog_Oscillator is
          when Sine_Fold =>
             This.Render_Sine_Fold (Buffer);
          when Buzz =>
-            This.Render_Buzz (Buffer);
-         when others =>
             This.Render_Buzz (Buffer);
       end case;
    end Render;
@@ -201,6 +232,150 @@ package body Tresses.Analog_Oscillator is
    begin
       Osc.Prev_Phase_Increment := This.Phase_Increment;
    end End_Interpolate;
+
+   ----------------
+   -- Render_Saw --
+   ----------------
+
+   procedure Render_Saw (This   : in out Instance;
+                         Buffer :    out Mono_Buffer)
+   is
+      Phase_Incr_Interp : Phase_Increment_Interpolator;
+      Phase_Increment : U32;
+      Next_Sample : S32 := S32 (This.Next_Sample);
+
+   begin
+      Begin_Interpolate (Phase_Incr_Interp,
+                         This,
+                         U32 (Buffer'Length));
+
+      for Sample of Buffer loop
+         Phase_Increment := Interpolate (Phase_Incr_Interp);
+         declare
+            --  Sync_Reset : Boolean := False;
+            Self_Reset : Boolean := False;
+            --  Transition_During_Reset : Boolean := False;
+
+            --  Reset_Time : U32 := 0;
+            T : U32;
+
+            This_Sample : S32 := Next_Sample;
+         begin
+            Next_Sample := 0;
+
+            --  TODO sync_in ?
+
+            This.Phase := This.Phase + Phase_Increment;
+
+            if This.Phase < Phase_Increment then
+               Self_Reset := True;
+            end if;
+
+            --  TODO sync_out ?
+
+            if Self_Reset then
+               T := This.Phase / Shift_Right (Phase_Increment, 16);
+               This_Sample := This_Sample - This_Blep_Sample (T);
+               Next_Sample := Next_Sample - Next_Blep_Sample (T);
+            end if;
+
+            --  TODO sync_reset ?
+
+            Next_Sample := Next_Sample + S32 (This.Phase / 2**17);
+
+            Sample := S16 ((This_Sample - 16_384) * 2);
+         end;
+      end loop;
+
+      This.Next_Sample := S16 (Next_Sample);
+
+      End_Interpolate (Phase_Incr_Interp, This);
+
+   end Render_Saw;
+
+   -------------------
+   -- Render_Square --
+   -------------------
+
+   procedure Render_Square (This   : in out Instance;
+                            Buffer :    out Mono_Buffer)
+   is
+      Phase_Incr_Interp : Phase_Increment_Interpolator;
+      Phase_Increment : U32;
+      Param : constant Param_Range := (if This.Params (0) > 32_000
+                                       then 32_000
+                                       else This.Params (0));
+
+      Next_Sample : S32 := S32 (This.Next_Sample);
+
+   begin
+      Begin_Interpolate (Phase_Incr_Interp,
+                         This,
+                         U32 (Buffer'Length));
+
+      for Sample of Buffer loop
+         Phase_Increment := Interpolate (Phase_Incr_Interp);
+         declare
+            --  Sync_Reset : Boolean := False;
+            Self_Reset : Boolean := False;
+            --  Transition_During_Reset : Boolean := False;
+
+            PW : constant U32 :=  Shift_Left (32_768 - U32 (Param), 16);
+            --  Pulse Width
+
+            --  Reset_Time : U32 := 0;
+            T : U32;
+
+            This_Sample : S32 := Next_Sample;
+         begin
+            Next_Sample := 0;
+
+            --  TODO sync_in ?
+
+            This.Phase := This.Phase + Phase_Increment;
+
+            if This.Phase < Phase_Increment then
+               Self_Reset := True;
+            end if;
+
+            --  TODO sync_out ?
+
+            loop
+               if not This.High then
+                  exit when This.Phase < PW;
+
+                  T := (This.Phase - PW)  / Shift_Right (Phase_Increment, 16);
+                  This_Sample := This_Sample + This_Blep_Sample (T);
+                  Next_Sample := Next_Sample + Next_Blep_Sample (T);
+                  This.High := True;
+               end if;
+
+               if This.High then
+                  exit when not Self_Reset;
+                  Self_Reset := False;
+
+                  T := This.Phase / Shift_Right (Phase_Increment, 16);
+                  This_Sample := This_Sample - This_Blep_Sample (T);
+                  Next_Sample := Next_Sample - Next_Blep_Sample (T);
+                  This.High := False;
+               end if;
+            end loop;
+
+            --  TODO sync_reset ?
+
+            Next_Sample := Next_Sample + (if This.Phase < PW
+                                          then 0
+                                          else 32_767);
+
+            Sample := S16 ((This_Sample - 16_384) * 2);
+         end;
+      end loop;
+
+      This.Next_Sample := S16 (Next_Sample);
+
+      End_Interpolate (Phase_Incr_Interp, This);
+
+   end Render_Square;
 
    ---------------------
    -- Render_Triangle --

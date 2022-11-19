@@ -76,6 +76,7 @@ package body Tresses.Voices.Macro is
                Phase           => This.Phase,
                Pitch           => This.Pitch,
                Do_Strike       => This.Do_Strike);
+
          when Voice_Plucked =>
             Plucked.Render_Plucked (Buffer,
                                     Decay_Param    => This.P1,
@@ -87,19 +88,30 @@ package body Tresses.Voices.Macro is
                                     Pitch          => This.Pitch,
                                     Do_Strike      => This.Do_Strike);
 
-         when Voice_Analog_Buzz =>
-            Voices.Analog_Macro.Render_Analog_Macro
-              (Buffer_A =>  Buffer,
-               Buffer_B =>  Aux_Buffer,
-               Shape =>  Voices.Analog_Macro.Buzz,
-               Param1 =>  This.P1,
-               Param2 => This.P2,
-               Osc0 => This.Osc0,
-               Osc1 => This.Osc1,
-               Env => This.Env,
-               Pitch => This.Pitch,
-               Do_Strike => This.Do_Strike);
+         when Voice_Analog_Buzz | Voice_Analog_Morph =>
+            declare
+               use Voices.Analog_Macro;
 
+               Shape : constant Analog_Macro_Shape :=
+                 (case This.Engine is
+                     when Voice_Analog_Buzz => Buzz,
+                     when Voice_Analog_Morph => Morph,
+                     when others => raise Program_Error);
+
+            begin
+               Voices.Analog_Macro.Render_Analog_Macro
+                 (Buffer_A =>  Buffer,
+                  Buffer_B =>  Aux_Buffer,
+                  Shape => Shape,
+                  Param1 =>  This.P1,
+                  Param2 => This.P2,
+                  Osc0 => This.Osc0,
+                  Osc1 => This.Osc1,
+                  Env => This.Env,
+                  LP_State => This.LP_State,
+                  Pitch => This.Pitch,
+                  Do_Strike => This.Do_Strike);
+            end;
       end case;
    end Render;
 

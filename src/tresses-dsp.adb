@@ -105,6 +105,18 @@ package body Tresses.DSP is
                   16));
    end Mix;
 
+   ---------
+   -- Mix --
+   ---------
+
+   function Mix (A, B : S16; Balance : U16) return S16 is
+      A32 : constant S32 := S32 (A);
+      B32 : constant S32 := S32 (B);
+      Balance32 : constant S32 := S32 (Balance);
+   begin
+      return S16 (((A32 * (65_535 - Balance32)) + (B32 * Balance32)) / 2**16);
+   end Mix;
+
    -----------
    -- "and" --
    -----------

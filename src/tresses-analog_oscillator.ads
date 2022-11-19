@@ -4,7 +4,7 @@ package Tresses.Analog_Oscillator
 with Preelaborate
 is
 
-   type Shape_Kind is (Saw, Variable_Saw, Csaw, Square, Triangle, Sine,
+   type Shape_Kind is (Saw, Square, Triangle, Sine,
                        Triangle_Fold, Sine_Fold, Buzz);
 
    type Param_Id is range 0 .. 1;
@@ -23,10 +23,11 @@ is
       Phase      : U32 := 0;
       Phase_Increment : U32 := 1;
       Prev_Phase_Increment : U32 := 1;
-      High : Boolean := False;
+      High : Boolean := False; -- For square wave, saw, variable saw
 
       Discontinuity_Depth : S16 := 0;
       Next_Sample : Mono_Point := 0;
+
    end record;
 
    procedure Init (This : in out Instance);
@@ -87,6 +88,12 @@ private
    procedure End_Interpolate
      (This : in out Phase_Increment_Interpolator;
       Osc  : in out Instance);
+
+   procedure Render_Saw (This   : in out Instance;
+                         Buffer :    out Mono_Buffer);
+
+   procedure Render_Square (This   : in out Instance;
+                            Buffer :    out Mono_Buffer);
 
    procedure Render_Triangle (This   : in out Instance;
                               Buffer :    out Mono_Buffer);

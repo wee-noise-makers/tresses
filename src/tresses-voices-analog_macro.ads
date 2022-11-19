@@ -6,7 +6,7 @@ package Tresses.Voices.Analog_Macro
 with Preelaborate
 is
 
-   type Analog_Macro_Shape is (Buzz);
+   type Analog_Macro_Shape is (Morph, Buzz);
 
    type Instance
    is new Pitched_Voice
@@ -29,6 +29,7 @@ is
       Param1, Param2     :        Param_Range;
       Osc0, Osc1         : in out Analog_Oscillator.Instance;
       Env                : in out Envelopes.AD.Instance;
+      LP_State           : in out S32;
       Pitch              :        Pitch_Range;
       Do_Strike          : in out Boolean)
      with Pre => Buffer_A'First = Buffer_B'First
@@ -71,6 +72,7 @@ private
       Pitch : Pitch_Range := Init_Pitch;
 
       Do_Strike : Boolean := False;
+      LP_State : S32 := 0;
 
       Param1, Param2 : Param_Range := 0;
    end record;
