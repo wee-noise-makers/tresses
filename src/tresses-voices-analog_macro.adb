@@ -58,7 +58,17 @@ package body Tresses.Voices.Analog_Macro is
 
          Osc1.Set_Param1 (Param1);
          Osc1.Set_Shape (Analog_Oscillator.Buzz);
-         Osc1.Set_Pitch (Pitch + Pitch_Range (Param1 / 2**8));
+
+         declare
+            Pitch_Shift : constant Pitch_Range :=
+              Pitch_Range (Param1 / 2**8);
+         begin
+            if Pitch <= Pitch_Range'Last - Pitch_Shift then
+               Osc1.Set_Pitch (Pitch + Pitch_Shift);
+            else
+               Osc1.Set_Pitch (Pitch);
+            end if;
+         end;
 
          Osc0.Render (Buffer_A);
          Osc1.Render (Buffer_B);

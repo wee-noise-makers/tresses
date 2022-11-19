@@ -1,3 +1,5 @@
+with Tresses.Voices.Analog_Macro;
+
 package body Tresses.Voices.Macro is
 
    ------------
@@ -58,8 +60,8 @@ package body Tresses.Voices.Macro is
    -- Render --
    ------------
 
-   procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer)
+   procedure Render (This               : in out Instance;
+                     Buffer, Aux_Buffer :    out Mono_Buffer)
    is
    begin
       case This.Engine is
@@ -84,6 +86,20 @@ package body Tresses.Voices.Macro is
                                     KS             => This.KS,
                                     Pitch          => This.Pitch,
                                     Do_Strike      => This.Do_Strike);
+
+         when Voice_Analog_Buzz =>
+            Voices.Analog_Macro.Render_Analog_Macro
+              (Buffer_A =>  Buffer,
+               Buffer_B =>  Aux_Buffer,
+               Shape =>  Voices.Analog_Macro.Buzz,
+               Param1 =>  This.P1,
+               Param2 => This.P2,
+               Osc0 => This.Osc0,
+               Osc1 => This.Osc1,
+               Env => This.Env,
+               Pitch => This.Pitch,
+               Do_Strike => This.Do_Strike);
+
       end case;
    end Render;
 

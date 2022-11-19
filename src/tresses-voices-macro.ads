@@ -3,6 +3,7 @@ with Tresses.Voices.Plucked;
 
 with Tresses.Random;
 with Tresses.Envelopes.AD;
+with Tresses.Analog_Oscillator;
 
 with Tresses.Interfaces; use Tresses.Interfaces;
 
@@ -22,8 +23,8 @@ is
 
    procedure Init (This : in out Instance);
 
-   procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer);
+   procedure Render (This               : in out Instance;
+                     Buffer, Aux_Buffer :    out Mono_Buffer);
 
    procedure Set_Attack (This : in out Instance; A : U7);
    procedure Set_Decay (This : in out Instance; D : U7);
@@ -56,6 +57,7 @@ private
       KS          : Plucked.KS_Array;
       Rng         : Random.Instance;
       Env         : Envelopes.AD.Instance;
+      Osc0, Osc1  : Analog_Oscillator.Instance;
 
       Pitch : Pitch_Range := Init_Pitch;
       Phase : U32 := 0;

@@ -43,7 +43,7 @@ is
                     Voice_Analog_Buzz);
 
    subtype Drum_Engines is Engines range Drum_Kick .. Drum_Bell;
-   subtype Synth_Engines is Engines range Voice_Plucked .. Voice_Saw_Swarm;
+   subtype Synth_Engines is Engines range Voice_Plucked .. Engines'Last;
 
 private
 
