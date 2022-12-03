@@ -9,13 +9,16 @@ package body Tresses.DSP is
 
    function Interpolate824 (T : Table_257_U16; Phase : U32) return U16 is
       P : constant U16 := U16 (Shift_Right (Phase, 24));
-      A : constant U32 := U32 (T (P));
-      B : constant U32 := U32 (T (P + 1));
+      A : constant S32 := S32 (T (P));
+      B : constant S32 := S32 (T (P + 1));
 
-      V : constant U32 :=
-        Shift_Right (Shift_Right (Phase, 8) and 16#FFFF#, 16);
+      --  The original code uses a shift 8 and FFFF mask here, but that can
+      --  give us a number that is outside the range of S16, and therefore
+      --  lead to an oveflow in the operation below. All of this should be
+      --  seen as fixed-point Q0.15.
+      V : constant S32 := S32 (Shift_Right (Phase, 9) and 16#7FFF#);
    begin
-      return U16 (A + ((B - A) * V));
+      return U16 (A + ((B - A) * V) / 2**15);
    end Interpolate824;
 
    --------------------
@@ -27,10 +30,13 @@ package body Tresses.DSP is
       A : constant S32 := S32 (T (P));
       B : constant S32 := S32 (T (P + 1));
 
-      V : constant S32 :=
-        S32 (Shift_Right (Shift_Right (Phase, 8) and 16#FFFF#, 16));
+      --  The original code uses a shift 8 and FFFF mask here, but that can
+      --  give us a number that is outside the range of S16, and therefore
+      --  lead to an oveflow in the operation below. All of this should be
+      --  seen as fixed-point Q0.15.
+      V : constant S32 := S32 (Shift_Right (Phase, 9) and 16#7FFF#);
    begin
-      return S16 (A + ((B - A) * V));
+      return S16 (A + ((B - A) * V) / 2**15);
    end Interpolate824;
 
    -------------------
@@ -42,9 +48,9 @@ package body Tresses.DSP is
       A : constant S32 := S32 (T (I));
       B : constant S32 := S32 (T (I + 1));
 
-      V : constant S32 := S32 (Index and 16#FF#) / 2**8;
+      V : constant S32 := S32 (Index and 16#FF#);
    begin
-      return S16 (A + ((B - A) * V));
+      return S16 (A + ((B - A) * V) / 2**8);
    end Interpolate88;
 
    ---------------
@@ -53,13 +59,13 @@ package body Tresses.DSP is
 
    function Crossfade (Table_A, Table_B : Resources.Table_257_S16;
                        Phase            : U32;
-                       Balance          : U16)
+                       Balance          : N16)
                        return S16
    is
       A : constant S32 := S32 (Interpolate824 (Table_A, Phase));
       B : constant S32 := S32 (Interpolate824 (Table_B, Phase));
    begin
-      return S16 (A + ((B - A) * S32 (Balance)) / 2**16);
+      return S16 (A + ((B - A) * S32 (Balance)) / 2**15);
    end Crossfade;
 
    ----------

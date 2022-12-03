@@ -21,7 +21,10 @@ is
    subtype S16 is Interfaces.Integer_16;
    subtype S32 is Interfaces.Integer_32;
 
-   type Param_Range is new S16 range 0 .. S16'Last;
+   type N16 is new S16 range 0 .. S16'Last;
+   --  Natural on 16 bit
+
+   type Param_Range is new N16;
 
    type Pitch_Range is new S16 range 0 .. 127 * 128;
 

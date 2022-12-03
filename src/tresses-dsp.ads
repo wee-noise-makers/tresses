@@ -8,23 +8,23 @@ is
                             Phase : U32)
                             return U16
      with Inline_Always;
-   --  Why 824? I don't know, yet...
+   --  Phase interpreted as 8-bit integer, 24-bit fraction
 
    function Interpolate824 (T     : Resources.Table_257_S16;
                             Phase : U32)
                             return S16
      with Inline_Always;
-   --  Why 824? I don't know, yet...
+   --  Phase interpreted as 8-bit integer, 24-bit fraction
 
    function Interpolate88 (T     : Resources.Table_257_S16;
                            Index : U16)
                            return S16
      with Inline_Always;
-   --  Why 88? I don't know, yet...
+   --  Phase interpreted as 8-bit integer, 8-bit fraction
 
    function Crossfade (Table_A, Table_B : Resources.Table_257_S16;
                        Phase            : U32;
-                       Balance          : U16)
+                       Balance          : N16)
                        return S16;
 
    function Clip (V : S32; First, Last : S32) return S32

@@ -536,7 +536,9 @@ package body Tresses.Analog_Oscillator is
    is
       Shifted_Pitch : constant S32 := S32 (This.Pitch) +
         ((32_767 - S32 (This.Params (0))) / 2**1);
-      Crossfade     : constant U16 := U16 (Shifted_Pitch) * 2**6;
+
+      Crossfade : constant U16 := (U16 (Shifted_Pitch) * 2**6) and 16#7FFF#;
+
       Index1        : U32 := Shift_Right (U32 (Shifted_Pitch), 10);
       Index2        : U32;
    begin
@@ -556,7 +558,7 @@ package body Tresses.Analog_Oscillator is
          for Sample of Buffer loop
             This.Phase := This.Phase + This.Phase_Increment;
             Sample := DSP.Crossfade (Wave1.all, Wave2.all,
-                                     This.Phase, Crossfade);
+                                     This.Phase, N16 (Crossfade));
          end loop;
       end;
    end Render_Buzz;
