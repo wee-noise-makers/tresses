@@ -49,6 +49,18 @@ is
    subtype Drum_Engines is Engines range Drum_Kick .. Drum_Bell;
    subtype Synth_Engines is Engines range Voice_Plucked .. Engines'Last;
 
+   function Img (E : Engines) return String
+   is (case E is
+          when Drum_Kick          => "Kick",
+          when Drum_Snare         => "Snare",
+          when Drum_Cymbal        => "Cymbal",
+          when Drum_Percussion    => "Percussion",
+          when Drum_Bell          => "Bell",
+          when Voice_Plucked      => "Plucked",
+          when Voice_Saw_Swarm    => "Saw Swarm",
+          when Voice_Analog_Buzz  => "Buzz",
+          when Voice_Analog_Morph => "Morph");
+
 private
 
    Init_Pitch : constant Pitch_Range := 60 * 128;
