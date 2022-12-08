@@ -44,7 +44,8 @@ is
                     Voice_Plucked,
                     Voice_Saw_Swarm,
                     Voice_Analog_Buzz,
-                    Voice_Analog_Morph);
+                    Voice_Analog_Morph,
+                    Voice_Analog_FM2OP);
 
    subtype Drum_Engines is Engines range Drum_Kick .. Drum_Bell;
    subtype Synth_Engines is Engines range Voice_Plucked .. Engines'Last;
@@ -59,7 +60,8 @@ is
           when Voice_Plucked      => "Plucked",
           when Voice_Saw_Swarm    => "Saw Swarm",
           when Voice_Analog_Buzz  => "Buzz",
-          when Voice_Analog_Morph => "Morph");
+          when Voice_Analog_Morph => "Morph",
+          when Voice_Analog_FM2OP => "FM 2 OP");
 
 private
 

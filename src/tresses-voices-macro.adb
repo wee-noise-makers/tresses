@@ -1,4 +1,5 @@
 with Tresses.Voices.Analog_Macro;
+with Tresses.Voices.FM_OP2;
 
 package body Tresses.Voices.Macro is
 
@@ -112,6 +113,15 @@ package body Tresses.Voices.Macro is
                   Pitch => This.Pitch,
                   Do_Strike => This.Do_Strike);
             end;
+         when Voice_Analog_FM2OP =>
+            Voices.FM_OP2.Render_FM_OP2 (Buffer,
+                                         This.P1,
+                                         This.P2,
+                                         This.Env,
+                                         This.Phase,
+                                         This.Modulator_Phase,
+                                         This.Pitch,
+                                         This.Do_Strike);
       end case;
    end Render;
 

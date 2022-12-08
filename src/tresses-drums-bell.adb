@@ -148,7 +148,7 @@ package body Tresses.Drums.Bell is
                Decay_Short : constant S32 := S32 (kBellPartialDecayShort (I));
 
                B1          : constant S16 := (32_767 - S16 (Damping)) / 2**8;
-               Balance     : constant S16 := (B1*B1) / 2**7;
+               Balance     : constant S16 := (B1 * B1) / 2**7;
 
                Decay       : constant S32 :=
                  Decay_Long -

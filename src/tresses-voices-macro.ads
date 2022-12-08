@@ -63,6 +63,7 @@ private
 
       Pitch : Pitch_Range := Init_Pitch;
       Phase : U32 := 0;
+      Modulator_Phase : U32 := 0;
 
       Do_Strike : Boolean := False;
       Do_Init : Boolean := True;
