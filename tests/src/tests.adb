@@ -18,7 +18,7 @@ procedure Tests is
      (Param_Range'First, Param_Range'Last);
 
    Env_Vals : constant array (Natural range <>) of U7 :=
-     (U7'First, U7'Last);
+     (U7'Last / 2, U7'Last);
 
 begin
 

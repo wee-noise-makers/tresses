@@ -252,7 +252,15 @@ lookup_tables.append(('bell', bell(256, 16)))
 Envelope increments.
 ----------------------------------------------------------------------------"""
 
-control_rate = sample_rate / 24.0
+# Original braids AD envelope is only rendered once per 24 sample buffers, so
+# the control_rate is sample_rate divided by 24:
+#  control_rate = sample_rate / 24.0
+#
+# But for tresses we don't want the envelope speed to depend on the size of the
+# buffers. So we remove this factor and call Render on every sample.
+#
+
+control_rate = sample_rate
 max_time = 12.0  # seconds
 min_time = 3.0 / control_rate  # seconds
 gamma = 0.175

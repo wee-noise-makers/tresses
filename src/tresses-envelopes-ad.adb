@@ -65,10 +65,17 @@ package body Tresses.Envelopes.AD is
    function Render (This : in out Instance) return U16 is
       Increment : constant U32 := This.Increment (This.Segement);
    begin
+      --  https://dsp.stackexchange.com/questions/2555/
+      --   help-with-equations-for-exponential-adsr-envelope
+
       This.Phase := This.Phase + Increment;
 
       if This.Phase < Increment then
+         --  We reached the end of the segment
+
          This.Value := DSP.Mix (This.A, This.B, 65_535);
+
+         --  Go to next segment
          Trigger (This, Segment_Kind'Succ (This.Segement));
       end if;
 

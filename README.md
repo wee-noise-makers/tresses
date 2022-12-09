@@ -16,3 +16,8 @@ $ cd tresses/tests
 $ alr build
 $ ./bin/tests | aplay -f S16_LE -c1 -r44100
 ```
+
+## Resources
+
+ - ADSR version of the Braids envelope: https://github.com/rcrogers/yarns-loom/blob/loom-analog-osc/yarns/envelope.h
+ - DSP videos: https://www.youtube.com/@nigelredmon1634/videos
