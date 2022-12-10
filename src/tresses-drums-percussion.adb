@@ -29,74 +29,20 @@ package body Tresses.Drums.Percussion is
       65083, 64715, 64715, 64715, 64715, 62312
      );
 
-   -----------------
-   -- Set_Damping --
-   -----------------
-
-   procedure Set_Damping (This : in out Instance; Damping : Param_Range) is
-   begin
-      This.Damping := Damping;
-   end Set_Damping;
-
-   ---------------------
-   -- Set_Coefficient --
-   ---------------------
-
-   procedure Set_Coefficient (This : in out Instance; Coef : Param_Range) is
-   begin
-      This.Coefficient := Coef;
-   end Set_Coefficient;
-
-   ------------
-   -- Strike --
-   ------------
-
-   overriding
-   procedure Strike (This : in out Instance) is
-   begin
-      This.Do_Strike := True;
-   end Strike;
-
-   ---------------
-   -- Set_Pitch --
-   ---------------
-
-   overriding
-   procedure Set_Pitch (This  : in out Instance;
-                        Pitch :        Pitch_Range)
-   is
-   begin
-      This.Pitch := Pitch;
-   end Set_Pitch;
-
-   ------------
-   -- Render --
-   ------------
-
-   procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer)
-   is
-   begin
-      Render_Percussion (Buffer,
-                         This.Damping, This.Coefficient,
-                         This.State,
-                         This.Rng,
-                         This.Pitch,
-                         This.Do_Strike);
-   end Render;
-
    -----------------------
    -- Render_Percussion --
    -----------------------
 
    procedure Render_Percussion
-     (Buffer               :    out Mono_Buffer;
-      Damping, Coefficient :        Param_Range;
-      State                : in out Additive_State;
-      Rng                  : in out Random.Instance;
-      Pitch                :        Pitch_Range;
-      Do_Strike            : in out Boolean)
+     (Buffer    :    out Mono_Buffer;
+      Params    :        Param_Array;
+      State     : in out Additive_State;
+      Rng       : in out Random.Instance;
+      Pitch     :        Pitch_Range;
+      Do_Strike : in out Boolean)
    is
+      Damping     : Param_Range renames Params (P_Damping);
+      Coefficient : Param_Range renames Params (P_Coefficient);
    begin
       --  Strike
       if Do_Strike then

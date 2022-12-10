@@ -10,77 +10,12 @@ with Tresses.DSP;
 
 package body Tresses.Drums.Kick is
 
-   ----------
-   -- Init --
-   ----------
-
-   procedure Init (This : in out Instance) is
-   begin
-      This.Do_Init := True;
-   end Init;
-
-   ---------------
-   -- Set_Decay --
-   ---------------
-
-   procedure Set_Decay (This : in out Instance; Decay : Param_Range) is
-   begin
-      This.Decay := Decay;
-   end Set_Decay;
-
-   ---------------------
-   -- Set_Coefficient --
-   ---------------------
-
-   procedure Set_Coefficient (This : in out Instance; Coef : Param_Range) is
-   begin
-      This.Coefficient := Coef;
-   end Set_Coefficient;
-
-   ------------
-   -- Strike --
-   ------------
-
-   overriding
-   procedure Strike (This : in out Instance) is
-   begin
-      This.Do_Strike := True;
-   end Strike;
-
-   ---------------
-   -- Set_Pitch --
-   ---------------
-
-   overriding
-   procedure Set_Pitch (This  : in out Instance;
-                        Pitch :        Pitch_Range)
-   is
-   begin
-      This.Pitch := Pitch;
-   end Set_Pitch;
-
-   ------------
-   -- Render --
-   ------------
-
-   procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer)
-   is
-   begin
-      Render_Kick (Buffer,
-                   This.Decay, This.Coefficient,
-                   This.Pulse0, This.Pulse1, This.Pulse2,
-                   This.Filter,
-                   This.LP_State, This.Pitch,
-                   This.Do_Init, This.Do_Strike);
-   end Render;
-
    -----------------
    -- Render_Kick --
    -----------------
 
    procedure Render_Kick (Buffer                 :    out Mono_Buffer;
-                          Decay, Coefficient     :        Param_Range;
+                          Params                 :        Param_Array;
                           Pulse0, Pulse1, Pulse2 : in out Excitation.Instance;
                           Filter                 : in out Filters.SVF.Instance;
                           LP_State               : in out S32;
@@ -88,7 +23,8 @@ package body Tresses.Drums.Kick is
                           Do_Init                : in out Boolean;
                           Do_Strike              : in out Boolean)
    is
-
+      Decay       : Param_Range renames Params (P_Decay);
+      Coefficient : Param_Range renames Params (P_Coefficient);
    begin
       if Do_Init then
          Do_Init := False;

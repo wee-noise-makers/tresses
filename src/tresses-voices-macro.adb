@@ -69,25 +69,23 @@ package body Tresses.Voices.Macro is
          when Voice_Saw_Swarm =>
             Saw_Swarm.Render_Saw_Swarm
               (Buffer,
-               Detune_Param    => This.P1,
-               High_Pass_Param => This.P1,
-               Rng             => This.Rng,
-               Env             => This.Env,
-               State           => This.Saw_Swarm_State,
-               Phase           => This.Phase,
-               Pitch           => This.Pitch,
-               Do_Strike       => This.Do_Strike);
+               Params    => This.Params,
+               Rng       => This.Rng,
+               Env       => This.Env,
+               State     => This.Saw_Swarm_State,
+               Phase     => This.Phase,
+               Pitch     => This.Pitch,
+               Do_Strike => This.Do_Strike);
 
          when Voice_Plucked =>
             Plucked.Render_Plucked (Buffer,
-                                    Decay_Param    => This.P1,
-                                    Position_Param => This.P1,
-                                    Rng            => This.Rng,
-                                    Env            => This.Env,
-                                    State          => This.Pluck_State,
-                                    KS             => This.KS,
-                                    Pitch          => This.Pitch,
-                                    Do_Strike      => This.Do_Strike);
+                                    Params    => This.Params,
+                                    Rng       => This.Rng,
+                                    Env       => This.Env,
+                                    State     => This.Pluck_State,
+                                    KS        => This.KS,
+                                    Pitch     => This.Pitch,
+                                    Do_Strike => This.Do_Strike);
 
          when Voice_Analog_Buzz | Voice_Analog_Morph =>
             declare
@@ -101,22 +99,20 @@ package body Tresses.Voices.Macro is
 
             begin
                Voices.Analog_Macro.Render_Analog_Macro
-                 (Buffer_A =>  Buffer,
-                  Buffer_B =>  Aux_Buffer,
-                  Shape => Shape,
-                  Param1 =>  This.P1,
-                  Param2 => This.P2,
-                  Osc0 => This.Osc0,
-                  Osc1 => This.Osc1,
-                  Env => This.Env,
-                  LP_State => This.LP_State,
-                  Pitch => This.Pitch,
+                 (Buffer_A  => Buffer,
+                  Buffer_B  => Aux_Buffer,
+                  Shape     => Shape,
+                  Params    => This.Params,
+                  Osc0      => This.Osc0,
+                  Osc1      => This.Osc1,
+                  Env       => This.Env,
+                  LP_State  => This.LP_State,
+                  Pitch     => This.Pitch,
                   Do_Strike => This.Do_Strike);
             end;
          when Voice_Analog_FM2OP =>
             Voices.FM_OP2.Render_FM_OP2 (Buffer,
-                                         This.P1,
-                                         This.P2,
+                                         This.Params,
                                          This.Env,
                                          This.Phase,
                                          This.Modulator_Phase,
@@ -125,23 +121,37 @@ package body Tresses.Voices.Macro is
       end case;
    end Render;
 
-   ----------------
-   -- Set_Attack --
-   ----------------
+   -----------------
+   -- Param_Label --
+   -----------------
 
-   procedure Set_Attack (This : in out Instance; A : U7) is
+   overriding
+   function Param_Label (This : Instance; Id : Param_Id) return String is
    begin
-      Envelopes.AD.Set_Attack (This.Env, A);
-   end Set_Attack;
+      case This.Engine is
+         when Voice_Saw_Swarm =>
+            return Saw_Swarm.Param_Label (Id);
 
-   ---------------
-   -- Set_Decay --
-   ---------------
+         when Voice_Plucked =>
+            return Plucked.Param_Label (Id);
 
-   procedure Set_Decay (This : in out Instance; D : U7) is
-   begin
-      Envelopes.AD.Set_Decay (This.Env, D);
-   end Set_Decay;
+         when Voice_Analog_Buzz | Voice_Analog_Morph =>
+            declare
+               use Voices.Analog_Macro;
+
+               Shape : constant Analog_Macro_Shape :=
+                 (case This.Engine is
+                     when Voice_Analog_Buzz => Buzz,
+                     when Voice_Analog_Morph => Morph,
+                     when others => raise Program_Error);
+
+            begin
+               return Voices.Analog_Macro.Param_Label (Shape, Id);
+            end;
+         when Voice_Analog_FM2OP =>
+            return Voices.FM_OP2.Param_Label (Id);
+      end case;
+   end Param_Label;
 
    ------------
    -- Strike --
@@ -165,24 +175,17 @@ package body Tresses.Voices.Macro is
       This.Pitch := Pitch;
    end Set_Pitch;
 
-   ----------------
-   -- Set_Param1 --
-   ----------------
+   ---------------
+   -- Set_Param --
+   ---------------
 
    overriding
-   procedure Set_Param1 (This : in out Instance; P : Param_Range) is
+   procedure Set_Param (This : in out Instance;
+                        Id   :        Param_Id;
+                        P    :        Param_Range)
+   is
    begin
-      This.P1 := P;
-   end Set_Param1;
-
-   ----------------
-   -- Set_Param2 --
-   ----------------
-
-   overriding
-   procedure Set_Param2 (This : in out Instance; P : Param_Range) is
-   begin
-      This.P2 := P;
-   end Set_Param2;
+      This.Params (Id) := P;
+   end Set_Param;
 
 end Tresses.Voices.Macro;

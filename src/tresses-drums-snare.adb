@@ -11,79 +11,13 @@ with Tresses.DSP;
 
 package body Tresses.Drums.Snare is
 
-   ----------
-   -- Init --
-   ----------
-
-   procedure Init (This : in out Instance) is
-   begin
-      This.Do_Init := True;
-   end Init;
-
-   --------------
-   -- Set_Tone --
-   --------------
-
-   procedure Set_Tone (This : in out Instance; P0 : Param_Range) is
-   begin
-      This.Tone_Param := P0;
-   end Set_Tone;
-
-   ---------------
-   -- Set_Noise --
-   ---------------
-
-   procedure Set_Noise (This : in out Instance; P1 : Param_Range) is
-   begin
-      This.Noise_Param := P1;
-   end Set_Noise;
-
-   ------------
-   -- Strike --
-   ------------
-
-   overriding
-   procedure Strike (This : in out Instance) is
-   begin
-      This.Do_Strike := True;
-   end Strike;
-
-   ---------------
-   -- Set_Pitch --
-   ---------------
-
-   overriding
-   procedure Set_Pitch (This  : in out Instance;
-                        Pitch :        Pitch_Range)
-   is
-   begin
-      This.Pitch := Pitch;
-   end Set_Pitch;
-
-   ------------
-   -- Render --
-   ------------
-
-   procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer)
-   is
-   begin
-      Render_Snare (Buffer,
-                    This.Tone_Param, This.Noise_Param,
-                    This.Pulse0, This.Pulse1, This.Pulse2, This.Pulse3,
-                    This.Filter0, This.Filter1, This.Filter2,
-                    This.Rng,
-                    This.Pitch,
-                    This.Do_Init, This.Do_Strike);
-   end Render;
-
    ------------------
    -- Render_Snare --
    ------------------
 
    procedure Render_Snare
      (Buffer                         :    out Mono_Buffer;
-      Tone_Param, Noise_Param        :        Param_Range;
+      Params                         :        Param_Array;
       Pulse0, Pulse1, Pulse2, Pulse3 : in out Excitation.Instance;
       Filter0, Filter1, Filter2      : in out Filters.SVF.Instance;
       Rng                            : in out Random.Instance;
@@ -92,6 +26,8 @@ package body Tresses.Drums.Snare is
       Do_Strike                      : in out Boolean)
    is
 
+      Tone_Param : Param_Range renames Params (P_Tone);
+      Noise_Param : Param_Range renames Params (P_Noise);
    begin
       if Do_Init then
 

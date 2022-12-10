@@ -36,6 +36,24 @@ package body Tresses.Envelopes.AD is
       This.Increment (Decay) := LUT_Env_Portamento_Increments (U8 (D));
    end Set_Decay;
 
+   ----------------
+   -- Set_Attack --
+   ----------------
+
+   procedure Set_Attack (This : in out Instance; A : Param_Range) is
+   begin
+      Set_Attack (This, U7 (A / 2**8));
+   end Set_Attack;
+
+   ---------------
+   -- Set_Decay --
+   ---------------
+
+   procedure Set_Decay (This : in out Instance; D : Param_Range) is
+   begin
+      Set_Decay (This, U7 (D / 2**8));
+   end Set_Decay;
+
    -------------
    -- Trigger --
    -------------

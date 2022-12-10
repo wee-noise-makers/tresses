@@ -10,97 +10,19 @@ with Tresses.DSP;
 
 package body Tresses.Voices.Plucked is
 
-   ---------------
-   -- Set_Decay --
-   ---------------
-
-   procedure Set_Decay (This : in out Instance; P0 : Param_Range) is
-   begin
-      This.Decay_Param := P0;
-   end Set_Decay;
-
-   ------------------
-   -- Set_Position --
-   ------------------
-
-   procedure Set_Position (This : in out Instance; P1 : Param_Range) is
-   begin
-      This.Position_Param := P1;
-   end Set_Position;
-
-   ------------
-   -- Strike --
-   ------------
-
-   overriding
-   procedure Strike (This : in out Instance) is
-   begin
-      This.Do_Strike := True;
-   end Strike;
-
-   ---------------
-   -- Set_Pitch --
-   ---------------
-
-   overriding
-   procedure Set_Pitch (This  : in out Instance;
-                        Pitch :        Pitch_Range)
-   is
-   begin
-      This.Pitch := Pitch;
-   end Set_Pitch;
-
-   ----------------
-   -- Set_Attack --
-   ----------------
-
-   overriding
-   procedure Set_Attack (This : in out Instance; A : U7) is
-   begin
-      Envelopes.AD.Set_Attack (This.Env, A);
-   end Set_Attack;
-
-   ---------------
-   -- Set_Decay --
-   ---------------
-
-   overriding
-   procedure Set_Decay (This : in out Instance; D : U7) is
-   begin
-      Envelopes.AD.Set_Decay (This.Env, D);
-   end Set_Decay;
-
-   ------------
-   -- Render --
-   ------------
-
-   procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer)
-   is
-   begin
-      Render_Plucked (Buffer,
-                      This.Decay_Param, This.Position_Param,
-                      This.Rng,
-                      This.Env,
-                      This.State,
-                      This.KS,
-                      This.Pitch,
-                      This.Do_Strike);
-   end Render;
-
    --------------------
    -- Render_Plucked --
    --------------------
 
    procedure Render_Plucked
-     (Buffer                      :    out Mono_Buffer;
-      Decay_Param, Position_Param :        Param_Range;
-      Rng                         : in out Random.Instance;
-      Env                         : in out Envelopes.AD.Instance;
-      State                       : in out Pluck_State;
-      KS                          : in out KS_Array;
-      Pitch                       :        Pitch_Range;
-      Do_Strike                   : in out Boolean)
+     (Buffer    :    out Mono_Buffer;
+      Params    :        Param_Array;
+      Rng       : in out Random.Instance;
+      Env       : in out Envelopes.AD.Instance;
+      State     : in out Pluck_State;
+      KS        : in out KS_Array;
+      Pitch     :        Pitch_Range;
+      Do_Strike : in out Boolean)
    is
 
       function Interpolate (Offset : U32; Phase : U32) return S32 is
@@ -115,8 +37,15 @@ package body Tresses.Voices.Plucked is
          return A + (((B - A) * V) / 2**16);
       end Interpolate;
 
+      Decay_Param : Param_Range renames Params (P_String_Decay);
+      Position_Param : Param_Range renames Params (P_Position);
+
       Phase_Increment : U32 := DSP.Compute_Phase_Increment (S16 (Pitch));
    begin
+
+      Set_Attack (Env, Params (P_Attack));
+      Set_Decay (Env, Params (P_Decay));
+
       Phase_Increment := Phase_Increment * 2;
 
       if Do_Strike then

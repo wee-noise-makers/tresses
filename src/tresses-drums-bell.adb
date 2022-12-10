@@ -35,70 +35,17 @@ package body Tresses.Drums.Bell is
      );
 
    -----------------
-   -- Set_Damping --
-   -----------------
-
-   procedure Set_Damping (This : in out Instance; Damping : Param_Range) is
-   begin
-      This.Damping := Damping;
-   end Set_Damping;
-
-   ---------------------
-   -- Set_Coefficient --
-   ---------------------
-
-   procedure Set_Coefficient (This : in out Instance; Coef : Param_Range) is
-   begin
-      This.Coefficient := Coef;
-   end Set_Coefficient;
-
-   ------------
-   -- Strike --
-   ------------
-
-   overriding
-   procedure Strike (This : in out Instance) is
-   begin
-      This.Do_Strike := True;
-   end Strike;
-
-   ---------------
-   -- Set_Pitch --
-   ---------------
-
-   overriding
-   procedure Set_Pitch (This  : in out Instance;
-                        Pitch :        Pitch_Range)
-   is
-   begin
-      This.Pitch := Pitch;
-   end Set_Pitch;
-
-   ------------
-   -- Render --
-   ------------
-
-   procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer)
-   is
-   begin
-      Render_Bell (Buffer,
-                   This.Damping, This.Coefficient,
-                   This.State,
-                   This.Pitch,
-                   This.Do_Strike);
-   end Render;
-
-   -----------------
    -- Render_Bell --
    -----------------
 
-   procedure Render_Bell (Buffer                 :    out Mono_Buffer;
-                          Damping, Coefficient   :        Param_Range;
-                          State                  : in out Additive_State;
-                          Pitch                  :        Pitch_Range;
-                          Do_Strike              : in out Boolean)
+   procedure Render_Bell (Buffer    :    out Mono_Buffer;
+                          Params    :        Param_Array;
+                          State     : in out Additive_State;
+                          Pitch     :        Pitch_Range;
+                          Do_Strike : in out Boolean)
    is
+      Damping     : Param_Range renames Params (P_Damping);
+      Coefficient : Param_Range renames Params (P_Coefficient);
 
       First_Partial : Natural := State.Current_Partial;
       Last_Partial :  Natural :=

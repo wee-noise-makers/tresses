@@ -70,8 +70,7 @@ package body Tresses.Macro is
       case This.Engine is
          when Drum_Kick =>
             Drums.Kick.Render_Kick (Buffer,
-                                    Decay => This.P1,
-                                    Coefficient => This.P2,
+                                    Params      => This.Params,
                                     Pulse0      => This.Pulse0,
                                     Pulse1      => This.Pulse1,
                                     Pulse2      => This.Pulse2,
@@ -82,8 +81,7 @@ package body Tresses.Macro is
                                     Do_Strike   => This.Do_Strike);
          when Drum_Snare =>
             Drums.Snare.Render_Snare (Buffer,
-                                      Tone_Param => This.P1,
-                                      Noise_Param => This.P2,
+                                      Params => This.Params,
                                       Pulse0 => This.Pulse0,
                                       Pulse1 => This.Pulse1,
                                       Pulse2 => This.Pulse2,
@@ -97,8 +95,7 @@ package body Tresses.Macro is
                                       Do_Strike => This.Do_Strike);
          when Drum_Cymbal =>
             Drums.Cymbal.Render_Cymbal (Buffer,
-                                        Cutoff_Param => This.P1,
-                                        Noise_Param => This.P2,
+                                        Params      => This.Params,
                                         Filter0 => This.Filter0,
                                         Filter1 => This.Filter1,
                                         Env => This.Env,
@@ -111,8 +108,7 @@ package body Tresses.Macro is
          when Drum_Percussion =>
             Drums.Percussion.Render_Percussion
               (Buffer,
-               Damping     => This.P1,
-               Coefficient => This.P2,
+               Params      => This.Params,
                State       => This.Perc_State,
                Rng         => This.Rng,
                Pitch       => This.Pitch,
@@ -120,8 +116,7 @@ package body Tresses.Macro is
 
          when Drum_Bell =>
             Drums.Bell.Render_Bell (Buffer,
-                                    Damping     => This.P1,
-                                    Coefficient => This.P2,
+                                    Params      => This.Params,
                                     State       => This.Bell_State,
                                     Pitch       => This.Pitch,
                                     Do_Strike   => This.Do_Strike);
@@ -129,8 +124,7 @@ package body Tresses.Macro is
          when Voice_Saw_Swarm =>
             Voices.Saw_Swarm.Render_Saw_Swarm
               (Buffer,
-               Detune_Param    => This.P1,
-               High_Pass_Param => This.P2,
+               Params      => This.Params,
                Rng             => This.Rng,
                Env             => This.Env,
                State           => This.Saw_Swarm_State,
@@ -141,8 +135,7 @@ package body Tresses.Macro is
          when Voice_Plucked =>
             Voices.Plucked.Render_Plucked
               (Buffer,
-               Decay_Param    => This.P1,
-               Position_Param => This.P2,
+               Params      => This.Params,
                Rng            => This.Rng,
                Env            => This.Env,
                State          => This.Pluck_State,
@@ -165,8 +158,7 @@ package body Tresses.Macro is
                  (Buffer_A =>  Buffer,
                   Buffer_B =>  Aux_Buffer,
                   Shape => Shape,
-                  Param1 =>  This.P1,
-                  Param2 => This.P2,
+                  Params => This.Params,
                   Osc0 => This.Osc0,
                   Osc1 => This.Osc1,
                   Env => This.Env,
@@ -177,8 +169,7 @@ package body Tresses.Macro is
 
          when Voice_Analog_FM2OP =>
             Voices.FM_OP2.Render_FM_OP2 (Buffer,
-                                         This.P1,
-                                         This.P2,
+                                         This.Params,
                                          This.Env,
                                          This.Phase,
                                          This.Modulator_Phase,
@@ -186,24 +177,6 @@ package body Tresses.Macro is
                                          This.Do_Strike);
       end case;
    end Render;
-
-   ----------------
-   -- Set_Attack --
-   ----------------
-
-   procedure Set_Attack (This : in out Instance; A : U7) is
-   begin
-      Envelopes.AD.Set_Attack (This.Env, A);
-   end Set_Attack;
-
-   ---------------
-   -- Set_Decay --
-   ---------------
-
-   procedure Set_Decay (This : in out Instance; D : U7) is
-   begin
-      Envelopes.AD.Set_Decay (This.Env, D);
-   end Set_Decay;
 
    ------------
    -- Strike --
@@ -227,24 +200,64 @@ package body Tresses.Macro is
       This.Pitch := Pitch;
    end Set_Pitch;
 
-   ----------------
-   -- Set_Param1 --
-   ----------------
+   ---------------
+   -- Set_Param --
+   ---------------
 
    overriding
-   procedure Set_Param1 (This : in out Instance; P : Param_Range) is
+   procedure Set_Param (This : in out Instance;
+                        Id   :        Param_Id;
+                        P    :        Param_Range)
+   is
    begin
-      This.P1 := P;
-   end Set_Param1;
+      This.Params (Id) := P;
+   end Set_Param;
 
-   ----------------
-   -- Set_Param2 --
-   ----------------
+   -----------------
+   -- Param_Label --
+   -----------------
 
    overriding
-   procedure Set_Param2 (This : in out Instance; P : Param_Range) is
+   function Param_Label (This : Instance; Id : Param_Id) return String is
    begin
-      This.P2 := P;
-   end Set_Param2;
+      case This.Engine is
+         when Drum_Kick =>
+            return Drums.Kick.Param_Label (Id);
+
+         when Drum_Snare =>
+            return Drums.Snare.Param_Label (Id);
+
+         when Drum_Cymbal =>
+            return Drums.Cymbal.Param_Label (Id);
+
+         when Drum_Percussion =>
+            return Drums.Percussion.Param_Label (Id);
+
+         when Drum_Bell =>
+           return  Drums.Bell.Param_Label (Id);
+
+         when Voice_Saw_Swarm =>
+            return Voices.Saw_Swarm.Param_Label (Id);
+
+         when Voice_Plucked =>
+            return Voices.Plucked.Param_Label (Id);
+
+         when Voice_Analog_Buzz | Voice_Analog_Morph =>
+            declare
+               use Voices.Analog_Macro;
+
+               Shape : constant Analog_Macro_Shape :=
+                 (case This.Engine is
+                     when Voice_Analog_Buzz => Buzz,
+                     when Voice_Analog_Morph => Morph,
+                     when others => raise Program_Error);
+
+            begin
+               return Voices.Analog_Macro.Param_Label (Shape, Id);
+            end;
+         when Voice_Analog_FM2OP =>
+            return Voices.FM_OP2.Param_Label (Id);
+      end case;
+   end Param_Label;
 
 end Tresses.Macro;

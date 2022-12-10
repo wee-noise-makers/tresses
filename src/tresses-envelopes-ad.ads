@@ -12,6 +12,9 @@ is
    procedure Set_Attack (This : in out Instance; A : U7);
    procedure Set_Decay (This : in out Instance; D : U7);
 
+   procedure Set_Attack (This : in out Instance; A : Param_Range);
+   procedure Set_Decay (This : in out Instance; D : Param_Range);
+
    procedure Trigger (This : in out Instance; Seg : Segment_Kind);
 
    function Current_Segment (This : Instance) return Segment_Kind;

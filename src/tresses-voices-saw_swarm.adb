@@ -11,102 +11,30 @@ with Tresses.Resources;
 
 package body Tresses.Voices.Saw_Swarm is
 
-   ----------------
-   -- Set_Cutoff --
-   ----------------
-
-   procedure Set_Detune (This : in out Instance; P0 : Param_Range) is
-   begin
-      This.Detune_Param := P0;
-   end Set_Detune;
-
-   ---------------
-   -- Set_Noise --
-   ---------------
-
-   procedure Set_High_Pass (This : in out Instance; P1 : Param_Range) is
-   begin
-      This.High_Pass_Param := P1;
-   end Set_High_Pass;
-
-   ------------
-   -- Strike --
-   ------------
-
-   overriding
-   procedure Strike (This : in out Instance) is
-   begin
-      This.Do_Strike := True;
-   end Strike;
-
-   ---------------
-   -- Set_Pitch --
-   ---------------
-
-   overriding
-   procedure Set_Pitch (This  : in out Instance;
-                        Pitch :        Pitch_Range)
-   is
-   begin
-      This.Pitch := Pitch;
-   end Set_Pitch;
-
-   ----------------
-   -- Set_Attack --
-   ----------------
-
-   overriding
-   procedure Set_Attack (This : in out Instance; A : U7) is
-   begin
-      Envelopes.AD.Set_Attack (This.Env, A);
-   end Set_Attack;
-
-   ---------------
-   -- Set_Decay --
-   ---------------
-
-   overriding
-   procedure Set_Decay (This : in out Instance; D : U7) is
-   begin
-      Envelopes.AD.Set_Decay (This.Env, D);
-   end Set_Decay;
-
-   ------------
-   -- Render --
-   ------------
-
-   procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer)
-   is
-   begin
-      Render_Saw_Swarm (Buffer,
-                        This.Detune_Param, This.High_Pass_Param,
-                        This.Rng,
-                        This.Env,
-                        This.State,
-                        This.Phase,
-                        This.Pitch,
-                        This.Do_Strike);
-   end Render;
-
    ------------------
    -- Render_Snare --
    ------------------
 
    procedure Render_Saw_Swarm
-     (Buffer                        :    out Mono_Buffer;
-      Detune_Param, High_Pass_Param :        Param_Range;
-      Rng                           : in out Random.Instance;
-      Env                           : in out Envelopes.AD.Instance;
-      State                         : in out Saw_Swarm_State;
-      Phase                         : in out U32;
-      Pitch                         :        Pitch_Range;
-      Do_Strike                     : in out Boolean)
+     (Buffer    :    out Mono_Buffer;
+      Params    :        Param_Array;
+      Rng       : in out Random.Instance;
+      Env       : in out Envelopes.AD.Instance;
+      State     : in out Saw_Swarm_State;
+      Phase     : in out U32;
+      Pitch     :        Pitch_Range;
+      Do_Strike : in out Boolean)
    is
       Increments : array (0 .. 6) of U32;
 
+      Detune_Param    : Param_Range renames Params (P_Detune);
+      High_Pass_Param : Param_Range renames Params (P_High_Pass);
+
       Detune : S32;
    begin
+      Set_Attack (Env, Params (P_Attack));
+      Set_Decay (Env, Params (P_Decay));
+
       --  Clip to avoid interger overflow on Detune**2
       Detune := S32'Min (S32 (Detune_Param), 46_340);
 

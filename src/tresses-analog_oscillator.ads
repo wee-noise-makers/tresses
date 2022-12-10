@@ -11,8 +11,7 @@ is
    type Param_Array is array (Param_Id) of Param_Range;
 
    type Instance
-   is new Two_Params_Voice
-      and Pitched_Voice
+   is new Pitched_Voice
    with record
       Pitch       : Pitch_Range := 60 * 128;
       Shape       : Shape_Kind := Shape_Kind'First;
@@ -37,13 +36,12 @@ is
    procedure Render (This   : in out Instance;
                      Buffer :    out Mono_Buffer);
 
-   -- Interfaces --
-   overriding
    procedure Set_Param1 (This : in out Instance; P1 : Param_Range);
 
-   overriding
    procedure Set_Param2 (This : in out Instance; P2 : Param_Range);
 
+
+   -- Interfaces --
    overriding
    procedure Set_Pitch (This : in out Instance; P : Pitch_Range);
 

@@ -11,88 +11,24 @@ with Tresses.DSP;
 
 package body Tresses.Drums.Cymbal is
 
-   ----------
-   -- Init --
-   ----------
-
-   procedure Init (This : in out Instance) is
-   begin
-      This.Do_Init := True;
-   end Init;
-
-   ----------------
-   -- Set_Cutoff --
-   ----------------
-
-   procedure Set_Cutoff (This : in out Instance; P0 : Param_Range) is
-   begin
-      This.Cutoff_Param := P0;
-   end Set_Cutoff;
-
-   ---------------
-   -- Set_Noise --
-   ---------------
-
-   procedure Set_Noise (This : in out Instance; P1 : Param_Range) is
-   begin
-      This.Noise_Param := P1;
-   end Set_Noise;
-
-   ------------
-   -- Strike --
-   ------------
-
-   overriding
-   procedure Strike (This : in out Instance) is
-   begin
-      This.Do_Strike := True;
-   end Strike;
-
-   ---------------
-   -- Set_Pitch --
-   ---------------
-
-   overriding
-   procedure Set_Pitch (This  : in out Instance;
-                        Pitch :        Pitch_Range)
-   is
-   begin
-      This.Pitch := Pitch;
-   end Set_Pitch;
-
-   ------------
-   -- Render --
-   ------------
-
-   procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer)
-   is
-   begin
-      Render_Cymbal (Buffer,
-                     This.Cutoff_Param, This.Noise_Param,
-                     This.Filter0, This.Filter1,
-                     This.Env,
-                     This.State,
-                     This.Phase,
-                     This.Pitch,
-                     This.Do_Init, This.Do_Strike);
-   end Render;
-
    ------------------
    -- Render_Snare --
    ------------------
 
    procedure Render_Cymbal
-     (Buffer                    :    out Mono_Buffer;
-      Cutoff_Param, Noise_Param :        Param_Range;
-      Filter0, Filter1          : in out Filters.SVF.Instance;
-      Env                       : in out Envelopes.AD.Instance;
-      State                     : in out Cymbal_State;
-      Phase                     : in out U32;
-      Pitch                     :        Pitch_Range;
-      Do_Init                   : in out Boolean;
-      Do_Strike                 : in out Boolean)
+     (Buffer           :    out Mono_Buffer;
+      Params           :        Param_Array;
+      Filter0, Filter1 : in out Filters.SVF.Instance;
+      Env              : in out Envelopes.AD.Instance;
+      State            : in out Cymbal_State;
+      Phase            : in out U32;
+      Pitch            :        Pitch_Range;
+      Do_Init          : in out Boolean;
+      Do_Strike        : in out Boolean)
    is
+      Cutoff_Param : Param_Range renames Params (P_Cutoff);
+      Noise_Param  : Param_Range renames Params (P_Noise);
+
       Increments : array (0 .. 6) of U32;
       Note : constant Pitch_Range :=
         Pitch_Range ((40 * 2**7) + (S32 (Pitch) / 2**1));
@@ -113,7 +49,7 @@ package body Tresses.Drums.Cymbal is
          Set_Resonance (Filter1, 2_000);
 
          Init (Env);
-         Set_Attack (Env, 0);
+         Set_Attack (Env, U7 (0));
       end if;
 
       if Do_Strike then

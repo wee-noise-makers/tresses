@@ -7,22 +7,10 @@ with Tresses.Interfaces; use Tresses.Interfaces;
 package Tresses.Drums.Snare
 with Preelaborate
 is
-   type Instance
-   is new Pitched_Voice and Strike_Voice and Two_Params_Voice
-   with private;
-
-   procedure Init (This : in out Instance);
-
-   procedure Set_Tone (This : in out Instance; P0 : Param_Range);
-
-   procedure Set_Noise (This : in out Instance; P1 : Param_Range);
-
-   procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer);
 
    procedure Render_Snare
      (Buffer                         :    out Mono_Buffer;
-      Tone_Param, Noise_Param        :        Param_Range;
+      Params                         :        Param_Array;
       Pulse0, Pulse1, Pulse2, Pulse3 : in out Excitation.Instance;
       Filter0, Filter1, Filter2      : in out Filters.SVF.Instance;
       Rng                            : in out Random.Instance;
@@ -30,39 +18,13 @@ is
       Do_Init                        : in out Boolean;
       Do_Strike                      : in out Boolean);
 
-   --  Interfaces --
+   P_Tone  : constant Param_Id := 1;
+   P_Noise : constant Param_Id := 2;
 
-   overriding
-   procedure Strike (This : in out Instance);
-
-   overriding
-   procedure Set_Pitch (This  : in out Instance;
-                        Pitch :        Pitch_Range);
-
-   overriding
-   procedure Set_Param1 (This : in out Instance; P : Param_Range)
-   renames Set_Tone;
-
-   overriding
-   procedure Set_Param2 (This : in out Instance; P : Param_Range)
-   renames Set_Noise;
-
-private
-
-   type Instance
-   is new Pitched_Voice and Strike_Voice and Two_Params_Voice
-   with record
-      Pulse0, Pulse1, Pulse2, Pulse3 : Excitation.Instance;
-      Filter0, Filter1, Filter2 : Filters.SVF.Instance;
-      Rng : Random.Instance;
-
-      Pitch : Pitch_Range := Init_Pitch;
-
-      Do_Strike : Boolean := False;
-      Do_Init : Boolean := True;
-
-      Tone_Param : Param_Range := 0;
-      Noise_Param : Param_Range := 0;
-   end record;
+   function Param_Label (Id : Param_Id) return String
+   is (case Id is
+          when P_Tone  => "Tone",
+          when P_Noise => "Noise",
+          when others  => "N/A");
 
 end Tresses.Drums.Snare;

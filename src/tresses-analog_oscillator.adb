@@ -116,7 +116,6 @@ package body Tresses.Analog_Oscillator is
    -- Set_Param1 --
    ----------------
 
-   overriding
    procedure Set_Param1 (This : in out Instance; P1 : Param_Range) is
    begin
       This.Params (0) := P1;
@@ -126,7 +125,6 @@ package body Tresses.Analog_Oscillator is
    -- Set_Param2 --
    ----------------
 
-   overriding
    procedure Set_Param2 (This : in out Instance; P2 : Param_Range) is
    begin
       This.Params (1) := P2;

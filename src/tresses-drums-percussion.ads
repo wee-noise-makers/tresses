@@ -4,42 +4,25 @@ with Tresses.Interfaces; use Tresses.Interfaces;
 package Tresses.Drums.Percussion
 with Preelaborate
 is
-   type Instance
-   is new Pitched_Voice and Strike_Voice and Two_Params_Voice
-   with private;
-
-   procedure Set_Damping (This : in out Instance; Damping : Param_Range);
-   procedure Set_Coefficient (This : in out Instance; Coef : Param_Range);
-
-   procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer);
 
    type Additive_State is private;
 
    procedure Render_Percussion
-     (Buffer               :     out Mono_Buffer;
-      Damping, Coefficient :        Param_Range;
-      State                : in out Additive_State;
-      Rng                  : in out Random.Instance;
-      Pitch                :        Pitch_Range;
-      Do_Strike            : in out Boolean);
+     (Buffer    :     out Mono_Buffer;
+      Params    :        Param_Array;
+      State     : in out Additive_State;
+      Rng       : in out Random.Instance;
+      Pitch     :        Pitch_Range;
+      Do_Strike : in out Boolean);
 
-   --  Interfaces --
+   P_Damping     : constant Param_Id := 1;
+   P_Coefficient : constant Param_Id := 2;
 
-   overriding
-   procedure Strike (This : in out Instance);
-
-   overriding
-   procedure Set_Pitch (This  : in out Instance;
-                        Pitch :        Pitch_Range);
-
-   overriding
-   procedure Set_Param1 (This : in out Instance; P : Param_Range)
-   renames Set_Damping;
-
-   overriding
-   procedure Set_Param2 (This : in out Instance; P : Param_Range)
-   renames Set_Coefficient;
+   function Param_Label (Id : Param_Id) return String
+   is (case Id is
+          when P_Damping     => "Damping",
+          when P_Coefficient => "Coefficient",
+          when others        => "N/A");
 
 private
 
@@ -57,20 +40,6 @@ private
       Target_Partial_Amplitude : S32_Partials := (others => 0);
       Previous_Sample : S16 := 0;
       LP_Noise : LP_Noise_Array;
-   end record;
-
-   type Instance
-   is new Pitched_Voice and Strike_Voice and Two_Params_Voice
-   with record
-      Rng : Random.Instance;
-
-      State : Additive_State;
-      Pitch : Pitch_Range := Init_Pitch;
-
-      Do_Strike : Boolean := False;
-
-      Damping : Param_Range := 0;
-      Coefficient : Param_Range := 0;
    end record;
 
 end Tresses.Drums.Percussion;

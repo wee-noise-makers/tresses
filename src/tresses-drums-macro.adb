@@ -68,8 +68,7 @@ package body Tresses.Drums.Macro is
       case This.Engine is
          when Drum_Kick =>
             Kick.Render_Kick (Buffer,
-                              Decay => This.P1,
-                              Coefficient => This.P2,
+                              Params      => This.Params,
                               Pulse0      => This.Pulse0,
                               Pulse1      => This.Pulse1,
                               Pulse2      => This.Pulse2,
@@ -80,8 +79,7 @@ package body Tresses.Drums.Macro is
                               Do_Strike   => This.Do_Strike);
          when Drum_Snare =>
             Snare.Render_Snare (Buffer,
-                                Tone_Param => This.P1,
-                                Noise_Param => This.P2,
+                                Params => This.Params,
                                 Pulse0 => This.Pulse0,
                                 Pulse1 => This.Pulse1,
                                 Pulse2 => This.Pulse2,
@@ -95,8 +93,7 @@ package body Tresses.Drums.Macro is
                                 Do_Strike => This.Do_Strike);
          when Drum_Cymbal =>
             Cymbal.Render_Cymbal (Buffer,
-                                  Cutoff_Param => This.P1,
-                                  Noise_Param => This.P2,
+                                  Params => This.Params,
                                   Filter0 => This.Filter0,
                                   Filter1 => This.Filter1,
                                   Env => This.Env,
@@ -108,22 +105,45 @@ package body Tresses.Drums.Macro is
 
          when Drum_Percussion =>
             Percussion.Render_Percussion (Buffer,
-                                          Damping     => This.P1,
-                                          Coefficient => This.P2,
-                                          State       => This.Perc_State,
-                                          Rng         => This.Rng,
-                                          Pitch       => This.Pitch,
-                                          Do_Strike   => This.Do_Strike);
+                                          Params    => This.Params,
+                                          State     => This.Perc_State,
+                                          Rng       => This.Rng,
+                                          Pitch     => This.Pitch,
+                                          Do_Strike => This.Do_Strike);
 
          when Drum_Bell =>
             Bell.Render_Bell (Buffer,
-                              Damping     => This.P1,
-                              Coefficient => This.P2,
-                              State       => This.Bell_State,
-                              Pitch       => This.Pitch,
-                              Do_Strike   => This.Do_Strike);
+                              Params    => This.Params,
+                              State     => This.Bell_State,
+                              Pitch     => This.Pitch,
+                              Do_Strike => This.Do_Strike);
       end case;
    end Render;
+
+   -----------------
+   -- Param_Label --
+   -----------------
+
+   overriding
+   function Param_Label (This : Instance; P : Param_Id) return String is
+   begin
+      case This.Engine is
+         when Drum_Kick =>
+            return Kick.Param_Label (P);
+
+         when Drum_Snare =>
+            return Snare.Param_Label (P);
+
+         when Drum_Cymbal =>
+            return Cymbal.Param_Label (P);
+
+         when Drum_Percussion =>
+            return Percussion.Param_Label (P);
+
+         when Drum_Bell =>
+            return Bell.Param_Label (P);
+      end case;
+   end Param_Label;
 
    ------------
    -- Strike --
@@ -147,24 +167,17 @@ package body Tresses.Drums.Macro is
       This.Pitch := Pitch;
    end Set_Pitch;
 
-   ----------------
-   -- Set_Param1 --
-   ----------------
+   ---------------
+   -- Set_Param --
+   ---------------
 
    overriding
-   procedure Set_Param1 (This : in out Instance; P : Param_Range) is
+   procedure Set_Param (This : in out Instance;
+                        Id   :        Param_Id;
+                        P    :        Param_Range)
+   is
    begin
-      This.P1 := P;
-   end Set_Param1;
-
-   ----------------
-   -- Set_Param2 --
-   ----------------
-
-   overriding
-   procedure Set_Param2 (This : in out Instance; P : Param_Range) is
-   begin
-      This.P2 := P;
-   end Set_Param2;
+      This.Params (Id) := P;
+   end Set_Param;
 
 end Tresses.Drums.Macro;

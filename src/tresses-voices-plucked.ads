@@ -6,20 +6,6 @@ package Tresses.Voices.Plucked
 with Preelaborate
 is
 
-   type Instance
-   is new Pitched_Voice
-      and Strike_Voice
-      and Two_Params_Voice
-      and Envelope_Voice
-   with private;
-
-   procedure Set_Decay (This : in out Instance; P0 : Param_Range);
-
-   procedure Set_Position (This : in out Instance; P1 : Param_Range);
-
-   procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer);
-
    type Pluck_State is private;
 
    Number_Of_Voices : constant := 4;
@@ -29,7 +15,7 @@ is
 
    procedure Render_Plucked
      (Buffer                      :    out Mono_Buffer;
-      Decay_Param, Position_Param :        Param_Range;
+      Params                      :        Param_Array;
       Rng                         : in out Random.Instance;
       Env                         : in out Envelopes.AD.Instance;
       State                       : in out Pluck_State;
@@ -37,28 +23,17 @@ is
       Pitch                       :        Pitch_Range;
       Do_Strike                   : in out Boolean);
 
-   --  Interfaces --
+   P_String_Decay : constant Param_Id := 1;
+   P_Position     : constant Param_Id := 2;
+   P_Attack       : constant Param_Id := 3;
+   P_Decay        : constant Param_Id := 4;
 
-   overriding
-   procedure Strike (This : in out Instance);
-
-   overriding
-   procedure Set_Pitch (This  : in out Instance;
-                        Pitch :        Pitch_Range);
-
-   overriding
-   procedure Set_Param1 (This : in out Instance; P : Param_Range)
-   renames Set_Decay;
-
-   overriding
-   procedure Set_Param2 (This : in out Instance; P : Param_Range)
-   renames Set_Position;
-
-   overriding
-   procedure Set_Attack (This : in out Instance; A : U7);
-
-   overriding
-   procedure Set_Decay (This : in out Instance; D : U7);
+   function Param_Label (Id : Param_Id) return String
+   is (case Id is
+          when P_String_Decay => "String Decay",
+          when P_Position     => "Position",
+          when P_Attack       => "Attack",
+          when P_Decay        => "Decay");
 
 private
 
@@ -82,26 +57,6 @@ private
    type Pluck_State is record
       Voices : Pluck_Voice_Array (0 .. Number_Of_Voices - 1);
       Active : U32 := 0;
-   end record;
-
-   type Instance
-   is new Pitched_Voice
-      and Strike_Voice
-      and Two_Params_Voice
-      and Envelope_Voice
-   with record
-      State : Pluck_State;
-      KS    : KS_Array;
-
-      Env   : Envelopes.AD.Instance;
-      Rng   : Random.Instance;
-
-      Pitch : Pitch_Range := Init_Pitch;
-
-      Do_Strike : Boolean := False;
-
-      Decay_Param : Param_Range := 0;
-      Position_Param : Param_Range := 0;
    end record;
 
 end Tresses.Voices.Plucked;

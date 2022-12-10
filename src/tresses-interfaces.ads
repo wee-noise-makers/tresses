@@ -13,20 +13,18 @@ is
    procedure Strike (This : in out Strike_Voice)
    is abstract;
 
-   type Two_Params_Voice is interface;
+   type Four_Params_Voice is interface;
 
-   procedure Set_Param1 (This : in out Two_Params_Voice; P : Param_Range)
+   type Param_Id is range 1 .. 4;
+   type Param_Array is array (Param_Id) of Param_Range;
+
+   procedure Set_Param (This : in out Four_Params_Voice;
+                        Id   :        Param_Id;
+                        P    :        Param_Range)
    is abstract;
 
-   procedure Set_Param2 (This : in out Two_Params_Voice; P : Param_Range)
-   is abstract;
-
-   type Envelope_Voice is interface;
-
-   procedure Set_Attack (This : in out Envelope_Voice; A : U7)
-   is abstract;
-
-   procedure Set_Decay (This : in out Envelope_Voice; D : U7)
+   function Param_Label (This : Four_Params_Voice; Id : Param_Id)
+                         return String
    is abstract;
 
 end Tresses.Interfaces;

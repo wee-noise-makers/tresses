@@ -5,32 +5,21 @@ with Tresses.Resources;
 
 package body Tresses.Voices.Analog_Macro is
 
-   ---------------
-   -- Set_Shape --
-   ---------------
+   -----------------
+   -- Param_Label --
+   -----------------
 
-   procedure Set_Shape (This : in out Instance; Shape : Analog_Macro_Shape) is
-   begin
-      This.Shape := Shape;
-   end Set_Shape;
-
-   ------------
-   -- Render --
-   ------------
-
-   procedure Render (This               : in out Instance;
-                     Buffer_A, Buffer_B :    out Mono_Buffer)
-   is
-   begin
-      Render_Analog_Macro (Buffer_A, Buffer_B,
-                           This.Shape,
-                           This.Param1, This.Param2,
-                           This.Osc0, This.Osc1,
-                           This.Env,
-                           This.LP_State,
-                           This.Pitch,
-                           This.Do_Strike);
-   end Render;
+   function Param_Label (Shape : Analog_Macro_Shape; Id : Param_Id)
+                         return String
+   is (case Id is
+          when 1 => (case Shape is
+                        when Morph => "Waveform",
+                        when Buzz  => "Waveform"),
+          when 2 => (case Shape is
+                        when Morph => "Tone",
+                        when Buzz  => "Detune"),
+          when 3 => "Attack",
+          when 4 => "Decay");
 
    -----------------
    -- Render_Buzz --
@@ -38,7 +27,7 @@ package body Tresses.Voices.Analog_Macro is
 
    procedure Render_Buzz
      (Buffer_A, Buffer_B :    out Mono_Buffer;
-      Param1             :        Param_Range;
+      Param1, Param2     :        Param_Range;
       Osc0, Osc1         : in out Analog_Oscillator.Instance;
       Env                : in out Envelopes.AD.Instance;
       Pitch              :        Pitch_Range)
@@ -54,7 +43,7 @@ package body Tresses.Voices.Analog_Macro is
 
       declare
          Pitch_Shift : constant Pitch_Range :=
-           Pitch_Range (Param1 / 2**8);
+           Pitch_Range (Param2 / 2**8);
       begin
          if Pitch <= Pitch_Range'Last - Pitch_Shift then
             Osc1.Set_Pitch (Pitch + Pitch_Shift);
@@ -166,7 +155,7 @@ package body Tresses.Voices.Analog_Macro is
    procedure Render_Analog_Macro
      (Buffer_A, Buffer_B :    out Mono_Buffer;
       Shape              :        Analog_Macro_Shape;
-      Param1, Param2     :        Param_Range;
+      Params             :        Param_Array;
       Osc0, Osc1         : in out Analog_Oscillator.Instance;
       Env                : in out Envelopes.AD.Instance;
       LP_State           : in out S32;
@@ -179,81 +168,25 @@ package body Tresses.Voices.Analog_Macro is
          Envelopes.AD.Trigger (Env, Envelopes.AD.Attack);
       end if;
 
+      Set_Attack (Env, Params (3));
+      Set_Decay (Env, Params (4));
+
       case Shape is
          when Buzz =>
             Render_Buzz
-              (Buffer_A, Buffer_B, Param1, Osc0, Osc1, Env, Pitch);
+              (Buffer_A, Buffer_B,
+               Params (1), Params (2),
+               Osc0, Osc1,
+               Env, Pitch);
          when Morph =>
             Render_Morph
               (Buffer_A, Buffer_B,
-               Param1, Param2,
+               Params (1), Params (2),
                Osc0, Osc1,
                Env,
                LP_State, Pitch);
       end case;
 
    end Render_Analog_Macro;
-
-   ------------
-   -- Strike --
-   ------------
-
-   overriding
-   procedure Strike (This : in out Instance) is
-   begin
-      This.Do_Strike := True;
-   end Strike;
-
-   ---------------
-   -- Set_Pitch --
-   ---------------
-
-   overriding
-   procedure Set_Pitch (This  : in out Instance;
-                        Pitch :        Pitch_Range)
-   is
-   begin
-      This.Pitch := Pitch;
-   end Set_Pitch;
-
-   ----------------
-   -- Set_Param1 --
-   ----------------
-
-   overriding
-   procedure Set_Param1 (This : in out Instance; P : Param_Range) is
-   begin
-      This.Param1 := P;
-   end Set_Param1;
-
-   ----------------
-   -- Set_Param2 --
-   ----------------
-
-   overriding
-   procedure Set_Param2 (This : in out Instance; P : Param_Range) is
-   begin
-      This.Param2 := P;
-   end Set_Param2;
-
-   ----------------
-   -- Set_Attack --
-   ----------------
-
-   overriding
-   procedure Set_Attack (This : in out Instance; A : U7) is
-   begin
-      Envelopes.AD.Set_Attack (This.Env, A);
-   end Set_Attack;
-
-   ---------------
-   -- Set_Decay --
-   ---------------
-
-   overriding
-   procedure Set_Decay (This : in out Instance; D : U7) is
-   begin
-      Envelopes.AD.Set_Decay (This.Env, D);
-   end Set_Decay;
 
 end Tresses.Voices.Analog_Macro;
