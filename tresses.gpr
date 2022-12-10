@@ -15,7 +15,7 @@ project Tresses is
    for Library_Kind use Library_Type;
 
    package Naming is
-      for Spec ("Tresses.Resources") use "tresses-resources-" &
+      for Spec ("Tresses.Resources") use "tresses-resources--" &
                                           Tresses_Config.Sample_Rate & ".ads";
    end Naming;
 
