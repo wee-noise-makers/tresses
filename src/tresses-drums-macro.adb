@@ -145,39 +145,4 @@ package body Tresses.Drums.Macro is
       end case;
    end Param_Label;
 
-   ------------
-   -- Strike --
-   ------------
-
-   overriding
-   procedure Strike (This : in out Instance) is
-   begin
-      This.Do_Strike := True;
-   end Strike;
-
-   ---------------
-   -- Set_Pitch --
-   ---------------
-
-   overriding
-   procedure Set_Pitch (This  : in out Instance;
-                        Pitch :        Pitch_Range)
-   is
-   begin
-      This.Pitch := Pitch;
-   end Set_Pitch;
-
-   ---------------
-   -- Set_Param --
-   ---------------
-
-   overriding
-   procedure Set_Param (This : in out Instance;
-                        Id   :        Param_Id;
-                        P    :        Param_Range)
-   is
-   begin
-      This.Params (Id) := P;
-   end Set_Param;
-
 end Tresses.Drums.Macro;

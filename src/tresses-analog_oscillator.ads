@@ -7,13 +7,12 @@ is
    type Shape_Kind is (Saw, Square, Triangle, Sine,
                        Triangle_Fold, Sine_Fold, Buzz);
 
-   type Param_Id is range 0 .. 1;
+   type Param_Id is range 0 .. 0;
    type Param_Array is array (Param_Id) of Param_Range;
 
    type Instance
-   is new Pitched_Voice
-   with record
-      Pitch       : Pitch_Range := 60 * 128;
+   is tagged record
+      Pitch       : Pitch_Range := Init_Pitch;
       Shape       : Shape_Kind := Shape_Kind'First;
       Prev_Shape  : Shape_Kind := Shape_Kind'Last;
       Params      : Param_Array := (others => Param_Range'Last);
@@ -36,13 +35,10 @@ is
    procedure Render (This   : in out Instance;
                      Buffer :    out Mono_Buffer);
 
-   procedure Set_Param1 (This : in out Instance; P1 : Param_Range);
+   procedure Set_Param (This : in out Instance;
+                        Id   :        Param_Id;
+                        P    :        Param_Range);
 
-   procedure Set_Param2 (This : in out Instance; P2 : Param_Range);
-
-
-   -- Interfaces --
-   overriding
    procedure Set_Pitch (This : in out Instance; P : Pitch_Range);
 
 private

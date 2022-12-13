@@ -24,4 +24,29 @@ is
           when P_Coefficient => "Coefficient",
           when others        => "N/A");
 
+   -- Interfaces --
+
+   type Instance
+   is new Four_Params_Voice
+   with private;
+
+   overriding
+   function Param_Label (This : Instance; Id : Param_Id)
+                         return String
+   is (Param_Label (Id));
+
+   procedure Render (This   : in out Instance;
+                     Buffer :    out Mono_Buffer);
+
+private
+
+   type Instance
+   is new Four_Params_Voice
+   with record
+      Pulse0, Pulse1, Pulse2 : Excitation.Instance;
+      Filter                 : Filters.SVF.Instance;
+      LP_State               : S32;
+      Do_Init                : Boolean := True;
+   end record;
+
 end Tresses.Drums.Kick;

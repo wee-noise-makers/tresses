@@ -13,7 +13,7 @@ is
    --  A macro engine that can play all the synth sounds
 
    type Instance
-   is new Pitched_Voice and Strike_Voice and Four_Params_Voice
+   is new Four_Params_Voice
    with private;
 
    function Engine (This : Instance) return Synth_Engines;
@@ -29,22 +29,12 @@ is
    --  Interfaces --
 
    overriding
-   procedure Strike (This : in out Instance);
-
-   overriding
-   procedure Set_Pitch (This  : in out Instance;
-                        Pitch :        Pitch_Range);
-
-   overriding
-   procedure Set_Param (This : in out Instance; Id : Param_Id; P : Param_Range);
-
-   overriding
    function Param_Label (This : Instance; Id : Param_Id) return String;
 
 private
 
    type Instance
-   is new Pitched_Voice and Strike_Voice and Four_Params_Voice
+   is new Four_Params_Voice
    with record
 
       Engine : Synth_Engines := Synth_Engines'First;
@@ -58,14 +48,10 @@ private
 
       LP_State : S32 := 0;
 
-      Pitch : Pitch_Range := Init_Pitch;
       Phase : U32 := 0;
       Modulator_Phase : U32 := 0;
 
-      Do_Strike : Boolean := False;
       Do_Init : Boolean := True;
-
-      Params : Param_Array := (others => Param_Range'Last / 2);
    end record;
 
 end Tresses.Voices.Macro;

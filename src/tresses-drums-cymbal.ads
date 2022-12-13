@@ -29,6 +29,20 @@ is
           when P_Noise  => "Noise",
           when others   => "N/A");
 
+   -- Interfaces --
+
+   type Instance
+   is new Four_Params_Voice
+   with private;
+
+   overriding
+   function Param_Label (This : Instance; Id : Param_Id)
+                         return String
+   is (Param_Label (Id));
+
+   procedure Render (This   : in out Instance;
+                     Buffer :    out Mono_Buffer);
+
 private
 
    type Cymbal_Phase_Array is array (0 .. 5) of U32;
@@ -37,6 +51,16 @@ private
       Phase : Cymbal_Phase_Array := (others => 0);
       Rng : Random.Instance;
       Last_Noise : U32 := 0;
+   end record;
+
+   type Instance
+   is new Four_Params_Voice
+   with record
+      Filter0, Filter1 : Filters.SVF.Instance;
+      Env              : Envelopes.AD.Instance;
+      State            : Cymbal_State;
+      Phase            : U32;
+      Do_Init          : Boolean := True;
    end record;
 
 end Tresses.Drums.Cymbal;

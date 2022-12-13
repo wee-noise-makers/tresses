@@ -203,4 +203,20 @@ package body Tresses.Drums.Percussion is
       end;
    end Render_Percussion;
 
+   ------------
+   -- Render --
+   ------------
+
+   procedure Render (This   : in out Instance;
+                     Buffer :    out Mono_Buffer)
+   is
+   begin
+      Render_Percussion (Buffer,
+                         This.Params,
+                         This.State,
+                         This.Rng,
+                         This.Pitch,
+                         This.Do_Strike);
+   end Render;
+
 end Tresses.Drums.Percussion;

@@ -112,29 +112,22 @@ package body Tresses.Analog_Oscillator is
       end case;
    end Render;
 
-   ----------------
-   -- Set_Param1 --
-   ----------------
+   ---------------
+   -- Set_Param --
+   ---------------
 
-   procedure Set_Param1 (This : in out Instance; P1 : Param_Range) is
+   procedure Set_Param (This : in out Instance;
+                        Id : Param_Id;
+                        P  : Param_Range)
+   is
    begin
-      This.Params (0) := P1;
-   end Set_Param1;
-
-   ----------------
-   -- Set_Param2 --
-   ----------------
-
-   procedure Set_Param2 (This : in out Instance; P2 : Param_Range) is
-   begin
-      This.Params (1) := P2;
-   end Set_Param2;
+      This.Params (Id) := P;
+   end Set_Param;
 
    ---------------
    -- Set_Pitch --
    ---------------
 
-   overriding
    procedure Set_Pitch (This : in out Instance; P : Pitch_Range) is
    begin
       This.Pitch := P;

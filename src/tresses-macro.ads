@@ -19,7 +19,7 @@ is
    --  A macro engine that can play all sounds
 
    type Instance
-   is new Pitched_Voice and Strike_Voice and Four_Params_Voice
+   is new Four_Params_Voice
    with private;
 
    function Engine (This : Instance) return Engines;
@@ -50,7 +50,7 @@ is
 private
 
    type Instance
-   is new Pitched_Voice and Strike_Voice and Four_Params_Voice
+   is new Four_Params_Voice
    with record
 
       Engine : Engines := Engines'First;
@@ -60,8 +60,6 @@ private
       Osc0, Osc1 : Analog_Oscillator.Instance;
       Rng : Random.Instance;
       Env : Envelopes.AD.Instance;
-
-      Pitch : Pitch_Range := Init_Pitch;
 
       LP_State : S32 := 0;
       Cym_State : Drums.Cymbal.Cymbal_State;
@@ -74,10 +72,8 @@ private
       Pluck_State : Voices.Plucked.Pluck_State;
       KS          : Voices.Plucked.KS_Array;
 
-      Do_Strike : Boolean := False;
       Do_Init : Boolean := True;
 
-      Params : Param_Array := (others => Param_Range'Last / 2);
    end record;
 
 end Tresses.Macro;

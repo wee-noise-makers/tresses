@@ -150,4 +150,27 @@ package body Tresses.Drums.Snare is
       end;
    end Render_Snare;
 
+   ------------
+   -- Render --
+   ------------
+
+   procedure Render (This   : in out Instance;
+                     Buffer :    out Mono_Buffer)
+   is
+   begin
+      Render_Snare (Buffer,
+                    This.Params,
+                    This.Pulse0,
+                    This.Pulse1,
+                    This.Pulse2,
+                    This.Pulse3,
+                    This.Filter0,
+                    This.Filter1,
+                    This.Filter2,
+                    This.Rng,
+                    This.Pitch,
+                    This.Do_Init,
+                    This.Do_Strike);
+   end Render;
+
 end Tresses.Drums.Snare;

@@ -34,11 +34,11 @@ package body Tresses.Voices.Analog_Macro is
    is
       Sample : S32;
    begin
-      Osc0.Set_Param1 (Param1);
+      Osc0.Set_Param (0, Param1);
       Osc0.Set_Shape (Analog_Oscillator.Buzz);
       Osc0.Set_Pitch (Pitch);
 
-      Osc1.Set_Param1 (Param1);
+      Osc1.Set_Param (0, Param1);
       Osc1.Set_Shape (Analog_Oscillator.Buzz);
 
       declare
@@ -92,22 +92,22 @@ package body Tresses.Voices.Analog_Macro is
 
       case Param1 is
          when Param_Range'First .. 10_922 =>
-            Osc0.Set_Param1 (0);
-            Osc1.Set_Param1 (0);
+            Osc0.Set_Param (0, 0);
+            Osc1.Set_Param (0, 0);
             Osc0.Set_Shape (Analog_Oscillator.Triangle);
             Osc1.Set_Shape (Analog_Oscillator.Saw);
             Balance := U16 (Param1) * 6;
 
          when 10_923 .. 21_845 =>
-            Osc0.Set_Param1 (0);
-            Osc1.Set_Param1 (0);
+            Osc0.Set_Param (0, 0);
+            Osc1.Set_Param (0, 0);
             Osc0.Set_Shape (Analog_Oscillator.Square);
             Osc1.Set_Shape (Analog_Oscillator.Saw);
             Balance := U16'Last - ((U16 (Param1) - 10_923) * 6);
 
          when 21_846 .. Param_Range'Last =>
-            Osc0.Set_Param1 ((Param1 - 21_846) * 3);
-            Osc1.Set_Param1 (0);
+            Osc0.Set_Param (0, (Param1 - 21_846) * 3);
+            Osc1.Set_Param (0, 0);
             Osc0.Set_Shape (Analog_Oscillator.Square);
             Osc1.Set_Shape (Analog_Oscillator.Sine);
             Balance := 0;

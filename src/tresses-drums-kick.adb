@@ -118,4 +118,24 @@ package body Tresses.Drums.Kick is
       end;
    end Render_Kick;
 
+   ------------
+   -- Render --
+   ------------
+
+   procedure Render (This   : in out Instance;
+                     Buffer :    out Mono_Buffer)
+   is
+   begin
+      Render_Kick (Buffer,
+                   This.Params,
+                   This.Pulse0,
+                   This.Pulse1,
+                   This.Pulse2,
+                   This.Filter,
+                   This.LP_State,
+                   This.Pitch,
+                   This.Do_Init,
+                   This.Do_Strike);
+   end Render;
+
 end Tresses.Drums.Kick;

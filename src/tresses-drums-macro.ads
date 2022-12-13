@@ -15,7 +15,7 @@ is
    --  A macro engine that can play all the drum sounds
 
    type Instance
-   is new Pitched_Voice and Strike_Voice and Four_Params_Voice
+   is new Four_Params_Voice
    with private;
 
    function Engine (This : Instance) return Drum_Engines;
@@ -31,22 +31,12 @@ is
    --  Interfaces --
 
    overriding
-   procedure Strike (This : in out Instance);
-
-   overriding
-   procedure Set_Pitch (This  : in out Instance;
-                        Pitch :        Pitch_Range);
-
-   overriding
-   procedure Set_Param (This : in out Instance; Id : Param_Id; P : Param_Range);
-
-   overriding
    function Param_Label (This : Instance; P : Param_Id) return String;
 
 private
 
    type Instance
-   is new Pitched_Voice and Strike_Voice and Four_Params_Voice
+   is new Four_Params_Voice
    with record
 
       Engine : Drum_Engines := Drum_Engines'First;
@@ -56,18 +46,14 @@ private
       Rng : Random.Instance;
       Env : Envelopes.AD.Instance;
 
-      Pitch : Pitch_Range := Init_Pitch;
-
       Bell_State : Bell.Additive_State;
       Perc_State : Percussion.Additive_State;
       LP_State : S32 := 0;
       Cym_State : Cymbal.Cymbal_State;
       Phase : U32 := 0;
 
-      Do_Strike : Boolean := False;
       Do_Init : Boolean := True;
 
-      Params : Param_Array := (others => Param_Range'Last / 2);
    end record;
 
 end Tresses.Drums.Macro;

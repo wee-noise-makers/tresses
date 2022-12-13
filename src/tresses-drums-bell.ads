@@ -23,6 +23,20 @@ is
           when P_Coefficient => "Coefficient",
           when others        => "N/A");
 
+   -- Interfaces --
+
+   type Instance
+   is new Four_Params_Voice
+   with private;
+
+   overriding
+   function Param_Label (This : Instance; Id : Param_Id)
+                         return String
+   is (Param_Label (Id));
+
+   procedure Render (This   : in out Instance;
+                     Buffer :    out Mono_Buffer);
+
 private
 
    Num_Bell_Partials : constant := 11;
@@ -38,6 +52,12 @@ private
       Partial_Amplitude : S32_Partials := (others => 0);
       Previous_Sample : S16 := 0;
       Current_Partial : Partials_Index := 0;
+   end record;
+
+   type Instance
+   is new Four_Params_Voice
+   with record
+      State : Additive_State;
    end record;
 
 end Tresses.Drums.Bell;

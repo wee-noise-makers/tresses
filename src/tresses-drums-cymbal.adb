@@ -143,4 +143,24 @@ package body Tresses.Drums.Cymbal is
       end;
    end Render_Cymbal;
 
+   ------------
+   -- Render --
+   ------------
+
+   procedure Render (This   : in out Instance;
+                     Buffer :    out Mono_Buffer)
+   is
+   begin
+      Render_Cymbal (Buffer,
+                     This.Params,
+                     This.Filter0,
+                     This.Filter1,
+                     This.Env,
+                     This.State,
+                     This.Phase,
+                     This.Pitch,
+                     This.Do_Init,
+                     This.Do_Strike);
+   end Render;
+
 end Tresses.Drums.Cymbal;

@@ -144,4 +144,19 @@ package body Tresses.Drums.Bell is
       end;
    end Render_Bell;
 
+   ------------
+   -- Render --
+   ------------
+
+   procedure Render (This   : in out Instance;
+                     Buffer :    out Mono_Buffer)
+   is
+   begin
+      Render_Bell (Buffer,
+                   This.Params,
+                   This.State,
+                   This.Pitch,
+                   This.Do_Strike);
+   end Render;
+
 end Tresses.Drums.Bell;

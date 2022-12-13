@@ -63,8 +63,6 @@ is
           when Voice_Analog_Morph => "Morph",
           when Voice_Analog_FM2OP => "FM 2 OP");
 
-private
-
    Init_Pitch : constant Pitch_Range := 60 * 128;
 
 end Tresses;
