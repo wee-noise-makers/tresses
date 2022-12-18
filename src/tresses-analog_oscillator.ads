@@ -1,5 +1,3 @@
-with Tresses.Interfaces; use Tresses.Interfaces;
-
 package Tresses.Analog_Oscillator
 with Preelaborate
 is

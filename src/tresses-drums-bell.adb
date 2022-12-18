@@ -4,8 +4,6 @@
 --  Based on Braids from Mutable Instruments:
 --  Copyright 2012 Emilie Gillet.
 
-with Tresses.Excitation; use Tresses.Excitation;
-with Tresses.Filters.SVF; use Tresses.Filters.SVF;
 with Tresses.DSP;
 with Tresses.Resources;
 

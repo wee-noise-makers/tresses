@@ -7,6 +7,7 @@
 with Tresses.Excitation; use Tresses.Excitation;
 with Tresses.Filters.SVF; use Tresses.Filters.SVF;
 with Tresses.DSP;
+with Tresses.Resources;
 
 package body Tresses.Drums.Kick is
 
@@ -23,8 +24,11 @@ package body Tresses.Drums.Kick is
                           Do_Init                : in out Boolean;
                           Do_Strike              : in out Boolean)
    is
-      Decay       : Param_Range renames Params (P_Decay);
-      Coefficient : Param_Range renames Params (P_Coefficient);
+      Decay        : Param_Range renames Params (P_Decay);
+      Coefficient  : Param_Range renames Params (P_Coefficient);
+      Drive        : Param_Range renames Params (P_Drive);
+      Drive_Amount : U16;
+
    begin
       if Do_Init then
          Do_Init := False;
@@ -66,9 +70,13 @@ package body Tresses.Drums.Kick is
          Set_Resonance (Filter, S16 (32768 - 128 - Scaled));
       end;
 
+      --  Control curve: Drive to the power of 2
+      Drive_Amount := U16 (Shift_Right (U32 (Drive)**2, 15));
+
       declare
          Coef : U32 := U32 (Coefficient);
       begin
+         --  Control curve: Coef to the power of 4
          Coef := Shift_Right (Coef**2, 15);
          Coef := Shift_Right (Coef**2, 15);
          declare
@@ -80,6 +88,7 @@ package body Tresses.Drums.Kick is
                declare
                   Excitation : S32 := 0;
                   Unused : S32;
+                  Shifted_Sample : S32;
                begin
                   Excitation := Excitation + Process (Pulse0);
                   Excitation := Excitation + (if not Done (Pulse1)
@@ -96,6 +105,7 @@ package body Tresses.Drums.Kick is
                      declare
                         Resonator_Output : S32;
                         Ignore : Integer;
+                        Fuzzed : S16;
                      begin
                         Resonator_Output := (Excitation / 2**4) +
                           Process (Filter, Excitation);
@@ -105,7 +115,16 @@ package body Tresses.Drums.Kick is
 
                         DSP.Clip_S16 (LP_State);
 
-                        Buffer (Index) := S16 (LP_State);
+                        Shifted_Sample := LP_State + 32_768;
+
+                        Fuzzed := DSP.Interpolate88
+                          (Resources.WS_Extreme_Overdrive,
+                           U16 (Shifted_Sample));
+
+                        --  Mix clean and overdrive signals
+                        Buffer (Index) := DSP.Mix (S16 (LP_State),
+                                                   Fuzzed,
+                                                   Drive_Amount);
                         Index := Index + 1;
 
                         exit when Index > Buffer'Last;

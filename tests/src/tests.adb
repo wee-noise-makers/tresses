@@ -17,9 +17,6 @@ procedure Tests is
    Param_Vals : constant array (Natural range <>) of Param_Range :=
      (Param_Range'First, Param_Range'Last);
 
-   Env_Vals : constant array (Natural range <>) of U7 :=
-     (U7'Last / 2, U7'Last);
-
 begin
 
    --  Run every engine with all combinations of limit settings
@@ -31,16 +28,16 @@ begin
          Macro.Set_Pitch (Pitch);
 
          for Param_1 of Param_Vals loop
-            Macro.Set_Param1 (Param_1);
+            Macro.Set_Param (1, Param_1);
 
             for Param_2 of Param_Vals loop
-               Macro.Set_Param2 (Param_2);
+               Macro.Set_Param (2, Param_2);
 
-               for Attack of Env_Vals loop
-                  Macro.Set_Attack (Attack);
+               for Param_3 of Param_Vals loop
+                  Macro.Set_Param (3, Param_3);
 
-                  for Decay of Env_Vals loop
-                     Macro.Set_Decay (Decay);
+                  for Param_4 of Param_Vals loop
+                     Macro.Set_Param (4, Param_4);
 
                      Macro.Strike;
 

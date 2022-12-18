@@ -234,7 +234,7 @@ package body Tresses.Macro is
             return Drums.Percussion.Param_Label (Id);
 
          when Drum_Bell =>
-           return  Drums.Bell.Param_Label (Id);
+            return  Drums.Bell.Param_Label (Id);
 
          when Voice_Saw_Swarm =>
             return Voices.Saw_Swarm.Param_Label (Id);
