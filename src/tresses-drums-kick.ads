@@ -17,11 +17,13 @@ is
 
    P_Decay       : constant Param_Id := 1;
    P_Coefficient : constant Param_Id := 2;
+   P_Drive       : constant Param_Id := 3;
 
    function Param_Label (Id : Param_Id) return String
    is (case Id is
           when P_Decay       => "Decay",
           when P_Coefficient => "Coefficient",
+          when P_Drive       => "Drive",
           when others        => "N/A");
 
 end Tresses.Drums.Kick;

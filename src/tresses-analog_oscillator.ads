@@ -40,7 +40,6 @@ is
 
    procedure Set_Param2 (This : in out Instance; P2 : Param_Range);
 
-
    -- Interfaces --
    overriding
    procedure Set_Pitch (This : in out Instance; P : Pitch_Range);

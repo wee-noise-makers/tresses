@@ -270,7 +270,7 @@ class ResourceLibrary(object):
   def GenerateHeader(self):
     root = self._root
     sample_rate = os.environ['SAMPLE_RATE']
-    f = file(os.path.join(root.target, 'tresses-resources-SR%s.ads' % sample_rate), 'wb')
+    f = file(os.path.join(root.target, 'tresses-resources--SR%s.ads' % sample_rate), 'wb')
     # Write header and header guard
     f.write(root.header + '\n')
     # f.write(root.includes + '\n\n')

@@ -38,7 +38,9 @@ is
                         Pitch :        Pitch_Range);
 
    overriding
-   procedure Set_Param (This : in out Instance; Id : Param_Id; P : Param_Range);
+   procedure Set_Param (This : in out Instance;
+                        Id : Param_Id;
+                        P : Param_Range);
 
    overriding
    function Param_Label (This : Instance; P : Param_Id) return String;
