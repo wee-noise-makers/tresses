@@ -48,4 +48,6 @@ is
 
    function Compute_Phase_Increment (Pitch : S16) return U32;
 
+   function Tanh (X : S16) return S16;
+
 end Tresses.DSP;

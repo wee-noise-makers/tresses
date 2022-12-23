@@ -149,7 +149,9 @@ package body Tresses.Macro is
                Pitch          => This.Pitch,
                Do_Strike      => This.Do_Strike);
 
-         when Voice_Analog_Buzz | Voice_Analog_Morph =>
+         when Voice_Analog_Buzz | Voice_Analog_Morph |
+              Voice_Analog_Acid_Bass
+            =>
             declare
                use Voices.Analog_Macro;
 
@@ -157,6 +159,7 @@ package body Tresses.Macro is
                  (case This.Engine is
                      when Voice_Analog_Buzz => Buzz,
                      when Voice_Analog_Morph => Morph,
+                     when Voice_Analog_Acid_Bass => Acid_Bass,
                      when others => raise Program_Error);
 
             begin
@@ -169,6 +172,7 @@ package body Tresses.Macro is
                   Osc0 => This.Osc0,
                   Osc1 => This.Osc1,
                   Env => This.Env,
+                  Filter => This.Ladder,
                   LP_State => This.LP_State,
                   Pitch => This.Pitch,
                   Do_Strike => This.Do_Strike);

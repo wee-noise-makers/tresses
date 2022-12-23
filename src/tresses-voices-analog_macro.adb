@@ -27,6 +27,7 @@ package body Tresses.Voices.Analog_Macro is
                            This.Param1, This.Param2,
                            This.Osc0, This.Osc1,
                            This.Env,
+                           This.Filter,
                            This.LP_State,
                            This.Pitch,
                            This.Do_Strike);
@@ -159,6 +160,45 @@ package body Tresses.Voices.Analog_Macro is
 
    end Render_Morph;
 
+   ----------------------
+   -- Render_Acid_Bass --
+   ----------------------
+
+   procedure Render_Acid_Bass
+     (Buffer             :    out Mono_Buffer;
+      Param1, Param2     :        Param_Range;
+      Osc0               : in out Analog_Oscillator.Instance;
+      Env                : in out Envelopes.AD.Instance;
+      Filter             : in out Filters.Ladder.Instance;
+      Pitch              :        Pitch_Range)
+   is
+      Sample : S32;
+      Env_Val : S32;
+      Cutoff  : S32;
+   begin
+      Osc0.Set_Pitch (Pitch);
+      Osc0.Set_Param1 (0);
+      Osc0.Set_Shape (Analog_Oscillator.Square);
+
+      Osc0.Render (Buffer);
+
+      Filters.Ladder.Set_Resonance (Filter, Param2);
+
+      for Idx in Buffer'Range loop
+         Env_Val := S32 (Render (Env));
+
+         Cutoff := (S32 (Param1) * Env_Val) / 2**15;
+         Filters.Ladder.Set_Cutoff (Filter, Param_Range (Cutoff));
+
+         Sample := S32 (Buffer (Idx));
+         Sample := Filters.Ladder.Process (Filter, Sample);
+         Sample := (Sample * Env_Val) / 2**15;
+
+         Buffer (Idx) := S16 (Sample);
+      end loop;
+
+   end Render_Acid_Bass;
+
    -------------------------
    -- Render_Analog_Macro --
    -------------------------
@@ -169,6 +209,7 @@ package body Tresses.Voices.Analog_Macro is
       Param1, Param2     :        Param_Range;
       Osc0, Osc1         : in out Analog_Oscillator.Instance;
       Env                : in out Envelopes.AD.Instance;
+      Filter             : in out Filters.Ladder.Instance;
       LP_State           : in out S32;
       Pitch              :        Pitch_Range;
       Do_Strike          : in out Boolean)
@@ -190,6 +231,15 @@ package body Tresses.Voices.Analog_Macro is
                Osc0, Osc1,
                Env,
                LP_State, Pitch);
+
+         when Acid_Bass =>
+            Render_Acid_Bass
+              (Buffer_A,
+               Param1, Param2,
+               Osc0,
+               Env,
+               Filter,
+               Pitch);
       end case;
 
    end Render_Analog_Macro;

@@ -4,6 +4,7 @@ with Tresses.Voices.Plucked;
 with Tresses.Random;
 with Tresses.Envelopes.AD;
 with Tresses.Analog_Oscillator;
+with Tresses.Filters.Ladder;
 
 with Tresses.Interfaces; use Tresses.Interfaces;
 
@@ -57,6 +58,7 @@ private
       KS          : Plucked.KS_Array;
       Rng         : Random.Instance;
       Env         : Envelopes.AD.Instance;
+      Filter      : Filters.Ladder.Instance;
       Osc0, Osc1  : Analog_Oscillator.Instance;
 
       LP_State : S32 := 0;

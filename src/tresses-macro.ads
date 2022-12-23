@@ -5,6 +5,7 @@ with Tresses.Drums.Bell;
 with Tresses.Excitation;
 with Tresses.Random;
 with Tresses.Filters.SVF;
+with Tresses.Filters.Ladder;
 with Tresses.Envelopes.AD;
 with Tresses.Analog_Oscillator;
 
@@ -63,6 +64,7 @@ private
       Osc0, Osc1 : Analog_Oscillator.Instance;
       Rng : Random.Instance;
       Env : Envelopes.AD.Instance;
+      Ladder : Filters.Ladder.Instance;
 
       Pitch : Pitch_Range := Init_Pitch;
 

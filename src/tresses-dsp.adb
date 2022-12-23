@@ -170,4 +170,14 @@ package body Tresses.DSP is
       return Phase_Increment;
    end Compute_Phase_Increment;
 
+   ----------
+   -- Tanh --
+   ----------
+
+   function Tanh (X : S16) return S16 is
+      Index : constant S32 := S32 (X) + 32_768;
+   begin
+      return Interpolate88 (LUT_Tanh, U16 (Index));
+   end Tanh;
+
 end Tresses.DSP;

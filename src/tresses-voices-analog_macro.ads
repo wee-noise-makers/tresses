@@ -1,12 +1,13 @@
 with Tresses.Envelopes.AD;
 with Tresses.Analog_Oscillator;
+with Tresses.Filters.Ladder;
 with Tresses.Interfaces; use Tresses.Interfaces;
 
 package Tresses.Voices.Analog_Macro
 with Preelaborate
 is
 
-   type Analog_Macro_Shape is (Morph, Buzz);
+   type Analog_Macro_Shape is (Morph, Buzz, Acid_Bass);
 
    type Instance
    is new Pitched_Voice
@@ -29,6 +30,7 @@ is
       Param1, Param2     :        Param_Range;
       Osc0, Osc1         : in out Analog_Oscillator.Instance;
       Env                : in out Envelopes.AD.Instance;
+      Filter             : in out Filters.Ladder.Instance;
       LP_State           : in out S32;
       Pitch              :        Pitch_Range;
       Do_Strike          : in out Boolean)
@@ -68,6 +70,7 @@ private
       Shape      : Analog_Macro_Shape := Analog_Macro_Shape'First;
       Env        : Envelopes.AD.Instance;
       Osc0, Osc1 : Analog_Oscillator.Instance;
+      Filter     : Filters.Ladder.Instance;
 
       Pitch : Pitch_Range := Init_Pitch;
 
