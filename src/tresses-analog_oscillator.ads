@@ -28,6 +28,8 @@ is
 
    procedure Init (This : in out Instance);
 
+   procedure Sync (This : in out Instance);
+
    procedure Set_Shape (This : in out Instance; S : Shape_Kind);
 
    procedure Render (This   : in out Instance;

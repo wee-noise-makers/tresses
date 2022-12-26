@@ -10,6 +10,7 @@ package Tresses.Resources
 with Preelaborate
 is
    SAMPLE_RATE : constant := 32000;
+   SAMPLE_RATE_REAL : constant := 32000.0;
    type Table_257_S16 is array (U16 range 0 .. 256) of S16;
    type Table_256_S16 is array (U8 range 0 .. 255) of S16;
    type Table_513_U16 is array (U16 range 0 .. 512) of U16;

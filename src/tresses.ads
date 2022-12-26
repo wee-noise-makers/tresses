@@ -63,6 +63,8 @@ is
           when Voice_Analog_Morph => "Morph",
           when Voice_Analog_FM2OP => "FM 2 OP");
 
-   Init_Pitch : constant Pitch_Range := 60 * 128;
+   Semitone   : constant Pitch_Range := 128;
+   Octave     : constant Pitch_Range := 12 * Semitone;
+   Init_Pitch : constant Pitch_Range := 60 * Semitone;
 
 end Tresses;

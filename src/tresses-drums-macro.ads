@@ -44,7 +44,7 @@ private
       Pulse0, Pulse1, Pulse2, Pulse3 : Excitation.Instance;
       Filter0, Filter1, Filter3 : Filters.SVF.Instance;
       Rng : Random.Instance;
-      Env : Envelopes.AD.Instance;
+      Env0, Env1 : Envelopes.AD.Instance;
 
       Bell_State : Bell.Additive_State;
       Perc_State : Percussion.Additive_State;

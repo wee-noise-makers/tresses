@@ -278,6 +278,7 @@ class ResourceLibrary(object):
     f.write("with Preelaborate\n")
     f.write("is\n")
     f.write("   SAMPLE_RATE : constant := %s;\n" % sample_rate)
+    f.write("   SAMPLE_RATE_REAL : constant := %s.0;\n" % sample_rate)
     self._DeclareArrayTypes(f)
     # self._DeclareTables(f)
     # self._DeclareEntries(f)

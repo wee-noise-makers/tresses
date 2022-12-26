@@ -69,6 +69,15 @@ package body Tresses.Analog_Oscillator is
       This.Next_Sample := 0;
    end Init;
 
+   ----------
+   -- Sync --
+   ----------
+
+   procedure Sync (This : in out Instance) is
+   begin
+      This.Phase := 0;
+   end Sync;
+
    ---------------
    -- Set_Shape --
    ---------------
@@ -420,7 +429,9 @@ package body Tresses.Analog_Oscillator is
 
       for Sample of Buffer loop
          Phase_Increment := Interpolate (Phase_Incr_Interp);
-         This.Phase := This.Phase + Phase_Increment / 2;
+
+         This.Phase := This.Phase + Phase_Increment;
+
          Sample := DSP.Interpolate824 (WAV_Sine, This.Phase);
       end loop;
 

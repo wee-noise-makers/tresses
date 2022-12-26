@@ -19,8 +19,10 @@ is
 
    function Current_Segment (This : Instance) return Segment_Kind;
    function Render (This : in out Instance) return U16;
+   procedure Render (This : in out Instance);
 
    function Value (This : Instance) return U16;
+   function Low_Pass (This : in out Instance) return S32;
 
 private
 
@@ -39,6 +41,7 @@ private
                                 Dead => 0);
       Segement : Segment_Kind := Segment_Kind'First;
       A, B, Value : U16 := 0;
+      LP : S32 := 0;
       Phase : U32 := 0;
    end record;
 

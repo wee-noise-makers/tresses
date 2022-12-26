@@ -91,7 +91,7 @@ package body Tresses.Envelopes.AD is
       if This.Phase < Increment then
          --  We reached the end of the segment
 
-         This.Value := DSP.Mix (This.A, This.B, 65_535);
+         This.Value := This.B;
 
          --  Go to next segment
          Trigger (This, Segment_Kind'Succ (This.Segement));
@@ -106,11 +106,32 @@ package body Tresses.Envelopes.AD is
       return This.Value;
    end Render;
 
+   ------------
+   -- Render --
+   ------------
+
+   procedure Render (This : in out Instance) is
+      Unused : U16;
+   begin
+      Unused := Render (This);
+   end Render;
+
    -----------
    -- Value --
    -----------
 
    function Value (This : Instance) return U16
    is (This.Value);
+
+   --------------
+   -- Low_Pass --
+   --------------
+
+   function Low_Pass (This : in out Instance) return S32 is
+      Result : constant S32 := This.LP;
+   begin
+      This.LP := This.LP + ((S32 (This.Value) - This.LP) / 2**4);
+      return Result;
+   end Low_Pass;
 
 end Tresses.Envelopes.AD;

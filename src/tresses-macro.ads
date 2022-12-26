@@ -61,7 +61,7 @@ private
       Filter0, Filter1, Filter3 : Filters.SVF.Instance;
       Osc0, Osc1 : Analog_Oscillator.Instance;
       Rng : Random.Instance;
-      Env : Envelopes.AD.Instance;
+      Env0 : Envelopes.AD.Instance;
 
       LP_State : S32 := 0;
       Cym_State : Drums.Cymbal.Cymbal_State;
