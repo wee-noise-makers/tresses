@@ -9,6 +9,9 @@ maintainers-logins = ["Fabien-Chouteau"]
 [[depends-on]]
 midi = "~0.2.0"
 
+[build-switches]
+release.runtime_checks = "none"
+
 [configuration.variables]
 Sample_Rate = {type = "Enum", values = ["SR22050", "SR32000", "SR44100",
                                         "SR48000",
