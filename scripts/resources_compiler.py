@@ -10,10 +10,10 @@
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in
 # all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,7 +21,7 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-# 
+#
 # See http://creativecommons.org/licenses/MIT/ for more information.
 #
 # -----------------------------------------------------------------------------
@@ -49,7 +49,7 @@ class ResourceEntry(object):
 
   @property
   def variable_name(self):
-    
+
     return '%s_%s' % (self._table.prefix, to_ada_case(self._dupe_of))
 
   @property
@@ -80,14 +80,14 @@ class ResourceEntry(object):
          index_type,
          size - 1,
          self._table.ada_type)
-    
+
   @property
   def declaration(self):
     array_type = self.array_type
     name = self.variable_name
     storage = ' IN_RAM' if self._in_ram else ''
     return '   %(name)s : aliased constant %(array_type)s %(storage)s' % locals()
-    
+
   def Declare(self, f):
     if self._dupe_of == self._key:
       # Dupes are not declared.
@@ -106,12 +106,12 @@ class ResourceEntry(object):
     f.write('   %(prefix)s_%(key)s : constant := %(index)d;%(comment)s\n' % locals())
     if not size is None:
       f.write('   %(prefix)s_%(key)s_SIZE : constant := %(size)d;\n' % locals())
-  
+
   def Compile(self, f):
     # Do not create declaration for dupes.
     if self._dupe_of != self._key:
       return
-    
+
     declaration = self.declaration
     if self._table.python_type == float:
       f.write('%(declaration)s:= (\n' % locals())
@@ -138,12 +138,13 @@ class ResourceEntry(object):
             '%6d' % self._value[j] \
             for j in xrange(i, min(n_elements, i + 4))))
         if i < last - 3:
-          f.write(',\n');
-      f.write(');\n')
-    
+          f.write(',\n')
+      f.write(')\n')
+      f.write('     with Linker_Section => Linker_Section;\n')
+
 
 class ResourceTable(object):
-  
+
   def __init__(self, resource_tuple):
     self.name = resource_tuple[1]
     self.prefix = resource_tuple[2]
@@ -173,7 +174,7 @@ class ResourceTable(object):
           values.get(hashable_value, None), self, in_ram))
       if not hashable_value in values:
         values[hashable_value] = key
-  
+
   def _ComputeIdentifierRewriteTable(self):
     in_chr = ''.join(map(chr, range(256)))
     out_chr = [ord('_')] * 256
@@ -190,7 +191,7 @@ class ResourceTable(object):
     table = string.maketrans(in_chr, ''.join(map(chr, out_chr)))
     bad_chars = '\t\n\r-:()[]"\',;'
     self._MakeIdentifier = lambda s:s.translate(table, bad_chars)
-  
+
   def DeclareEntries(self, f):
     if self.python_type != str:
       for entry in self.entries:
@@ -199,7 +200,7 @@ class ResourceTable(object):
   def DeclareAliases(self, f):
     for entry in self.entries:
       entry.DeclareAlias(f)
-  
+
   def Compile(self, f):
     # Write a declaration for each entry.
     for entry in self.entries:
@@ -222,7 +223,7 @@ class ResourceTable(object):
 
 
 class ResourceLibrary(object):
-  
+
   def __init__(self, root):
     self._tables = []
     self._root = root
@@ -253,7 +254,7 @@ class ResourceLibrary(object):
 
   def _DeclareTables(self, f):
     for table in self._tables:
-      f.write('extern const %s* %s_table[];\n\n' % (table.c_type, table.name)) 
+      f.write('extern const %s* %s_table[];\n\n' % (table.c_type, table.name))
 
   def _DeclareEntries(self, f):
     for table in self._tables:
@@ -262,11 +263,11 @@ class ResourceLibrary(object):
   def _DeclareAliases(self, f):
     for table in self._tables:
       table.DeclareAliases(f)
-  
+
   def _CompileTables(self, f):
     for table in self._tables:
       table.Compile(f)
-  
+
   def GenerateHeader(self):
     root = self._root
     sample_rate = os.environ['SAMPLE_RATE']
@@ -274,11 +275,14 @@ class ResourceLibrary(object):
     # Write header and header guard
     f.write(root.header + '\n')
     # f.write(root.includes + '\n\n')
+    f.write("with Tresses_Config;\n")
     f.write("package Tresses.Resources\n")
     f.write("with Preelaborate\n")
     f.write("is\n")
     f.write("   SAMPLE_RATE : constant := %s;\n" % sample_rate)
     f.write("   SAMPLE_RATE_REAL : constant := %s.0;\n" % sample_rate)
+    f.write("   Linker_Section   : constant String := Tresses_Config.Resources_Linker_Section;\n")
+
     self._DeclareArrayTypes(f)
     # self._DeclareTables(f)
     # self._DeclareEntries(f)
@@ -286,7 +290,7 @@ class ResourceLibrary(object):
     self._CompileTables(f)
     f.write("end Tresses.Resources;\n")
     f.close()
-    
+
   def GenerateCc(self):
     root = self._root
     file_name = os.path.join(self._root.target, 'tresses-resources.adb')
