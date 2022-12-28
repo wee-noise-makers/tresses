@@ -98,8 +98,6 @@ package body Tresses.Drums.Kick is
             while Index <= Buffer'Last loop
                declare
                   Excitation : S32 := 0;
-                  Unused : S32;
-                  Shifted_Sample : S32;
                begin
                   Excitation := Excitation + Process (Pulse0);
                   Excitation := Excitation + (if not Done (Pulse1)
@@ -128,16 +126,20 @@ package body Tresses.Drums.Kick is
 
                         DSP.Clip_S16 (LP_State);
 
-                        Shifted_Sample := LP_State + 32_768;
+                        --  Asymmetrical soft clipping
+                        if LP_State > 0 then
 
-                        Fuzzed := DSP.Interpolate88
-                          (Resources.WS_Extreme_Overdrive,
-                           U16 (Shifted_Sample));
+                           Fuzzed := DSP.Interpolate88
+                             (Resources.WS_Extreme_Overdrive,
+                              U16 (LP_State + 32_768));
 
-                        --  Mix clean and overdrive signals
-                        Buffer (Index) := DSP.Mix (S16 (LP_State),
-                                                   Fuzzed,
-                                                   Drive_Amount);
+                           --  Mix clean and overdrive signals
+                           Buffer (Index) := DSP.Mix (S16 (LP_State),
+                                                      Fuzzed,
+                                                      Drive_Amount);
+                        else
+                           Buffer (Index) := S16 (LP_State);
+                        end if;
 
                         Index := Index + 1;
 
