@@ -1,4 +1,5 @@
 with Tresses.Drums.Kick;
+with Tresses.Drums.Analog_Kick;
 with Tresses.Drums.Snare;
 with Tresses.Voices.Analog_Macro;
 with Tresses.Voices.FM_OP2;
@@ -79,6 +80,19 @@ package body Tresses.Macro is
                                     Pitch       => This.Pitch,
                                     Do_Init     => This.Do_Init,
                                     Do_Strike   => This.Do_Strike);
+
+         when Drum_Analog_Kick =>
+            Drums.Analog_Kick.Render_Analog_Kick
+              (Buffer,
+               Params => This.Params,
+               Phase => This.Phase,
+               Phase_Increment => This.Phase_Increment,
+               Target_Phase_Increment => This.Target_Phase_Increment,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
          when Drum_Snare =>
             Drums.Snare.Render_Snare (Buffer,
                                       Params => This.Params,
@@ -223,6 +237,9 @@ package body Tresses.Macro is
       case This.Engine is
          when Drum_Kick =>
             return Drums.Kick.Param_Label (Id);
+
+         when Drum_Analog_Kick =>
+            return Drums.Analog_Kick.Param_Label (Id);
 
          when Drum_Snare =>
             return Drums.Snare.Param_Label (Id);

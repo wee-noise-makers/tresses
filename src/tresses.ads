@@ -36,6 +36,7 @@ is
    type Mono_Buffer is array (Natural range <>) of Mono_Point;
 
    type Engines is (Drum_Kick,
+                    Drum_Analog_Kick,
                     Drum_Snare,
                     Drum_Cymbal,
                     Drum_Percussion,
@@ -53,6 +54,7 @@ is
    function Img (E : Engines) return String
    is (case E is
           when Drum_Kick          => "Kick",
+          when Drum_Analog_Kick   => "Analog Kick",
           when Drum_Snare         => "Snare",
           when Drum_Cymbal        => "Cymbal",
           when Drum_Percussion    => "Percussion",

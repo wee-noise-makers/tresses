@@ -69,6 +69,7 @@ private
       Perc_State : Drums.Percussion.Additive_State;
       Phase : U32 := 0;
       Modulator_Phase : U32 := 0;
+      Target_Phase_Increment, Phase_Increment : U32 := 0;
 
       Saw_Swarm_State : Voices.Saw_Swarm.Saw_Swarm_State;
       Pluck_State : Voices.Plucked.Pluck_State;

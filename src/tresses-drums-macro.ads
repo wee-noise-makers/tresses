@@ -44,13 +44,14 @@ private
       Pulse0, Pulse1, Pulse2, Pulse3 : Excitation.Instance;
       Filter0, Filter1, Filter3 : Filters.SVF.Instance;
       Rng : Random.Instance;
-      Env0, Env1 : Envelopes.AD.Instance;
+      Env0 : Envelopes.AD.Instance;
 
       Bell_State : Bell.Additive_State;
       Perc_State : Percussion.Additive_State;
       LP_State : S32 := 0;
       Cym_State : Cymbal.Cymbal_State;
       Phase : U32 := 0;
+      Target_Phase_Increment, Phase_Increment : U32 := 0;
 
       Do_Init : Boolean := True;
 
