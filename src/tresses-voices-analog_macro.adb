@@ -1,5 +1,4 @@
 with Tresses.Envelopes.AD; use Tresses.Envelopes.AD;
-
 with Tresses.DSP;
 with Tresses.Resources;
 
@@ -178,6 +177,7 @@ package body Tresses.Voices.Analog_Macro is
                Params (1), Params (2),
                Osc0, Osc1,
                Env, Pitch);
+
          when Morph =>
             Render_Morph
               (Buffer_A, Buffer_B,

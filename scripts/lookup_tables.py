@@ -282,3 +282,14 @@ env_linear = numpy.arange(0, 257.0) / 256.0
 env_expo = 1.0 - numpy.exp(-4 * env_linear)
 
 lookup_tables.append(('env_expo', env_expo / env_expo.max() * 65535.0))
+
+"""----------------------------------------------------------------------------
+tanh
+----------------------------------------------------------------------------"""
+
+x = ((numpy.arange(0, 257) / 128.0 - 1.0)) # 257 values between -1.0 and 1.0
+tanh = numpy.tanh(x) # Applay tanh to each of those values
+lookup_tables_signed.append(
+    ('tanh', tanh * 32767.0) # Multiply by 32767 (2^14) to get a Q0.15 number
+)
+

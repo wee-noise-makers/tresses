@@ -3,6 +3,7 @@ with Tresses.Drums.Analog_Kick;
 with Tresses.Drums.Snare;
 with Tresses.Voices.Analog_Macro;
 with Tresses.Voices.FM_OP2;
+with Tresses.Voices.Acid;
 
 package body Tresses.Macro is
 
@@ -157,7 +158,19 @@ package body Tresses.Macro is
                Pitch          => This.Pitch,
                Do_Strike      => This.Do_Strike);
 
-         when Voice_Analog_Buzz | Voice_Analog_Morph =>
+         when Voice_Acid =>
+            Voices.Acid.Render_Acid (Buffer => Buffer,
+                                     Params => This.Params,
+                                     Osc0 => This.Osc0,
+                                     A_Env => This.Env0,
+                                     F_Env => This.Env1,
+                                     Filter => This.Ladder,
+                                     Pitch => This.Pitch,
+                                     Do_Init => This.Do_Init,
+                                     Do_Strike => This.Do_Strike);
+
+         when Voice_Analog_Buzz | Voice_Analog_Morph
+            =>
             declare
                use Voices.Analog_Macro;
 
@@ -181,7 +194,7 @@ package body Tresses.Macro is
                   Do_Strike => This.Do_Strike);
             end;
 
-         when Voice_Analog_FM2OP =>
+         when Voice_FM2OP =>
             Voices.FM_OP2.Render_FM_OP2 (Buffer,
                                          This.Params,
                                          This.Env0,
@@ -259,7 +272,11 @@ package body Tresses.Macro is
          when Voice_Plucked =>
             return Voices.Plucked.Param_Label (Id);
 
-         when Voice_Analog_Buzz | Voice_Analog_Morph =>
+         when Voice_Acid =>
+            return Voices.Acid.Param_Label (Id);
+
+         when Voice_Analog_Buzz | Voice_Analog_Morph
+            =>
             declare
                use Voices.Analog_Macro;
 
@@ -272,7 +289,7 @@ package body Tresses.Macro is
             begin
                return Voices.Analog_Macro.Param_Label (Shape, Id);
             end;
-         when Voice_Analog_FM2OP =>
+         when Voice_FM2OP =>
             return Voices.FM_OP2.Param_Label (Id);
       end case;
    end Param_Label;

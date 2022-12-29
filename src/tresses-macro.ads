@@ -5,6 +5,7 @@ with Tresses.Drums.Bell;
 with Tresses.Excitation;
 with Tresses.Random;
 with Tresses.Filters.SVF;
+with Tresses.Filters.Ladder;
 with Tresses.Envelopes.AD;
 with Tresses.Analog_Oscillator;
 
@@ -61,7 +62,9 @@ private
       Filter0, Filter1, Filter3 : Filters.SVF.Instance;
       Osc0, Osc1 : Analog_Oscillator.Instance;
       Rng : Random.Instance;
-      Env0 : Envelopes.AD.Instance;
+      Env0, Env1 : Envelopes.AD.Instance;
+
+      Ladder : Filters.Ladder.Instance;
 
       LP_State : S32 := 0;
       Cym_State : Drums.Cymbal.Cymbal_State;

@@ -44,26 +44,28 @@ is
 
                     Voice_Plucked,
                     Voice_Saw_Swarm,
+                    Voice_Acid,
+                    Voice_FM2OP,
                     Voice_Analog_Buzz,
-                    Voice_Analog_Morph,
-                    Voice_Analog_FM2OP);
+                    Voice_Analog_Morph);
 
    subtype Drum_Engines is Engines range Drum_Kick .. Drum_Bell;
    subtype Synth_Engines is Engines range Voice_Plucked .. Engines'Last;
 
    function Img (E : Engines) return String
    is (case E is
-          when Drum_Kick          => "Kick",
-          when Drum_Analog_Kick   => "Analog Kick",
-          when Drum_Snare         => "Snare",
-          when Drum_Cymbal        => "Cymbal",
-          when Drum_Percussion    => "Percussion",
-          when Drum_Bell          => "Bell",
-          when Voice_Plucked      => "Plucked",
-          when Voice_Saw_Swarm    => "Saw Swarm",
-          when Voice_Analog_Buzz  => "Buzz",
-          when Voice_Analog_Morph => "Morph",
-          when Voice_Analog_FM2OP => "FM 2 OP");
+          when Drum_Kick              => "Kick",
+          when Drum_Analog_Kick       => "Analog Kick",
+          when Drum_Snare             => "Snare",
+          when Drum_Cymbal            => "Cymbal",
+          when Drum_Percussion        => "Percussion",
+          when Drum_Bell              => "Bell",
+          when Voice_Plucked          => "Plucked",
+          when Voice_Saw_Swarm        => "Saw Swarm",
+          when Voice_Acid             => "Acid",
+          when Voice_Analog_Buzz      => "Buzz",
+          when Voice_Analog_Morph     => "Morph",
+          when Voice_FM2OP            => "FM 2 OP");
 
    Semitone   : constant Pitch_Range := 128;
    Octave     : constant Pitch_Range := 12 * Semitone;
