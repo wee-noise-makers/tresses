@@ -28,7 +28,7 @@ package body Tresses.Drums.Analog_Kick is
 
       Sample : S32;
       Fuzzed : S16;
-      Drive_Amount : U16;
+      Drive_Amount : U32;
    begin
       if Do_Init then
          Do_Init := False;
@@ -60,7 +60,9 @@ package body Tresses.Drums.Analog_Kick is
          (U32 (Param_Range'Last - Pitch_Decay)) / 259));
 
       --  Control curve: Drive to the power of 2
-      Drive_Amount := U16 (Shift_Right (U32 (Drive)**2, 15));
+      Drive_Amount := U32 (Drive);
+      Drive_Amount := Shift_Right (Drive_Amount**2, 15);
+      Drive_Amount := Drive_Amount * 2;
 
       for Index in Buffer'Range loop
 
@@ -72,15 +74,13 @@ package body Tresses.Drums.Analog_Kick is
 
          Sample := S32 (DSP.Interpolate824 (Resources.WAV_Sine, Phase));
 
-         --  Asymmetrical soft clipping
-         if Sample > 0 then
-            Fuzzed := DSP.Interpolate88
-              (Resources.WS_Extreme_Overdrive,
-               U16 (Sample + 32_768));
+         --  Symmetrical soft clipping
+         Fuzzed := DSP.Interpolate88
+           (Resources.WS_Violent_Overdrive,
+            U16 (Sample + 32_768));
 
-            --  Mix clean and overdrive signals
-            Sample := S32 (DSP.Mix (S16 (Sample), Fuzzed, Drive_Amount));
-         end if;
+         --  Mix clean and overdrive signals
+         Sample := S32 (DSP.Mix (S16 (Sample), Fuzzed, U16 (Drive_Amount)));
 
          --  Amplitude envolope
          Render (Env);

@@ -31,7 +31,7 @@ package body Tresses.Drums.Kick is
       Coefficient  : Param_Range renames Params (P_Coefficient);
       Drive        : Param_Range renames Params (P_Drive);
       Pitch_Decay  : Param_Range renames Params (P_Punch);
-      Drive_Amount : U16;
+      Drive_Amount : U32;
 
       Pitch_Offset : S32 := 0;
 
@@ -80,7 +80,9 @@ package body Tresses.Drums.Kick is
       end;
 
       --  Control curve: Drive to the power of 2
-      Drive_Amount := U16 (Shift_Right (U32 (Drive)**2, 15));
+      Drive_Amount := U32 (Drive);
+      Drive_Amount := Shift_Right (Drive_Amount**2, 15);
+      Drive_Amount := Drive_Amount * 2;
 
       declare
          Coef : U32 := U32 (Coefficient);
@@ -126,20 +128,16 @@ package body Tresses.Drums.Kick is
 
                         DSP.Clip_S16 (LP_State);
 
-                        --  Asymmetrical soft clipping
-                        if LP_State > 0 then
+                        --  Symmetrical soft clipping
 
-                           Fuzzed := DSP.Interpolate88
-                             (Resources.WS_Extreme_Overdrive,
-                              U16 (LP_State + 32_768));
+                        Fuzzed := DSP.Interpolate88
+                          (Resources.WS_Violent_Overdrive,
+                           U16 (LP_State + 32_768));
 
-                           --  Mix clean and overdrive signals
-                           Buffer (Index) := DSP.Mix (S16 (LP_State),
-                                                      Fuzzed,
-                                                      Drive_Amount);
-                        else
-                           Buffer (Index) := S16 (LP_State);
-                        end if;
+                        --  Mix clean and overdrive signals
+                        Buffer (Index) := DSP.Mix (S16 (LP_State),
+                                                   Fuzzed,
+                                                   U16 (Drive_Amount));
 
                         Index := Index + 1;
 
