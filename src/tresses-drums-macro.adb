@@ -1,6 +1,7 @@
 with Tresses.Drums.Kick;
 with Tresses.Drums.Analog_Kick;
 with Tresses.Drums.Snare;
+with Tresses.Drums.Clap;
 
 package body Tresses.Drums.Macro is
 
@@ -105,6 +106,16 @@ package body Tresses.Drums.Macro is
                                 Pitch => This.Pitch,
                                 Do_Init => This.Do_Init,
                                 Do_Strike => This.Do_Strike);
+         when Drum_Clap =>
+            Clap.Render_Clap (Buffer,
+                              Params => This.Params,
+                              Filter => This.Filter0,
+                              Rng =>  This.Rng,
+                              Env => This.Env0,
+                              Re_Trig => This.Phase,
+                              Pitch => This.Pitch,
+                              Do_Init => This.Do_Init,
+                              Do_Strike => This.Do_Strike);
          when Drum_Cymbal =>
             Cymbal.Render_Cymbal (Buffer,
                                   Params => This.Params,
@@ -150,6 +161,9 @@ package body Tresses.Drums.Macro is
 
          when Drum_Snare =>
             return Snare.Param_Label (P);
+
+         when Drum_Clap =>
+            return Clap.Param_Label (P);
 
          when Drum_Cymbal =>
             return Cymbal.Param_Label (P);

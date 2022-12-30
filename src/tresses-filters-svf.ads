@@ -1,5 +1,5 @@
 
---  Static Value Filter
+--  State Variable Filter
 
 package Tresses.Filters.SVF
 with Preelaborate
