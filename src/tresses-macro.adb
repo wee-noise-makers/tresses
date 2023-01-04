@@ -255,10 +255,11 @@ package body Tresses.Macro is
    -- Param_Label --
    -----------------
 
-   overriding
-   function Param_Label (This : Instance; Id : Param_Id) return String is
+   function Param_Label (Engine : Tresses.Engines; Id : Param_Id)
+                         return String
+   is
    begin
-      case This.Engine is
+      case Engine is
          when Drum_Kick =>
             return Drums.Kick.Param_Label (Id);
 
@@ -289,23 +290,28 @@ package body Tresses.Macro is
          when Voice_Acid =>
             return Voices.Acid.Param_Label (Id);
 
-         when Voice_Analog_Buzz | Voice_Analog_Morph
-            =>
-            declare
-               use Voices.Analog_Macro;
+         when Voice_Analog_Buzz =>
+            return Voices.Analog_Macro.Param_Label
+              (Voices.Analog_Macro.Buzz, Id);
 
-               Shape : constant Analog_Macro_Shape :=
-                 (case This.Engine is
-                     when Voice_Analog_Buzz => Buzz,
-                     when Voice_Analog_Morph => Morph,
-                     when others => raise Program_Error);
+         when Voice_Analog_Morph =>
+            return Voices.Analog_Macro.Param_Label
+              (Voices.Analog_Macro.Morph, Id);
 
-            begin
-               return Voices.Analog_Macro.Param_Label (Shape, Id);
-            end;
          when Voice_FM2OP =>
             return Voices.FM_OP2.Param_Label (Id);
       end case;
+
+   end Param_Label;
+
+   -----------------
+   -- Param_Label --
+   -----------------
+
+   overriding
+   function Param_Label (This : Instance; Id : Param_Id) return String is
+   begin
+      return Param_Label (This.Engine, Id);
    end Param_Label;
 
 end Tresses.Macro;

@@ -47,6 +47,9 @@ is
                         Id : Param_Id;
                         P : Param_Range);
 
+   function Param_Label (Engine : Tresses.Engines; Id : Param_Id)
+                         return String;
+
    overriding
    function Param_Label (This : Instance; Id : Param_Id) return String;
 
