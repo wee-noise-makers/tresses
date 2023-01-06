@@ -24,4 +24,7 @@ is
    function Param_Label (Shape : Analog_Macro_Shape; Id : Param_Id)
                          return String;
 
+   function Param_Short_Label (Shape : Analog_Macro_Shape; Id : Param_Id)
+                               return Short_Label;
+
 end Tresses.Voices.Analog_Macro;

@@ -8,7 +8,7 @@ package body Tresses.Voices.Acid is
 
    procedure Render_Acid
      (Buffer             :    out Mono_Buffer;
-      Params             :        Interfaces.Param_Array;
+      Params             :        Param_Array;
       Osc0               : in out Analog_Oscillator.Instance;
       A_Env, F_Env       : in out Envelopes.AD.Instance;
       Filter             : in out Filters.Ladder.Instance;

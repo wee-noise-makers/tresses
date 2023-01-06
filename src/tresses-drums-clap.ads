@@ -32,6 +32,13 @@ is
           when P_Tone  => "Tone",
           when P_Drive => "Drive");
 
+   function Param_Short_Label (Id : Param_Id) return Short_Label
+   is (case Id is
+          when P_Decay => "DCY",
+          when P_Sync  => "SYN",
+          when P_Tone  => "TON",
+          when P_Drive => "DRV");
+
    -- Interfaces --
 
    type Instance
@@ -43,6 +50,10 @@ is
                          return String
    is (Param_Label (Id));
 
+   overriding
+   function Param_Short_Label (This : Instance; Id : Param_Id)
+                               return Short_Label
+   is (Param_Short_Label (Id));
    procedure Render (This   : in out Instance;
                      Buffer :    out Mono_Buffer);
 

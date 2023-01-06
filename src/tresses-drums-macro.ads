@@ -31,7 +31,11 @@ is
    --  Interfaces --
 
    overriding
-   function Param_Label (This : Instance; P : Param_Id) return String;
+   function Param_Label (This : Instance; Id : Param_Id) return String;
+
+   overriding
+   function Param_Short_Label (This : Instance; Id : Param_Id)
+                               return Short_Label;
 
 private
 

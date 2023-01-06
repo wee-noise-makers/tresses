@@ -50,8 +50,15 @@ is
    function Param_Label (Engine : Tresses.Engines; Id : Param_Id)
                          return String;
 
+   function Param_Short_Label (Engine : Tresses.Engines; Id : Param_Id)
+                               return Short_Label;
+
    overriding
    function Param_Label (This : Instance; Id : Param_Id) return String;
+
+   overriding
+   function Param_Short_Label (This : Instance; Id : Param_Id)
+                               return Short_Label;
 
 private
 

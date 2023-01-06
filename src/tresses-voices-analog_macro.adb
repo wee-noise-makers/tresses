@@ -20,6 +20,18 @@ package body Tresses.Voices.Analog_Macro is
           when 3 => "Attack",
           when 4 => "Decay");
 
+   function Param_Short_Label (Shape : Analog_Macro_Shape; Id : Param_Id)
+                               return Short_Label
+   is (case Id is
+          when 1 => (case Shape is
+                        when Morph => "WAV",
+                        when Buzz  => "WAV"),
+          when 2 => (case Shape is
+                        when Morph => "TON",
+                        when Buzz  => "DET"),
+          when 3 => "ATK",
+          when 4 => "DCY");
+
    -----------------
    -- Render_Buzz --
    -----------------

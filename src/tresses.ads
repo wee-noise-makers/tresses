@@ -26,7 +26,14 @@ is
 
    type Param_Range is new N16;
 
+   type Param_Id is range 1 .. 4;
+   type Param_Array is array (Param_Id) of Param_Range;
+
    type Pitch_Range is new S16 range 0 .. 127 * 128;
+
+   Semitone   : constant Pitch_Range := 128;
+   Octave     : constant Pitch_Range := 12 * Semitone;
+   Init_Pitch : constant Pitch_Range := 60 * Semitone;
 
    function MIDI_Pitch (Key : MIDI.MIDI_Key) return Pitch_Range
    is (Pitch_Range (Key) * 128);
@@ -69,8 +76,6 @@ is
           when Voice_Analog_Morph     => "Morph",
           when Voice_FM2OP            => "FM 2 OP");
 
-   Semitone   : constant Pitch_Range := 128;
-   Octave     : constant Pitch_Range := 12 * Semitone;
-   Init_Pitch : constant Pitch_Range := 60 * Semitone;
+   subtype Short_Label is String (1 .. 3);
 
 end Tresses;

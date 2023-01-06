@@ -304,6 +304,58 @@ package body Tresses.Macro is
 
    end Param_Label;
 
+   -----------------------
+   -- Param_Short_Label --
+   -----------------------
+
+   function Param_Short_Label (Engine : Tresses.Engines; Id : Param_Id)
+                               return Short_Label
+   is
+   begin
+      case Engine is
+         when Drum_Kick =>
+            return Drums.Kick.Param_Short_Label (Id);
+
+         when Drum_Analog_Kick =>
+            return Drums.Analog_Kick.Param_Short_Label (Id);
+
+         when Drum_Snare =>
+            return Drums.Snare.Param_Short_Label (Id);
+
+         when Drum_Clap =>
+            return Drums.Clap.Param_Short_Label (Id);
+
+         when Drum_Cymbal =>
+            return Drums.Cymbal.Param_Short_Label (Id);
+
+         when Drum_Percussion =>
+            return Drums.Percussion.Param_Short_Label (Id);
+
+         when Drum_Bell =>
+            return  Drums.Bell.Param_Short_Label (Id);
+
+         when Voice_Saw_Swarm =>
+            return Voices.Saw_Swarm.Param_Short_Label (Id);
+
+         when Voice_Plucked =>
+            return Voices.Plucked.Param_Short_Label (Id);
+
+         when Voice_Acid =>
+            return Voices.Acid.Param_Short_Label (Id);
+
+         when Voice_Analog_Buzz =>
+            return Voices.Analog_Macro.Param_Short_Label
+              (Voices.Analog_Macro.Buzz, Id);
+
+         when Voice_Analog_Morph =>
+            return Voices.Analog_Macro.Param_Short_Label
+              (Voices.Analog_Macro.Morph, Id);
+
+         when Voice_FM2OP =>
+            return Voices.FM_OP2.Param_Short_Label (Id);
+      end case;
+   end Param_Short_Label;
+
    -----------------
    -- Param_Label --
    -----------------
@@ -313,5 +365,17 @@ package body Tresses.Macro is
    begin
       return Param_Label (This.Engine, Id);
    end Param_Label;
+
+   -----------------------
+   -- Param_Short_Label --
+   -----------------------
+
+   overriding
+   function Param_Short_Label (This : Instance; Id : Param_Id)
+                               return Short_Label
+   is
+   begin
+      return Param_Short_Label (This.Engine, Id);
+   end Param_Short_Label;
 
 end Tresses.Macro;

@@ -21,6 +21,12 @@ is
           when P_Coefficient => "Coefficient",
           when others        => "N/A");
 
+   function Param_Short_Label (Id : Param_Id) return Short_Label
+   is (case Id is
+          when P_Damping     => "DMP",
+          when P_Coefficient => "COF",
+          when others        => "N/A");
+
    -- Interfaces --
 
    type Instance
@@ -32,6 +38,10 @@ is
                          return String
    is (Param_Label (Id));
 
+   overriding
+   function Param_Short_Label (This : Instance; Id : Param_Id)
+                               return Short_Label
+   is (Param_Short_Label (Id));
    procedure Render (This   : in out Instance;
                      Buffer :    out Mono_Buffer);
 

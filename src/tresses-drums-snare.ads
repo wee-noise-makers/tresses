@@ -27,6 +27,12 @@ is
           when P_Noise => "Noise",
           when others  => "N/A");
 
+   function Param_Short_Label (Id : Param_Id) return Short_Label
+   is (case Id is
+          when P_Tone  => "TON",
+          when P_Noise => "NOS",
+          when others  => "N/A");
+
    -- Interfaces --
 
    type Instance
@@ -38,6 +44,10 @@ is
                          return String
    is (Param_Label (Id));
 
+   overriding
+   function Param_Short_Label (This : Instance; Id : Param_Id)
+                               return Short_Label
+   is (Param_Short_Label (Id));
    procedure Render (This   : in out Instance;
                      Buffer :    out Mono_Buffer);
 

@@ -1,6 +1,7 @@
 with Tresses.Voices.Analog_Macro;
 with Tresses.Voices.FM_OP2;
 with Tresses.Voices.Acid;
+with Tresses.Macro;
 
 package body Tresses.Voices.Macro is
 
@@ -142,33 +143,19 @@ package body Tresses.Voices.Macro is
    overriding
    function Param_Label (This : Instance; Id : Param_Id) return String is
    begin
-      case This.Engine is
-         when Voice_Saw_Swarm =>
-            return Saw_Swarm.Param_Label (Id);
-
-         when Voice_Plucked =>
-            return Plucked.Param_Label (Id);
-
-         when Voice_Acid =>
-            return Voices.Acid.Param_Label (Id);
-
-         when Voice_Analog_Buzz | Voice_Analog_Morph
-            =>
-            declare
-               use Voices.Analog_Macro;
-
-               Shape : constant Analog_Macro_Shape :=
-                 (case This.Engine is
-                     when Voice_Analog_Buzz => Buzz,
-                     when Voice_Analog_Morph => Morph,
-                     when others => raise Program_Error);
-
-            begin
-               return Voices.Analog_Macro.Param_Label (Shape, Id);
-            end;
-         when Voice_FM2OP =>
-            return Voices.FM_OP2.Param_Label (Id);
-      end case;
+      return Tresses.Macro.Param_Label (This.Engine, Id);
    end Param_Label;
+
+   -----------------------
+   -- Param_Short_Label --
+   -----------------------
+
+   overriding
+   function Param_Short_Label (This : Instance; Id : Param_Id)
+                               return Short_Label
+   is
+   begin
+      return Tresses.Macro.Param_Short_Label (This.Engine, Id);
+   end Param_Short_Label;
 
 end Tresses.Voices.Macro;

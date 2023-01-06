@@ -2,9 +2,6 @@ package Tresses.Interfaces
 with Preelaborate
 is
 
-   type Param_Id is range 1 .. 4;
-   type Param_Array is array (Param_Id) of Param_Range;
-
    type Four_Params_Voice is abstract tagged record
       Params    : Param_Array := (others => Param_Range'Last / 2);
       Pitch     : Pitch_Range := Init_Pitch;
@@ -22,6 +19,10 @@ is
 
    function Param_Label (This : Four_Params_Voice; Id : Param_Id)
                          return String
+   is abstract;
+
+   function Param_Short_Label (This : Four_Params_Voice; Id : Param_Id)
+                               return Short_Label
    is abstract;
 
 end Tresses.Interfaces;

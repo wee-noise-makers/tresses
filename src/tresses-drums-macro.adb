@@ -2,6 +2,7 @@ with Tresses.Drums.Kick;
 with Tresses.Drums.Analog_Kick;
 with Tresses.Drums.Snare;
 with Tresses.Drums.Clap;
+with Tresses.Macro;
 
 package body Tresses.Drums.Macro is
 
@@ -150,30 +151,21 @@ package body Tresses.Drums.Macro is
    -----------------
 
    overriding
-   function Param_Label (This : Instance; P : Param_Id) return String is
+   function Param_Label (This : Instance; Id : Param_Id) return String is
    begin
-      case This.Engine is
-         when Drum_Kick =>
-            return Kick.Param_Label (P);
-
-         when Drum_Analog_Kick =>
-            return Analog_Kick.Param_Label (P);
-
-         when Drum_Snare =>
-            return Snare.Param_Label (P);
-
-         when Drum_Clap =>
-            return Clap.Param_Label (P);
-
-         when Drum_Cymbal =>
-            return Cymbal.Param_Label (P);
-
-         when Drum_Percussion =>
-            return Percussion.Param_Label (P);
-
-         when Drum_Bell =>
-            return Bell.Param_Label (P);
-      end case;
+      return Tresses.Macro.Param_Label (This.Engine, Id);
    end Param_Label;
+
+   -----------------------
+   -- Param_Short_Label --
+   -----------------------
+
+   overriding
+   function Param_Short_Label (This : Instance; Id : Param_Id)
+                               return Short_Label
+   is
+   begin
+      return Tresses.Macro.Param_Short_Label (This.Engine, Id);
+   end Param_Short_Label;
 
 end Tresses.Drums.Macro;

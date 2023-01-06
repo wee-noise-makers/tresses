@@ -35,6 +35,13 @@ is
           when P_Attack       => "Attack",
           when P_Decay        => "Decay");
 
+   function Param_Short_Label (Id : Param_Id) return Short_Label
+   is (case Id is
+          when P_String_Decay => "SDY",
+          when P_Position     => "POS",
+          when P_Attack       => "ATK",
+          when P_Decay        => "DCY");
+
 private
 
    type Phase_Array is array (0 .. 5) of U32;

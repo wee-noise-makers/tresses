@@ -9,7 +9,7 @@ is
 
    procedure Render_Acid
      (Buffer             :    out Mono_Buffer;
-      Params             :        Interfaces.Param_Array;
+      Params             :        Param_Array;
       Osc0               : in out Analog_Oscillator.Instance;
       A_Env, F_Env       : in out Envelopes.AD.Instance;
       Filter             : in out Filters.Ladder.Instance;
@@ -28,5 +28,12 @@ is
           when P_Resonance  => "Resonance",
           when P_F_EG_Int   => "Filter Int",
           when P_F_Decay    => "Filter Decay");
+
+   function Param_Short_Label (Id : Param_Id) return Short_Label
+   is (case Id is
+          when P_Cutoff     => "CTF",
+          when P_Resonance  => "RES",
+          when P_F_EG_Int   => "FIT",
+          when P_F_Decay    => "FDY");
 
 end Tresses.Voices.Acid;
