@@ -25,7 +25,7 @@ package body Tresses.Drums.Kick is
       LP_State       : in out S32;
       Pitch          :        Pitch_Range;
       Do_Init        : in out Boolean;
-      Do_Strike      : in out Boolean)
+      Do_Strike      : in out Strike_State)
    is
       Decay        : Param_Range renames Params (P_Decay);
       Coefficient  : Param_Range renames Params (P_Coefficient);
@@ -58,16 +58,26 @@ package body Tresses.Drums.Kick is
       end if;
 
       --  Strike
-      if Do_Strike then
-         Do_Strike := False;
+      case Do_Strike.Event is
+         when On =>
+            Do_Strike.Event := None;
+
 
          Trigger (Pulse0, S32 (12.0 * 32_768.0 * 0.7));
          Trigger (Pulse1, S32 (-19_662.0 * 0.7));
          Set_Punch (Filter, 24_000);
 
          Set_Decay (Env, 4096 + Pitch_Decay / 4);
-         Trigger (Env, Envelopes.AD.Attack);
-      end if;
+         On (Env, Do_Strike.Velocity);
+
+         when Off =>
+            Do_Strike.Event := None;
+
+            Off (Env);
+
+         when None => null;
+      end case;
+
 
       Pitch_Offset := S32 (Octave) * 4;
 

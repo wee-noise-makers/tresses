@@ -20,7 +20,7 @@ package body Tresses.Drums.Clap is
       Re_Trig   : in out U32;
       Pitch     :        Pitch_Range;
       Do_Init   : in out Boolean;
-      Do_Strike : in out Boolean)
+      Do_Strike : in out Strike_State)
    is
 
       Decay_Param : Param_Range renames Params (P_Decay);
@@ -39,19 +39,19 @@ package body Tresses.Drums.Clap is
          Init (Filter);
          Set_Mode (Filter, Band_Pass);
 
-         Init (Env);
+         Init (Env, Do_Hold => False);
          Set_Attack (Env, U7 (5));
       end if;
 
       --  Strike
-      if Do_Strike
+      if Do_Strike.Event = On
         or else
           (Re_Trig > 0 and then Value (Env) < 1000)
       then
 
-         if Do_Strike then
+         if Do_Strike.Event = On then
             Re_Trig := 3;
-            Do_Strike := False;
+            Do_Strike.Event := None;
          else
             Re_Trig := Re_Trig - 1;
          end if;
@@ -65,7 +65,7 @@ package body Tresses.Drums.Clap is
                        (Param_Range'Last - Sync_Param) / 8);
          end if;
 
-         Trigger (Env, Attack);
+         On (Env, Do_Strike.Velocity);
       end if;
 
       Set_Frequency (Filter, S16 (Pitch) + S16 (2 * Octave));

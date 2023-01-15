@@ -24,7 +24,7 @@ package body Tresses.Drums.Cymbal is
       Phase            : in out U32;
       Pitch            :        Pitch_Range;
       Do_Init          : in out Boolean;
-      Do_Strike        : in out Boolean)
+      Do_Strike        : in out Strike_State)
    is
       Cutoff_Param : Param_Range renames Params (P_Cutoff);
       Noise_Param  : Param_Range renames Params (P_Noise);
@@ -48,37 +48,44 @@ package body Tresses.Drums.Cymbal is
          Set_Mode (Filter1, High_Pass);
          Set_Resonance (Filter1, 2_000);
 
-         Init (Env);
+         Init (Env, Do_Hold => False);
          Set_Attack (Env, U7 (0));
       end if;
 
-      if Do_Strike then
+      case Do_Strike.Event is
+         when On =>
+            Do_Strike.Event := None;
 
-         Do_Strike := False;
+            --  The original MI Braids cymbal did not feature an envelope. We
+            --  add one here for ease of use and to match the behavior of the
+            --  other drum sounds.
 
-         --  The original MI Braids cymbal did not feature an envelope. We add
-         --  one here for ease of use and to match the behavior of the other
-         --  drum sounds.
+            declare
+               To_U7_Div : constant := 512;
+               --  U16'Last / U7'Last = ~516.023 then rounded to the nearest
+               --  power of 2.
 
-         declare
-            To_U7_Div : constant := 512;
-            --  U16'Last / U7'Last = ~516.023 then rounded to the nearest
-            --  power of 2.
+               Limit : constant U32 := U32 (U7'Last) * To_U7_Div;
+               --  Maximum value to be converted to U7
 
-            Limit : constant U32 := U32 (U7'Last) * To_U7_Div;
-            --  Maximum value to be converted to U7
+               Decay : U32 := U32 (Noise_Param) + 20_000;
+               --  Add a base value to have a minimum decay
+            begin
+               if Decay > Limit then
+                  Decay := Limit;
+               end if;
 
-            Decay : U32 := U32 (Noise_Param) + 20_000;
-            --  Add a base value to have a minimum decay
-         begin
-            if Decay > Limit then
-               Decay := Limit;
-            end if;
+               Set_Decay (Env, U7 (Decay / To_U7_Div));
+               On (Env, Do_Strike.Velocity);
+            end;
 
-            Set_Decay (Env, U7 (Decay / To_U7_Div));
-            Trigger (Env, Attack);
-         end;
-      end if;
+         when Off =>
+            Do_Strike.Event := None;
+
+            Off (Env);
+
+         when None => null;
+      end case;
 
       Increments (0) := DSP.Compute_Phase_Increment (S16 (Note));
 

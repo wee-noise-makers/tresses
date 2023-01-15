@@ -10,7 +10,7 @@ is
                           Params    :        Param_Array;
                           State     : in out Additive_State;
                           Pitch     :        Pitch_Range;
-                          Do_Strike : in out Boolean);
+                          Do_Strike : in out Strike_State);
 
    P_Damping     : constant Param_Id := 1;
    P_Coefficient : constant Param_Id := 2;

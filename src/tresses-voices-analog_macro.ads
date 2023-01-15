@@ -16,7 +16,8 @@ is
       Env                : in out Envelopes.AD.Instance;
       LP_State           : in out S32;
       Pitch              :        Pitch_Range;
-      Do_Strike          : in out Boolean)
+      Do_Init            : in out Boolean;
+      Do_Strike          : in out Strike_State)
      with Pre => Buffer_A'First = Buffer_B'First
                and then
                  Buffer_A'Last = Buffer_B'Last;

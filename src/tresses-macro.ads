@@ -35,18 +35,6 @@ is
 
    --  Interfaces --
 
-   overriding
-   procedure Strike (This : in out Instance);
-
-   overriding
-   procedure Set_Pitch (This  : in out Instance;
-                        Pitch :        Pitch_Range);
-
-   overriding
-   procedure Set_Param (This : in out Instance;
-                        Id : Param_Id;
-                        P : Param_Range);
-
    function Param_Label (Engine : Tresses.Engines; Id : Param_Id)
                          return String;
 

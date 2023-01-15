@@ -23,7 +23,8 @@ package body Tresses.Voices.Saw_Swarm is
       State     : in out Saw_Swarm_State;
       Phase     : in out U32;
       Pitch     :        Pitch_Range;
-      Do_Strike : in out Boolean)
+      Do_Init   : in out Boolean;
+      Do_Strike : in out Strike_State)
    is
       Increments : array (0 .. 6) of U32;
 
@@ -32,12 +33,17 @@ package body Tresses.Voices.Saw_Swarm is
 
       Detune : S32;
    begin
+      if Do_Init then
+         Do_Init := False;
+
+         Init (Env, Do_Hold => True);
+      end if;
+
       Set_Attack (Env, Params (P_Attack));
       Set_Decay (Env, Params (P_Decay));
 
       --  Clip to avoid interger overflow on Detune**2
       Detune := S32'Min (S32 (Detune_Param), 46_340);
-
       Detune := (Detune**2) / 2**9;
 
       for X in Increments'Range loop
@@ -62,16 +68,24 @@ package body Tresses.Voices.Saw_Swarm is
          end;
       end loop;
 
-      if Do_Strike then
+     case Do_Strike.Event is
+         when On =>
+            Do_Strike.Event := None;
 
-         Do_Strike := False;
 
-         for Elt of State.Phase loop
-            Elt := Get_Word (Rng);
-         end loop;
+            for Elt of State.Phase loop
+               Elt := Get_Word (Rng);
+            end loop;
 
-         Trigger (Env, Attack);
-      end if;
+            On (Env, Do_Strike.Velocity);
+
+         when Off =>
+            Do_Strike.Event := None;
+
+            Off (Env);
+
+         when None => null;
+      end case;
 
       declare
          HP_Cutoff : S32 := S32 (Pitch);
@@ -136,7 +150,8 @@ package body Tresses.Voices.Saw_Swarm is
             BP := BP + ((F * HP) / 2**15);
             DSP.Clip_S16 (BP);
 
-            HP := (HP * S32 (Render (Env))) / 2**15;
+            Render (Env);
+            HP := (HP * S32 (Low_Pass (Env))) / 2**15;
 
             DSP.Clip_S16 (HP);
 

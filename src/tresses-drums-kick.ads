@@ -16,7 +16,7 @@ is
       LP_State       : in out S32;
       Pitch          :        Pitch_Range;
       Do_Init        : in out Boolean;
-      Do_Strike      : in out Boolean);
+      Do_Strike      : in out Strike_State);
 
    P_Decay       : constant Param_Id := 1;
    P_Coefficient : constant Param_Id := 2;

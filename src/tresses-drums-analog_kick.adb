@@ -18,7 +18,7 @@ package body Tresses.Drums.Analog_Kick is
       Env                    : in out Envelopes.AD.Instance;
       Pitch                  :        Pitch_Range;
       Do_Init                : in out Boolean;
-      Do_Strike              : in out Boolean)
+      Do_Strike              : in out Strike_State)
    is
       Decay        : Param_Range renames Params (P_Decay);
       Drive        : Param_Range renames Params (P_Drive);
@@ -40,20 +40,28 @@ package body Tresses.Drums.Analog_Kick is
          Phase_Increment := 0;
       end if;
 
-      if Do_Strike then
-         Do_Strike := False;
+      case Do_Strike.Event is
+         when On =>
+            Do_Strike.Event := None;
 
-         Set_Decay (Env, Param_Range'Last / 4 + (Decay / 2));
-         Trigger (Env, Attack);
+            Set_Decay (Env, Param_Range'Last / 4 + (Decay / 2));
+            On (Env, Do_Strike.Velocity);
 
-         Target_Phase_Increment :=
-           DSP.Compute_Phase_Increment (S16 (Pitch));
+            Target_Phase_Increment :=
+              DSP.Compute_Phase_Increment (S16 (Pitch));
 
-         Phase_Increment :=
-           DSP.Compute_Phase_Increment (S16 (Pitch + Octave * 4));
+            Phase_Increment :=
+              DSP.Compute_Phase_Increment (S16 (Pitch + Octave * 4));
 
-         Phase := 0;
-      end if;
+            Phase := 0;
+
+         when Off =>
+            Do_Strike.Event := None;
+
+            Off (Env);
+
+         when None => null;
+      end case;
 
       Phase_Incr_Delta := (Phase_Increment - Target_Phase_Increment) /
         (Resources.SAMPLE_RATE / (1 +

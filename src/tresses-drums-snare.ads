@@ -16,7 +16,7 @@ is
       Rng                            : in out Random.Instance;
       Pitch                          :        Pitch_Range;
       Do_Init                        : in out Boolean;
-      Do_Strike                      : in out Boolean);
+      Do_Strike                      : in out Strike_State);
 
    P_Tone  : constant Param_Id := 1;
    P_Noise : constant Param_Id := 2;

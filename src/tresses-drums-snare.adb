@@ -23,7 +23,7 @@ package body Tresses.Drums.Snare is
       Rng                            : in out Random.Instance;
       Pitch                          :        Pitch_Range;
       Do_Init                        : in out Boolean;
-      Do_Strike                      : in out Boolean)
+      Do_Strike                      : in out Strike_State)
    is
 
       Tone_Param : Param_Range renames Params (P_Tone);
@@ -57,44 +57,50 @@ package body Tresses.Drums.Snare is
       end if;
 
       --  Strike
-      if Do_Strike then
+      case Do_Strike.Event is
+         when On =>
+            Do_Strike.Event := None;
 
-         Do_Strike := False;
-
-         declare
-            Decay : S32 := 49_152 - S32 (Pitch);
-         begin
-            Decay := Decay + (if Noise_Param < 16_384
-                              then 0
-                              else S32 (Noise_Param) - 16_384);
-
-            if Decay > 65_535 then
-               Decay := 65_535;
-            end if;
-
-            Set_Resonance (Filter0, 29_000 + S16 (Decay / 2**5));
-            Set_Resonance (Filter1, 26_500 + S16 (Decay / 2**5));
-
-            --  Pulse3 is used as an envelope
-            Set_Decay (Pulse3, 4_092 + U16 (Decay / 2**14));
-
-            Trigger (Pulse0, 15 * 32_768);
-            Trigger (Pulse1, -1 * 32_768);
-            Trigger (Pulse2, 13_107);
 
             declare
-               Snappy : S32 := S32 (Noise_Param);
+               Decay : S32 := 49_152 - S32 (Pitch);
             begin
-               if Snappy >= 14_336 then
-                  Snappy := 14_336;
+               Decay := Decay + (if Noise_Param < 16_384
+                                 then 0
+                                 else S32 (Noise_Param) - 16_384);
+
+               if Decay > 65_535 then
+                  Decay := 65_535;
                end if;
 
-               --  Higher "Snappy" params means harder hit on the snare
-               --  "envelope".
-               Trigger (Pulse3, 512 + (Snappy * 2**1));
+               Set_Resonance (Filter0, 29_000 + S16 (Decay / 2**5));
+               Set_Resonance (Filter1, 26_500 + S16 (Decay / 2**5));
+
+               --  Pulse3 is used as an envelope
+               Set_Decay (Pulse3, 4_092 + U16 (Decay / 2**14));
+
+               Trigger (Pulse0, 15 * 32_768);
+               Trigger (Pulse1, -1 * 32_768);
+               Trigger (Pulse2, 13_107);
+
+               declare
+                  Snappy : S32 := S32 (Do_Strike.Velocity);
+               begin
+                  if Snappy >= 14_336 then
+                     Snappy := 14_336;
+                  end if;
+
+                  --  Higher "Snappy" params means harder hit on the snare
+                  --  "envelope".
+                  Trigger (Pulse3, 512 + (Snappy * 2**1));
+               end;
             end;
-         end;
-      end if;
+
+         when Off =>
+            Do_Strike.Event := None;
+
+         when None => null;
+      end case;
 
       Set_Frequency (Filter0, S16 (Pitch) + (12 * 2**7));
       Set_Frequency (Filter1, S16 (Pitch) + (24 * 2**7));

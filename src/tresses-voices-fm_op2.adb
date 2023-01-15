@@ -21,7 +21,8 @@ package body Tresses.Voices.FM_OP2 is
       Phase           : in out U32;
       Modulator_Phase : in out U32;
       Pitch           :        Pitch_Range;
-      Do_Strike       : in out Boolean)
+      Do_Init         : in out Boolean;
+      Do_Strike       : in out Strike_State)
    is
       Modulator_Pitch : constant S32 :=
         ((12 * 2**7) + S32 (Pitch) + (S32 (Params (2) - 16_384) / 2));
@@ -36,13 +37,28 @@ package body Tresses.Voices.FM_OP2 is
       Sample : S32;
    begin
 
+      if Do_Init then
+         Do_Init := False;
+
+         Init (Env, Do_Hold => True);
+      end if;
+
+      case Do_Strike.Event is
+         when On =>
+            Do_Strike.Event := None;
+
+            On (Env, Do_Strike.Velocity);
+
+         when Off =>
+            Do_Strike.Event := None;
+
+            Off (Env);
+
+         when None => null;
+      end case;
+
       Set_Attack (Env, Params (P_Attack));
       Set_Decay (Env, Params (P_Decay));
-
-      if Do_Strike then
-         Do_Strike := False;
-         Trigger (Env, Attack);
-      end if;
 
       for Index in Buffer'Range loop
          Phase := Phase + Phase_Increment;
@@ -53,7 +69,8 @@ package body Tresses.Voices.FM_OP2 is
          PM := (PM * U32 (Params (1))) * 2**2;
 
          Sample := S32 (DSP.Interpolate824 (Resources.WAV_Sine, Phase + PM));
-         Sample := (Sample * S32 (Render (Env))) / 2**15;
+         Render (Env);
+         Sample := (Sample * S32 (Low_Pass (Env))) / 2**15;
          DSP.Clip_S16 (Sample);
 
          Buffer (Index) := S16 (Sample);

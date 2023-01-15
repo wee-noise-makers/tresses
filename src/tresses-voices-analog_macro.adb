@@ -69,7 +69,8 @@ package body Tresses.Voices.Analog_Macro is
       for Idx in Buffer_A'Range loop
          Sample := S32 ((Buffer_A (Idx) / 2) + (Buffer_B (Idx) / 2));
 
-         Sample := (Sample * S32 (Render (Env))) / 2**15;
+         Render (Env);
+         Sample := (Sample * S32 (Low_Pass (Env))) / 2**15;
 
          Buffer_A (Idx) := S16 (Sample);
       end loop;
@@ -153,7 +154,9 @@ package body Tresses.Voices.Analog_Macro is
                                       U16 (Shifted_Sample));
 
          Sample := S32 (DSP.Mix (S16 (Sample), Fuzzed, U16 (Fuzz_Amount)));
-         Sample := (Sample * S32 (Render (Env))) / 2**15;
+
+         Render (Env);
+         Sample := (Sample * S32 (Low_Pass (Env))) / 2**15;
          Buffer_A (Idx) := S16 (Sample);
       end loop;
 
@@ -171,13 +174,29 @@ package body Tresses.Voices.Analog_Macro is
       Env                : in out Envelopes.AD.Instance;
       LP_State           : in out S32;
       Pitch              :        Pitch_Range;
-      Do_Strike          : in out Boolean)
+      Do_Init            : in out Boolean;
+      Do_Strike          : in out Strike_State)
    is
    begin
-      if Do_Strike then
-         Do_Strike := False;
-         Envelopes.AD.Trigger (Env, Envelopes.AD.Attack);
+      if Do_Init then
+         Do_Init := False;
+
+         Init (Env, Do_Hold => True);
       end if;
+
+      case Do_Strike.Event is
+         when On =>
+            Do_Strike.Event := None;
+
+            On (Env, Do_Strike.Velocity);
+
+         when Off =>
+            Do_Strike.Event := None;
+
+            Off (Env);
+
+         when None => null;
+      end case;
 
       Set_Attack (Env, Params (3));
       Set_Decay (Env, Params (4));

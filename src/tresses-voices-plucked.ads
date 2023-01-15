@@ -21,7 +21,8 @@ is
       State                       : in out Pluck_State;
       KS                          : in out KS_Array;
       Pitch                       :        Pitch_Range;
-      Do_Strike                   : in out Boolean);
+      Do_Init                     : in out Boolean;
+      Do_Strike                   : in out Strike_State);
 
    P_String_Decay : constant Param_Id := 1;
    P_Position     : constant Param_Id := 2;

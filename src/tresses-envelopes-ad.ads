@@ -3,17 +3,21 @@ with Tresses.Resources;
 package Tresses.Envelopes.AD
 with Preelaborate
 is
-   type Segment_Kind is (Attack, Decay, Dead);
+   type Segment_Kind is (Attack, Hold, Decay, Dead);
 
    type Instance is private;
 
-   procedure Init (This : in out Instance);
+   procedure Init (This    : in out Instance;
+                   Do_Hold :        Boolean);
 
    procedure Set_Attack (This : in out Instance; A : U7);
    procedure Set_Decay (This : in out Instance; D : U7);
 
    procedure Set_Attack (This : in out Instance; A : Param_Range);
    procedure Set_Decay (This : in out Instance; D : Param_Range);
+
+   procedure On (This : in out Instance; Velocity : Param_Range);
+   procedure Off (This : in out Instance);
 
    procedure Trigger (This : in out Instance; Seg : Segment_Kind);
 
@@ -37,9 +41,11 @@ private
            Resources.LUT_Env_Portamento_Increments (U8 (U7'Last)),
          others => 0);
       Target : Target_Array := (Attack => U16 (S16'Last),
-                                Decay => 0,
-                                Dead => 0);
+                                Hold   => U16 (S16'Last),
+                                Decay  => 0,
+                                Dead   => 0);
       Segement : Segment_Kind := Segment_Kind'First;
+      Do_Hold : Boolean := False;
       A, B, Value : U16 := 0;
       LP : S32 := 0;
       Phase : U32 := 0;

@@ -40,7 +40,7 @@ package body Tresses.Drums.Bell is
                           Params    :        Param_Array;
                           State     : in out Additive_State;
                           Pitch     :        Pitch_Range;
-                          Do_Strike : in out Boolean)
+                          Do_Strike : in out Strike_State)
    is
       Damping     : Param_Range renames Params (P_Damping);
       Coefficient : Param_Range renames Params (P_Coefficient);
@@ -57,8 +57,8 @@ package body Tresses.Drums.Bell is
       State.Current_Partial := (First_Partial + 3) mod Num_Bell_Partials;
 
       --  Strike
-      if Do_Strike then
-         Do_Strike := False;
+      if Do_Strike.Event = On then
+         Do_Strike.Event := None;
 
          for I in Partials_Index loop
             State.Partial_Amplitude (I) := S32 (kBellPartialAmplitudes (I));

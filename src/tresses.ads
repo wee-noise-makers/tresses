@@ -78,4 +78,11 @@ is
 
    subtype Short_Label is String (1 .. 3);
 
+   type Strike_Event_Kind is (None, On, Off);
+   type Strike_State is record
+      Event    : Strike_Event_Kind := None;
+      Velocity : Param_Range := Param_Range'Last;
+   end record;
+
+
 end Tresses;

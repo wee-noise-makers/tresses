@@ -13,7 +13,7 @@ is
       State     : in out Additive_State;
       Rng       : in out Random.Instance;
       Pitch     :        Pitch_Range;
-      Do_Strike : in out Boolean);
+      Do_Strike : in out Strike_State);
 
    P_Damping     : constant Param_Id := 1;
    P_Coefficient : constant Param_Id := 2;

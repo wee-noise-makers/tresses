@@ -150,24 +150,26 @@ package body Tresses.Macro is
          when Voice_Saw_Swarm =>
             Voices.Saw_Swarm.Render_Saw_Swarm
               (Buffer,
-               Params      => This.Params,
-               Rng             => This.Rng,
-               Env             => This.Env0,
-               State           => This.Saw_Swarm_State,
-               Phase           => This.Phase,
-               Pitch           => This.Pitch,
-               Do_Strike       => This.Do_Strike);
+               Params    => This.Params,
+               Rng       => This.Rng,
+               Env       => This.Env0,
+               State     => This.Saw_Swarm_State,
+               Phase     => This.Phase,
+               Pitch     => This.Pitch,
+               Do_Init   => This.Do_Init,
+               Do_Strike => This.Do_Strike);
 
          when Voice_Plucked =>
             Voices.Plucked.Render_Plucked
               (Buffer,
-               Params      => This.Params,
-               Rng            => This.Rng,
-               Env            => This.Env0,
-               State          => This.Pluck_State,
-               KS             => This.KS,
-               Pitch          => This.Pitch,
-               Do_Strike      => This.Do_Strike);
+               Params    => This.Params,
+               Rng       => This.Rng,
+               Env       => This.Env0,
+               State     => This.Pluck_State,
+               KS        => This.KS,
+               Pitch     => This.Pitch,
+               Do_Init   => This.Do_Init,
+               Do_Strike => This.Do_Strike);
 
          when Voice_Acid =>
             Voices.Acid.Render_Acid (Buffer => Buffer,
@@ -202,6 +204,7 @@ package body Tresses.Macro is
                   Env => This.Env0,
                   LP_State => This.LP_State,
                   Pitch => This.Pitch,
+                  Do_Init => This.Do_Init,
                   Do_Strike => This.Do_Strike);
             end;
 
@@ -212,44 +215,10 @@ package body Tresses.Macro is
                                          This.Phase,
                                          This.Modulator_Phase,
                                          This.Pitch,
+                                         This.Do_Init,
                                          This.Do_Strike);
       end case;
    end Render;
-
-   ------------
-   -- Strike --
-   ------------
-
-   overriding
-   procedure Strike (This : in out Instance) is
-   begin
-      This.Do_Strike := True;
-   end Strike;
-
-   ---------------
-   -- Set_Pitch --
-   ---------------
-
-   overriding
-   procedure Set_Pitch (This  : in out Instance;
-                        Pitch :        Pitch_Range)
-   is
-   begin
-      This.Pitch := Pitch;
-   end Set_Pitch;
-
-   ---------------
-   -- Set_Param --
-   ---------------
-
-   overriding
-   procedure Set_Param (This : in out Instance;
-                        Id   :        Param_Id;
-                        P    :        Param_Range)
-   is
-   begin
-      This.Params (Id) := P;
-   end Set_Param;
 
    -----------------
    -- Param_Label --

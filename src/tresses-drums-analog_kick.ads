@@ -16,7 +16,7 @@ is
       Env                    : in out Envelopes.AD.Instance;
       Pitch                  :        Pitch_Range;
       Do_Init                : in out Boolean;
-      Do_Strike              : in out Boolean);
+      Do_Strike              : in out Strike_State);
 
    P_Decay       : constant Param_Id := 1;
    P_Drive       : constant Param_Id := 3;

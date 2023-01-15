@@ -16,7 +16,8 @@ is
       State     : in out Saw_Swarm_State;
       Phase     : in out U32;
       Pitch     :        Pitch_Range;
-      Do_Strike : in out Boolean);
+      Do_Init   : in out Boolean;
+      Do_Strike : in out Strike_State);
 
    P_Detune    : constant Param_Id := 1;
    P_High_Pass : constant Param_Id := 2;

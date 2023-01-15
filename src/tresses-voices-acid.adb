@@ -14,7 +14,7 @@ package body Tresses.Voices.Acid is
       Filter             : in out Filters.Ladder.Instance;
       Pitch              :        Pitch_Range;
       Do_Init            : in out Boolean;
-      Do_Strike          : in out Boolean)
+      Do_Strike          : in out Strike_State)
    is
       Cutoff    : constant Param_Range := Params (P_Cutoff);
       Resonance : constant Param_Range := Params (P_Resonance);
@@ -33,26 +33,38 @@ package body Tresses.Voices.Acid is
          Osc0.Set_Shape (Analog_Oscillator.Square);
 
          --  Amp envelope
+         Init (A_Env, Do_Hold => True);
          Set_Attack (A_Env, U7 (50));
          Set_Decay (A_Env, U7 (0));
 
          --  Filter envelope
+         Init (F_Env, Do_Hold => True);
          Set_Attack (F_Env, U7 (0));
          Set_Decay (A_Env, U7 (0));
       end if;
 
-      if Do_Strike then
-         Do_Strike := False;
+      case Do_Strike.Event is
+         when On =>
+            Do_Strike.Event := None;
 
 
-         Set_Decay (A_Env, (if F_Decay < (Param_Range'Last - 10_000)
-                            then F_Decay + 10_000
-                            else Param_Range'Last));
-         Trigger (A_Env, Envelopes.AD.Attack);
+            Set_Decay (A_Env, (if F_Decay < (Param_Range'Last - 10_000)
+                               then F_Decay + 10_000
+                               else Param_Range'Last));
+            On (A_Env, Do_Strike.Velocity);
 
-         Set_Decay (F_Env, F_Decay);
-         Trigger (F_Env, Envelopes.AD.Attack);
-      end if;
+            Set_Decay (F_Env, F_Decay);
+            On (F_Env, Do_Strike.Velocity);
+
+         when Off =>
+            Do_Strike.Event := None;
+
+            Off (A_Env);
+            Off (F_Env);
+
+         when None => null;
+      end case;
+
 
       Osc0.Set_Pitch (Pitch);
       Osc0.Render (Buffer);
@@ -60,7 +72,8 @@ package body Tresses.Voices.Acid is
       Filters.Ladder.Set_Resonance (Filter, Resonance);
 
       for Idx in Buffer'Range loop
-         A_Env_Val := S32 (Render (A_Env));
+         Render (A_Env);
+         A_Env_Val := S32 (Low_Pass (A_Env));
          F_Env_Val := S32 (Render (F_Env));
 
          --  Apply Filter envelope intensity control

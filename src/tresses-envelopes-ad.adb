@@ -13,9 +13,11 @@ package body Tresses.Envelopes.AD is
    -- Init --
    ----------
 
-   procedure Init (This : in out Instance) is
+   procedure Init (This    : in out Instance;
+                   Do_Hold :        Boolean)
+   is
    begin
-      This := (others => <>);
+      This := (Do_Hold => Do_Hold, others => <>);
    end Init;
 
    ----------------
@@ -54,18 +56,47 @@ package body Tresses.Envelopes.AD is
       Set_Decay (This, U7 (D / 2**8));
    end Set_Decay;
 
+   --------
+   -- On --
+   --------
+
+   procedure On (This : in out Instance; Velocity : Param_Range) is
+   begin
+      This.Target (Attack) := U16 (Velocity);
+      This.Target (Hold) := U16 (Velocity);
+      Trigger (This, Attack);
+   end On;
+
+   ---------
+   -- Off --
+   ---------
+
+   procedure Off (This : in out Instance) is
+   begin
+      case This.Segement is
+         when Attack | Hold =>
+            Trigger (This, Decay);
+         when Decay | Dead =>
+            null;
+      end case;
+   end Off;
+
    -------------
    -- Trigger --
    -------------
 
    procedure Trigger (This : in out Instance; Seg : Segment_Kind) is
+      Next_Segment : Segment_Kind := Seg;
    begin
-      if Seg = Dead then
+      if Next_Segment = Dead then
          This.Value := 0;
+      elsif Next_Segment = Hold and then not This.Do_Hold then
+         Next_Segment := Segment_Kind'Succ (Hold);
       end if;
+
       This.A := This.Value;
-      This.B := This.Target (Seg);
-      This.Segement := Seg;
+      This.B := This.Target (Next_Segment);
+      This.Segement := Next_Segment;
       This.Phase := 0;
    end Trigger;
 

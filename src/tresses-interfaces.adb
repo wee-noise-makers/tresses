@@ -15,10 +15,22 @@ package body Tresses.Interfaces is
    -- Strike --
    ------------
 
-   procedure Strike (This : in out Four_Params_Voice) is
+   procedure Note_On (This     : in out Four_Params_Voice;
+                      Velocity :        Param_Range)
+   is
    begin
-      This.Do_Strike := True;
-   end Strike;
+      This.Do_Strike.Event := On;
+      This.Do_Strike.Velocity := Velocity;
+   end Note_On;
+
+   --------------
+   -- Note_Off --
+   --------------
+
+   procedure Note_Off (This : in out Four_Params_Voice) is
+   begin
+      This.Do_Strike.Event := Off;
+   end Note_Off;
 
    ---------------
    -- Set_Param --

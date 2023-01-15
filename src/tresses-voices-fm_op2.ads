@@ -12,7 +12,8 @@ is
       Phase           : in out U32;
       Modulator_Phase : in out U32;
       Pitch           :        Pitch_Range;
-      Do_Strike       : in out Boolean);
+      Do_Init         : in out Boolean;
+      Do_Strike       : in out Strike_State);
 
    P_Modulation : constant Param_Id := 1;
    P_Detune     : constant Param_Id := 2;

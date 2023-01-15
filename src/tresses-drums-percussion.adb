@@ -39,14 +39,14 @@ package body Tresses.Drums.Percussion is
       State     : in out Additive_State;
       Rng       : in out Random.Instance;
       Pitch     :        Pitch_Range;
-      Do_Strike : in out Boolean)
+      Do_Strike : in out Strike_State)
    is
       Damping     : Param_Range renames Params (P_Damping);
       Coefficient : Param_Range renames Params (P_Coefficient);
    begin
       --  Strike
-      if Do_Strike then
-         Do_Strike := False;
+      if Do_Strike.Event = On then
+         Do_Strike.Event := None;
 
          declare
             Reset_Phase : constant Boolean :=

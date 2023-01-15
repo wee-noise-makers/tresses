@@ -22,7 +22,8 @@ package body Tresses.Voices.Plucked is
       State     : in out Pluck_State;
       KS        : in out KS_Array;
       Pitch     :        Pitch_Range;
-      Do_Strike : in out Boolean)
+      Do_Init   : in out Boolean;
+      Do_Strike : in out Strike_State)
    is
 
       function Interpolate (Offset : U32; Phase : U32) return S32 is
@@ -43,45 +44,58 @@ package body Tresses.Voices.Plucked is
       Phase_Increment : U32 := DSP.Compute_Phase_Increment (S16 (Pitch));
    begin
 
+      if Do_Init then
+         Do_Init := False;
+
+         Init (Env, Do_Hold => True);
+      end if;
+
       Set_Attack (Env, Params (P_Attack));
       Set_Decay (Env, Params (P_Decay));
 
       Phase_Increment := Phase_Increment * 2;
 
-      if Do_Strike then
-         Do_Strike := False;
+      case Do_Strike.Event is
+         when On =>
+            --  New active voice
+            if State.Active = State.Voices'Last then
+               State.Active := State.Voices'First;
+            else
+               State.Active := State.Active + 1;
+            end if;
 
-         --  New active voice
-         if State.Active = State.Voices'Last then
-            State.Active := State.Voices'First;
-         else
-            State.Active := State.Active + 1;
-         end if;
+            declare
+               P : Pluck_Voice renames State.Voices (State.Active);
+               Increment : U32 := Phase_Increment;
+               Width : U32;
+            begin
+               P.Shift := 0;
+               while Increment > (2 * 2**22) loop
+                  Increment := Increment / 2;
+                  P.Shift := P.Shift + 1;
+               end loop;
 
-         declare
-            P : Pluck_Voice renames State.Voices (State.Active);
-            Increment : U32 := Phase_Increment;
-            Width : U32;
-         begin
-            P.Shift := 0;
-            while Increment > (2 * 2**22) loop
-               Increment := Increment / 2;
-               P.Shift := P.Shift + 1;
-            end loop;
+               P.Size := Shift_Right (Elt_Per_Voice - 1, P.Shift);
+               P.Mask := P.Size - 1;
+               P.Write_Ptr := 0;
+               P.Max_Phase_Increment := Phase_Increment * 2;
+               P.Phase_Increment := Phase_Increment;
 
-            P.Size := Shift_Right (Elt_Per_Voice - 1, P.Shift);
-            P.Mask := P.Size - 1;
-            P.Write_Ptr := 0;
-            P.Max_Phase_Increment := Phase_Increment * 2;
-            P.Phase_Increment := Phase_Increment;
+               Width := U32 (Position_Param);
+               Width := (3 * Width) / 2;
+               P.Initialization_Ptr := (P.Size * (8_192 + Width)) / 2**16;
+            end;
 
-            Width := U32 (Position_Param);
-            Width := (3 * Width) / 2;
-            P.Initialization_Ptr := (P.Size * (8_192 + Width)) / 2**16;
-         end;
+            On (Env, Do_Strike.Velocity);
+            Do_Strike.Event := None;
 
-         Trigger (Env, Attack);
-      end if;
+         when Off =>
+            Off (Env);
+            Do_Strike.Event := None;
+
+         when others =>
+            null;
+      end case;
 
       declare
          Current_String : Pluck_Voice renames State.Voices (State.Active);
@@ -185,7 +199,8 @@ package body Tresses.Voices.Plucked is
             end loop;
 
             DSP.Clip_S16 (Sample);
-            Sample := (Sample * S32 (Render (Env))) / 2**15;
+            Render (Env);
+            Sample := (Sample * S32 (Low_Pass (Env))) / 2**15;
             DSP.Clip_S16 (Sample);
 
             Buffer (Index) := S16 ((Previous_Sample + Sample) / 2**1);

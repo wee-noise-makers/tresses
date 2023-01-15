@@ -77,6 +77,7 @@ package body Tresses.Voices.Macro is
                State     => This.Saw_Swarm_State,
                Phase     => This.Phase,
                Pitch     => This.Pitch,
+               Do_Init   => This.Do_Init,
                Do_Strike => This.Do_Strike);
 
          when Voice_Plucked =>
@@ -87,6 +88,7 @@ package body Tresses.Voices.Macro is
                                     State     => This.Pluck_State,
                                     KS        => This.KS,
                                     Pitch     => This.Pitch,
+                                    Do_Init   => This.Do_Init,
                                     Do_Strike => This.Do_Strike);
 
          when Voice_Acid =>
@@ -122,6 +124,7 @@ package body Tresses.Voices.Macro is
                   Env       => This.Env0,
                   LP_State  => This.LP_State,
                   Pitch     => This.Pitch,
+                  Do_Init   => This.Do_Init,
                   Do_Strike => This.Do_Strike);
             end;
 
@@ -132,6 +135,7 @@ package body Tresses.Voices.Macro is
                                          This.Phase,
                                          This.Modulator_Phase,
                                          This.Pitch,
+                                         This.Do_Init,
                                          This.Do_Strike);
       end case;
    end Render;
