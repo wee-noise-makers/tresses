@@ -106,6 +106,8 @@ package body Tresses.Analog_Oscillator is
       case This.Shape is
          when Saw =>
             This.Render_Saw (Buffer);
+         when Variable_Saw =>
+            This.Render_Variable_Saw (Buffer);
          when Square =>
             This.Render_Square (Buffer);
          when Triangle =>
@@ -292,6 +294,83 @@ package body Tresses.Analog_Oscillator is
       End_Interpolate (Phase_Incr_Interp, This);
 
    end Render_Saw;
+
+   -------------------------
+   -- Render_Variable_Saw --
+   -------------------------
+
+   procedure Render_Variable_Saw (This   : in out Instance;
+                                  Buffer :    out Mono_Buffer)
+   is
+      Phase_Incr_Interp : Phase_Increment_Interpolator;
+      Phase_Increment : U32;
+      Next_Sample : S32 := S32 (This.Next_Sample);
+
+      PW : constant U32 := U32 (This.Params (0)) * 2**16;
+   begin
+      Begin_Interpolate (Phase_Incr_Interp,
+                         This,
+                         U32 (Buffer'Length));
+
+      for Sample of Buffer loop
+         Phase_Increment := Interpolate (Phase_Incr_Interp);
+         declare
+            --  Sync_Reset : Boolean := False;
+            Self_Reset : Boolean := False;
+            --  Transition_During_Reset : Boolean := False;
+
+            --  Reset_Time : U32 := 0;
+            T : U32;
+
+            This_Sample : S32 := Next_Sample;
+         begin
+            Next_Sample := 0;
+
+            --  TODO sync_in ?
+
+            This.Phase := This.Phase + Phase_Increment;
+
+            if This.Phase < Phase_Increment then
+               Self_Reset := True;
+            end if;
+
+            --  TODO sync_out ?
+
+            loop
+               if not This.High then
+                  exit when This.Phase < PW;
+
+                  T := (This.Phase - PW)  / Shift_Right (Phase_Increment, 16);
+                  This_Sample := This_Sample - This_Blep_Sample (T);
+                  Next_Sample := Next_Sample - Next_Blep_Sample (T);
+                  This.High := True;
+               end if;
+
+               if This.High then
+                  exit when not Self_Reset;
+                  Self_Reset := False;
+
+                  T := This.Phase / Shift_Right (Phase_Increment, 16);
+                  This_Sample := This_Sample - This_Blep_Sample (T);
+                  Next_Sample := Next_Sample - Next_Blep_Sample (T);
+                  This.High := False;
+               end if;
+            end loop;
+
+            --  TODO sync_reset ?
+
+            Next_Sample := Next_Sample + S32 (This.Phase / 2**18);
+            Next_Sample := Next_Sample + S32 ((This.Phase - PW) / 2**18);
+
+            Sample := S16 ((This_Sample - 16_384) * 2);
+         end;
+      end loop;
+
+      This.Next_Sample := S16 (Next_Sample);
+
+      End_Interpolate (Phase_Incr_Interp, This);
+
+   end Render_Variable_Saw;
 
    -------------------
    -- Render_Square --

@@ -10,9 +10,9 @@ with Tresses.DSP;
 
 package body Tresses.Voices.FM_OP2 is
 
-   --------------------
-   -- Render_Plucked --
-   --------------------
+   -------------------
+   -- Render_FM_OP2 --
+   -------------------
 
    procedure Render_FM_OP2
      (Buffer          :    out Mono_Buffer;

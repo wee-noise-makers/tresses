@@ -11,9 +11,9 @@ with Tresses.Resources;
 
 package body Tresses.Voices.Saw_Swarm is
 
-   ------------------
-   -- Render_Snare --
-   ------------------
+   ----------------------
+   -- Render_Saw_Swarm --
+   ----------------------
 
    procedure Render_Saw_Swarm
      (Buffer    :    out Mono_Buffer;
@@ -28,9 +28,8 @@ package body Tresses.Voices.Saw_Swarm is
    is
       Increments : array (0 .. 6) of U32;
 
-      Detune_Param    : Param_Range renames Params (P_Detune);
+      Detune_Param : Param_Range renames Params (P_Detune);
       High_Pass_Param : Param_Range renames Params (P_High_Pass);
-
       Detune : S32;
    begin
       if Do_Init then

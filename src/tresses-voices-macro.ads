@@ -4,6 +4,7 @@ with Tresses.Voices.Plucked;
 with Tresses.Random;
 with Tresses.Envelopes.AD;
 with Tresses.Filters.Ladder;
+with Tresses.Filters.SVF;
 with Tresses.Analog_Oscillator;
 
 with Tresses.Interfaces; use Tresses.Interfaces;
@@ -51,6 +52,7 @@ private
       Env0, Env1  : Envelopes.AD.Instance;
       Osc0, Osc1  : Analog_Oscillator.Instance;
       Ladder      : Filters.Ladder.Instance;
+      SVF         : Filters.SVF.Instance;
       LP_State : S32 := 0;
 
       Phase : U32 := 0;

@@ -2,7 +2,7 @@ package Tresses.Analog_Oscillator
 with Preelaborate
 is
 
-   type Shape_Kind is (Saw, Square, Triangle, Sine,
+   type Shape_Kind is (Saw, Variable_Saw, Square, Triangle, Sine,
                        Triangle_Fold, Sine_Fold, Buzz);
 
    type Param_Id is range 0 .. 0;
@@ -85,6 +85,9 @@ private
 
    procedure Render_Saw (This   : in out Instance;
                          Buffer :    out Mono_Buffer);
+
+   procedure Render_Variable_Saw (This   : in out Instance;
+                                  Buffer :    out Mono_Buffer);
 
    procedure Render_Square (This   : in out Instance;
                             Buffer :    out Mono_Buffer);

@@ -1,6 +1,7 @@
 with Tresses.Voices.Analog_Macro;
 with Tresses.Voices.FM_OP2;
 with Tresses.Voices.Acid;
+with Tresses.Voices.Sand;
 with Tresses.Macro;
 
 package body Tresses.Voices.Macro is
@@ -137,6 +138,20 @@ package body Tresses.Voices.Macro is
                                          This.Pitch,
                                          This.Do_Init,
                                          This.Do_Strike);
+
+         when Voice_Sand =>
+            Voices.Sand.Render_Sand
+              (Buffer_A  => Buffer,
+               Buffer_B  => Aux_Buffer,
+               Params    => This.Params,
+               Osc0      => This.Osc0,
+               Osc1      => This.Osc1,
+               Filter1   => This.SVF,
+               Env       => This.Env0,
+               Pitch     => This.Pitch,
+               Do_Init   => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
       end case;
    end Render;
 
