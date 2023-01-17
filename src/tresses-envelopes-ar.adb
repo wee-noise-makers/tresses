@@ -7,7 +7,7 @@
 with Tresses.Resources; use Tresses.Resources;
 with Tresses.DSP;
 
-package body Tresses.Envelopes.AD is
+package body Tresses.Envelopes.AR is
 
    ----------
    -- Init --
@@ -29,14 +29,14 @@ package body Tresses.Envelopes.AD is
       This.Increment (Attack) := LUT_Env_Portamento_Increments (U8 (A));
    end Set_Attack;
 
-   ---------------
-   -- Set_Decay --
-   ---------------
+   -----------------
+   -- Set_Release --
+   -----------------
 
-   procedure Set_Decay (This : in out Instance; D : U7) is
+   procedure Set_Release (This : in out Instance; R : U7) is
    begin
-      This.Increment (Decay) := LUT_Env_Portamento_Increments (U8 (D));
-   end Set_Decay;
+      This.Increment (Release) := LUT_Env_Portamento_Increments (U8 (R));
+   end Set_Release;
 
    ----------------
    -- Set_Attack --
@@ -47,14 +47,14 @@ package body Tresses.Envelopes.AD is
       Set_Attack (This, U7 (A / 2**8));
    end Set_Attack;
 
-   ---------------
-   -- Set_Decay --
-   ---------------
+   -----------------
+   -- Set_Release --
+   -----------------
 
-   procedure Set_Decay (This : in out Instance; D : Param_Range) is
+   procedure Set_Release (This : in out Instance; R : Param_Range) is
    begin
-      Set_Decay (This, U7 (D / 2**8));
-   end Set_Decay;
+      Set_Release (This, U7 (R / 2**8));
+   end Set_Release;
 
    --------
    -- On --
@@ -75,8 +75,8 @@ package body Tresses.Envelopes.AD is
    begin
       case This.Segement is
          when Attack | Hold =>
-            Trigger (This, Decay);
-         when Decay | Dead =>
+            Trigger (This, Release);
+         when Release | Dead =>
             null;
       end case;
    end Off;
@@ -165,4 +165,4 @@ package body Tresses.Envelopes.AD is
       return Result;
    end Low_Pass;
 
-end Tresses.Envelopes.AD;
+end Tresses.Envelopes.AR;

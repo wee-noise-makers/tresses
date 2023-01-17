@@ -1,9 +1,9 @@
 with Tresses.Resources;
 
-package Tresses.Envelopes.AD
+package Tresses.Envelopes.AR
 with Preelaborate
 is
-   type Segment_Kind is (Attack, Hold, Decay, Dead);
+   type Segment_Kind is (Attack, Hold, Release, Dead);
 
    type Instance is private;
 
@@ -11,10 +11,10 @@ is
                    Do_Hold :        Boolean);
 
    procedure Set_Attack (This : in out Instance; A : U7);
-   procedure Set_Decay (This : in out Instance; D : U7);
+   procedure Set_Release (This : in out Instance; R : U7);
 
    procedure Set_Attack (This : in out Instance; A : Param_Range);
-   procedure Set_Decay (This : in out Instance; D : Param_Range);
+   procedure Set_Release (This : in out Instance; R : Param_Range);
 
    procedure On (This : in out Instance; Velocity : Param_Range);
    procedure Off (This : in out Instance);
@@ -37,12 +37,12 @@ private
       Increment : Incr_Array :=
         (Attack =>
            Resources.LUT_Env_Portamento_Increments (U8 (U7'First)),
-         Decay =>
+         Release =>
            Resources.LUT_Env_Portamento_Increments (U8 (U7'Last)),
          others => 0);
       Target : Target_Array := (Attack => U16 (S16'Last),
                                 Hold   => U16 (S16'Last),
-                                Decay  => 0,
+                                Release  => 0,
                                 Dead   => 0);
       Segement : Segment_Kind := Segment_Kind'First;
       Do_Hold : Boolean := False;
@@ -51,4 +51,4 @@ private
       Phase : U32 := 0;
    end record;
 
-end Tresses.Envelopes.AD;
+end Tresses.Envelopes.AR;

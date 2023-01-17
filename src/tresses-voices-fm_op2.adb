@@ -5,7 +5,7 @@
 --  Copyright 2012 Emilie Gillet.
 
 with Tresses.Resources;
-with Tresses.Envelopes.AD; use Tresses.Envelopes.AD;
+with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 with Tresses.DSP;
 
 package body Tresses.Voices.FM_OP2 is
@@ -17,7 +17,7 @@ package body Tresses.Voices.FM_OP2 is
    procedure Render_FM_OP2
      (Buffer          :    out Mono_Buffer;
       Params          :        Param_Array;
-      Env             : in out Envelopes.AD.Instance;
+      Env             : in out Envelopes.AR.Instance;
       Phase           : in out U32;
       Modulator_Phase : in out U32;
       Pitch           :        Pitch_Range;
@@ -58,7 +58,7 @@ package body Tresses.Voices.FM_OP2 is
       end case;
 
       Set_Attack (Env, Params (P_Attack));
-      Set_Decay (Env, Params (P_Decay));
+      Set_Release (Env, Params (P_Release));
 
       for Index in Buffer'Range loop
          Phase := Phase + Phase_Increment;

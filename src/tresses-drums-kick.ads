@@ -1,6 +1,6 @@
 with Tresses.Excitation;
 with Tresses.Filters.SVF;
-with Tresses.Envelopes.AD;
+with Tresses.Envelopes.AR;
 with Tresses.Interfaces; use Tresses.Interfaces;
 
 package Tresses.Drums.Kick
@@ -12,7 +12,7 @@ is
       Params         :        Param_Array;
       Pulse0, Pulse1 : in out Excitation.Instance;
       Filter         : in out Filters.SVF.Instance;
-      Env            : in out Envelopes.AD.Instance;
+      Env            : in out Envelopes.AR.Instance;
       LP_State       : in out S32;
       Pitch          :        Pitch_Range;
       Do_Init        : in out Boolean;
@@ -62,7 +62,7 @@ private
    with record
       Pulse0, Pulse1 : Excitation.Instance;
       Filter         : Filters.SVF.Instance;
-      Env            : Envelopes.AD.Instance;
+      Env            : Envelopes.AR.Instance;
       LP_State       : S32;
       Do_Init        : Boolean := True;
    end record;

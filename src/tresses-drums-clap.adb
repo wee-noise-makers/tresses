@@ -1,7 +1,7 @@
 with Tresses.Excitation; use Tresses.Excitation;
 with Tresses.Filters.SVF; use Tresses.Filters.SVF;
 with Tresses.Random; use Tresses.Random;
-with Tresses.Envelopes.AD; use Tresses.Envelopes.AD;
+with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 with Tresses.DSP;
 with Tresses.Resources;
 
@@ -16,7 +16,7 @@ package body Tresses.Drums.Clap is
       Params    :        Param_Array;
       Filter    : in out Filters.SVF.Instance;
       Rng       : in out Random.Instance;
-      Env       : in out Envelopes.AD.Instance;
+      Env       : in out Envelopes.AR.Instance;
       Re_Trig   : in out U32;
       Pitch     :        Pitch_Range;
       Do_Init   : in out Boolean;
@@ -58,10 +58,10 @@ package body Tresses.Drums.Clap is
 
          if Re_Trig = 0 then
             --  Last clap
-            Set_Decay (Env, Param_Range'Last / 4 + Decay_Param / 6);
+            Set_Release (Env, Param_Range'Last / 4 + Decay_Param / 6);
          else
             --  First claps
-            Set_Decay (Env, Param_Range'Last / 8 +
+            Set_Release (Env, Param_Range'Last / 8 +
                        (Param_Range'Last - Sync_Param) / 8);
          end if;
 

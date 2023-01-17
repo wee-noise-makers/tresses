@@ -1,5 +1,5 @@
 with Tresses.Random;
-with Tresses.Envelopes.AD;
+with Tresses.Envelopes.AR;
 with Tresses.Interfaces; use Tresses.Interfaces;
 
 package Tresses.Voices.Plucked
@@ -17,7 +17,7 @@ is
      (Buffer                      :    out Mono_Buffer;
       Params                      :        Param_Array;
       Rng                         : in out Random.Instance;
-      Env                         : in out Envelopes.AD.Instance;
+      Env                         : in out Envelopes.AR.Instance;
       State                       : in out Pluck_State;
       KS                          : in out KS_Array;
       Pitch                       :        Pitch_Range;
@@ -27,21 +27,21 @@ is
    P_String_Decay : constant Param_Id := 1;
    P_Position     : constant Param_Id := 2;
    P_Attack       : constant Param_Id := 3;
-   P_Decay        : constant Param_Id := 4;
+   P_Release      : constant Param_Id := 4;
 
    function Param_Label (Id : Param_Id) return String
    is (case Id is
           when P_String_Decay => "String Decay",
           when P_Position     => "Position",
           when P_Attack       => "Attack",
-          when P_Decay        => "Decay");
+          when P_Release      => "Release");
 
    function Param_Short_Label (Id : Param_Id) return Short_Label
    is (case Id is
           when P_String_Decay => "SDY",
           when P_Position     => "POS",
           when P_Attack       => "ATK",
-          when P_Decay        => "DCY");
+          when P_Release      => "REL");
 
 private
 

@@ -5,7 +5,7 @@ with Tresses.Drums.Bell;
 with Tresses.Excitation;
 with Tresses.Random;
 with Tresses.Filters.SVF;
-with Tresses.Envelopes.AD;
+with Tresses.Envelopes.AR;
 
 with Tresses.Interfaces; use Tresses.Interfaces;
 
@@ -48,7 +48,7 @@ private
       Pulse0, Pulse1, Pulse2, Pulse3 : Excitation.Instance;
       Filter0, Filter1, Filter3 : Filters.SVF.Instance;
       Rng : Random.Instance;
-      Env0 : Envelopes.AD.Instance;
+      Env0 : Envelopes.AR.Instance;
 
       Bell_State : Bell.Additive_State;
       Perc_State : Percussion.Additive_State;

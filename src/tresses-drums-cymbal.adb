@@ -4,7 +4,7 @@
 --  Based on Braids from Mutable Instruments:
 --  Copyright 2012 Emilie Gillet.
 
-with Tresses.Envelopes.AD; use Tresses.Envelopes.AD;
+with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 with Tresses.Filters.SVF; use Tresses.Filters.SVF;
 with Tresses.Random; use Tresses.Random;
 with Tresses.DSP;
@@ -19,7 +19,7 @@ package body Tresses.Drums.Cymbal is
      (Buffer           :    out Mono_Buffer;
       Params           :        Param_Array;
       Filter0, Filter1 : in out Filters.SVF.Instance;
-      Env              : in out Envelopes.AD.Instance;
+      Env              : in out Envelopes.AR.Instance;
       State            : in out Cymbal_State;
       Phase            : in out U32;
       Pitch            :        Pitch_Range;
@@ -75,7 +75,7 @@ package body Tresses.Drums.Cymbal is
                   Decay := Limit;
                end if;
 
-               Set_Decay (Env, U7 (Decay / To_U7_Div));
+               Set_Release (Env, U7 (Decay / To_U7_Div));
                On (Env, Do_Strike.Velocity);
             end;
 

@@ -1,5 +1,5 @@
 with Tresses.Resources;
-with Tresses.Envelopes.AD; use Tresses.Envelopes.AD;
+with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 with Tresses.DSP;
 
 package body Tresses.Voices.Sand is
@@ -13,7 +13,7 @@ package body Tresses.Voices.Sand is
       Params             :        Param_Array;
       Osc0, Osc1         : in out Analog_Oscillator.Instance;
       Filter1            : in out Filters.SVF.Instance;
-      Env                : in out Envelopes.AD.Instance;
+      Env                : in out Envelopes.AR.Instance;
       Pitch              :        Pitch_Range;
       Do_Init            : in out Boolean;
       Do_Strike          : in out Strike_State)
@@ -54,7 +54,7 @@ package body Tresses.Voices.Sand is
       end case;
 
       Set_Attack (Env, Params (P_Attack));
-      Set_Decay (Env, Params (P_Decay));
+      Set_Release (Env, Params (P_Release));
 
       --  Filter frequency control
       Filters.SVF.Set_Frequency (Filter1, S16 (Params (P_Band_pass)) / 2);

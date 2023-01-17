@@ -1,4 +1,4 @@
-with Tresses.Envelopes.AD;
+with Tresses.Envelopes.AR;
 with Tresses.Interfaces; use Tresses.Interfaces;
 with Tresses.Analog_Oscillator;
 with Tresses.Filters.Ladder;
@@ -11,7 +11,7 @@ is
      (Buffer             :    out Mono_Buffer;
       Params             :        Param_Array;
       Osc0               : in out Analog_Oscillator.Instance;
-      A_Env, F_Env       : in out Envelopes.AD.Instance;
+      A_Env, F_Env       : in out Envelopes.AR.Instance;
       Filter             : in out Filters.Ladder.Instance;
       Pitch              :        Pitch_Range;
       Do_Init            : in out Boolean;

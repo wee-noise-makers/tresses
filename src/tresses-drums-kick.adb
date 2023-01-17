@@ -6,7 +6,7 @@
 
 with Tresses.Excitation; use Tresses.Excitation;
 with Tresses.Filters.SVF; use Tresses.Filters.SVF;
-with Tresses.Envelopes.AD; use Tresses.Envelopes.AD;
+with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 with Tresses.DSP;
 with Tresses.Resources;
 
@@ -21,7 +21,7 @@ package body Tresses.Drums.Kick is
       Params         :        Param_Array;
       Pulse0, Pulse1 : in out Excitation.Instance;
       Filter         : in out Filters.SVF.Instance;
-      Env            : in out Envelopes.AD.Instance;
+      Env            : in out Envelopes.AR.Instance;
       LP_State       : in out S32;
       Pitch          :        Pitch_Range;
       Do_Init        : in out Boolean;
@@ -67,7 +67,7 @@ package body Tresses.Drums.Kick is
          Trigger (Pulse1, S32 (-19_662.0 * 0.7));
          Set_Punch (Filter, 24_000);
 
-         Set_Decay (Env, 4096 + Pitch_Decay / 4);
+         Set_Release (Env, 4096 + Pitch_Decay / 4);
          On (Env, Do_Strike.Velocity);
 
          when Off =>

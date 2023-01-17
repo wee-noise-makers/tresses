@@ -1,7 +1,7 @@
 with Tresses.Excitation;
 with Tresses.Filters.SVF;
 with Tresses.Random;
-with Tresses.Envelopes.AD;
+with Tresses.Envelopes.AR;
 
 with Tresses.Interfaces; use Tresses.Interfaces;
 
@@ -14,7 +14,7 @@ is
       Params    :        Param_Array;
       Filter    : in out Filters.SVF.Instance;
       Rng       : in out Random.Instance;
-      Env       : in out Envelopes.AD.Instance;
+      Env       : in out Envelopes.AR.Instance;
       Re_Trig   : in out U32;
       Pitch     :        Pitch_Range;
       Do_Init   : in out Boolean;
@@ -65,7 +65,7 @@ private
       Re_Trig : U32 := 0;
       Filter  : Filters.SVF.Instance;
       Rng     : Random.Instance;
-      Env     : Envelopes.AD.Instance;
+      Env     : Envelopes.AR.Instance;
       Do_Init : Boolean := True;
    end record;
 

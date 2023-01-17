@@ -1,4 +1,4 @@
-with Tresses.Envelopes.AD; use Tresses.Envelopes.AD;
+with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 
 with Tresses.DSP;
 with Tresses.Resources;
@@ -15,7 +15,8 @@ package body Tresses.Drums.Analog_Kick is
       Phase                  : in out U32;
       Phase_Increment        : in out U32;
       Target_Phase_Increment : in out U32;
-      Env                    : in out Envelopes.AD.Instance;
+      Env                    : in out Envelopes.AR.Instance;
+      Rng                    : in out Random.Instance;
       Pitch                  :        Pitch_Range;
       Do_Init                : in out Boolean;
       Do_Strike              : in out Strike_State)
@@ -44,7 +45,7 @@ package body Tresses.Drums.Analog_Kick is
          when On =>
             Do_Strike.Event := None;
 
-            Set_Decay (Env, Param_Range'Last / 4 + (Decay / 2));
+            Set_Release (Env, Param_Range'Last / 4 + (Decay / 2));
             On (Env, Do_Strike.Velocity);
 
             Target_Phase_Increment :=
@@ -81,6 +82,7 @@ package body Tresses.Drums.Analog_Kick is
          Phase := Phase + Phase_Increment;
 
          Sample := S32 (DSP.Interpolate824 (Resources.WAV_Sine, Phase));
+         Sample := Sample + S32 (Random.Get_Sample (Rng));
 
          --  Symmetrical soft clipping
          Fuzzed := DSP.Interpolate88
@@ -115,6 +117,7 @@ package body Tresses.Drums.Analog_Kick is
                           This.Phase_Increment,
                           This.Target_Phase_Increment,
                           This.Env,
+                          This.Rng,
                           This.Pitch,
                           This.Do_Init,
                           This.Do_Strike);

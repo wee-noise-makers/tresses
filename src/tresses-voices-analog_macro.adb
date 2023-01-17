@@ -1,4 +1,4 @@
-with Tresses.Envelopes.AD; use Tresses.Envelopes.AD;
+with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 with Tresses.DSP;
 with Tresses.Resources;
 
@@ -40,7 +40,7 @@ package body Tresses.Voices.Analog_Macro is
      (Buffer_A, Buffer_B :    out Mono_Buffer;
       Param1, Param2     :        Param_Range;
       Osc0, Osc1         : in out Analog_Oscillator.Instance;
-      Env                : in out Envelopes.AD.Instance;
+      Env                : in out Envelopes.AR.Instance;
       Pitch              :        Pitch_Range)
    is
       Sample : S32;
@@ -85,7 +85,7 @@ package body Tresses.Voices.Analog_Macro is
      (Buffer_A, Buffer_B :    out Mono_Buffer;
       Param1, Param2     :        Param_Range;
       Osc0, Osc1         : in out Analog_Oscillator.Instance;
-      Env                : in out Envelopes.AD.Instance;
+      Env                : in out Envelopes.AR.Instance;
       LP_State           : in out S32;
       Pitch              :        Pitch_Range)
    is
@@ -171,7 +171,7 @@ package body Tresses.Voices.Analog_Macro is
       Shape              :        Analog_Macro_Shape;
       Params             :        Param_Array;
       Osc0, Osc1         : in out Analog_Oscillator.Instance;
-      Env                : in out Envelopes.AD.Instance;
+      Env                : in out Envelopes.AR.Instance;
       LP_State           : in out S32;
       Pitch              :        Pitch_Range;
       Do_Init            : in out Boolean;
@@ -199,7 +199,7 @@ package body Tresses.Voices.Analog_Macro is
       end case;
 
       Set_Attack (Env, Params (3));
-      Set_Decay (Env, Params (4));
+      Set_Release (Env, Params (4));
 
       case Shape is
          when Buzz =>

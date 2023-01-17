@@ -1,4 +1,4 @@
-with Tresses.Envelopes.AD;
+with Tresses.Envelopes.AR;
 with Tresses.Filters.SVF;
 with Tresses.Random;
 
@@ -13,7 +13,7 @@ is
      (Buffer           :    out Mono_Buffer;
       Params           :        Param_Array;
       Filter0, Filter1 : in out Filters.SVF.Instance;
-      Env              : in out Envelopes.AD.Instance;
+      Env              : in out Envelopes.AR.Instance;
       State            : in out Cymbal_State;
       Phase            : in out U32;
       Pitch            :        Pitch_Range;
@@ -68,7 +68,7 @@ private
    is new Four_Params_Voice
    with record
       Filter0, Filter1 : Filters.SVF.Instance;
-      Env              : Envelopes.AD.Instance;
+      Env              : Envelopes.AR.Instance;
       State            : Cymbal_State;
       Phase            : U32;
       Do_Init          : Boolean := True;

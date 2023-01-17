@@ -2,7 +2,7 @@ with Tresses.Voices.Saw_Swarm;
 with Tresses.Voices.Plucked;
 
 with Tresses.Random;
-with Tresses.Envelopes.AD;
+with Tresses.Envelopes.AR;
 with Tresses.Filters.Ladder;
 with Tresses.Filters.SVF;
 with Tresses.Analog_Oscillator;
@@ -49,7 +49,7 @@ private
       Pluck_State : Plucked.Pluck_State;
       KS          : Plucked.KS_Array;
       Rng         : Random.Instance;
-      Env0, Env1  : Envelopes.AD.Instance;
+      Env0, Env1  : Envelopes.AR.Instance;
       Osc0, Osc1  : Analog_Oscillator.Instance;
       Ladder      : Filters.Ladder.Instance;
       SVF         : Filters.SVF.Instance;

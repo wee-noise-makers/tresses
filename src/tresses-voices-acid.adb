@@ -1,4 +1,4 @@
-with Tresses.Envelopes.AD; use Tresses.Envelopes.AD;
+with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 
 package body Tresses.Voices.Acid is
 
@@ -10,7 +10,7 @@ package body Tresses.Voices.Acid is
      (Buffer             :    out Mono_Buffer;
       Params             :        Param_Array;
       Osc0               : in out Analog_Oscillator.Instance;
-      A_Env, F_Env       : in out Envelopes.AD.Instance;
+      A_Env, F_Env       : in out Envelopes.AR.Instance;
       Filter             : in out Filters.Ladder.Instance;
       Pitch              :        Pitch_Range;
       Do_Init            : in out Boolean;
@@ -35,12 +35,12 @@ package body Tresses.Voices.Acid is
          --  Amp envelope
          Init (A_Env, Do_Hold => True);
          Set_Attack (A_Env, U7 (50));
-         Set_Decay (A_Env, U7 (0));
+         Set_Release (A_Env, U7 (0));
 
          --  Filter envelope
          Init (F_Env, Do_Hold => True);
          Set_Attack (F_Env, U7 (0));
-         Set_Decay (A_Env, U7 (0));
+         Set_Release (A_Env, U7 (0));
       end if;
 
       case Do_Strike.Event is
@@ -48,12 +48,12 @@ package body Tresses.Voices.Acid is
             Do_Strike.Event := None;
 
 
-            Set_Decay (A_Env, (if F_Decay < (Param_Range'Last - 10_000)
+            Set_Release (A_Env, (if F_Decay < (Param_Range'Last - 10_000)
                                then F_Decay + 10_000
                                else Param_Range'Last));
             On (A_Env, Do_Strike.Velocity);
 
-            Set_Decay (F_Env, F_Decay);
+            Set_Release (F_Env, F_Decay);
             On (F_Env, Do_Strike.Velocity);
 
          when Off =>

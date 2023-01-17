@@ -5,7 +5,7 @@
 --  Copyright 2012 Emilie Gillet.
 
 with Tresses.Random; use Tresses.Random;
-with Tresses.Envelopes.AD; use Tresses.Envelopes.AD;
+with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 with Tresses.DSP;
 
 package body Tresses.Voices.Plucked is
@@ -18,7 +18,7 @@ package body Tresses.Voices.Plucked is
      (Buffer    :    out Mono_Buffer;
       Params    :        Param_Array;
       Rng       : in out Random.Instance;
-      Env       : in out Envelopes.AD.Instance;
+      Env       : in out Envelopes.AR.Instance;
       State     : in out Pluck_State;
       KS        : in out KS_Array;
       Pitch     :        Pitch_Range;
@@ -51,7 +51,7 @@ package body Tresses.Voices.Plucked is
       end if;
 
       Set_Attack (Env, Params (P_Attack));
-      Set_Decay (Env, Params (P_Decay));
+      Set_Release (Env, Params (P_Release));
 
       Phase_Increment := Phase_Increment * 2;
 

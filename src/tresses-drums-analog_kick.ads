@@ -1,6 +1,7 @@
 with Tresses.Excitation;
+with Tresses.Random;
 with Tresses.Filters.SVF;
-with Tresses.Envelopes.AD;
+with Tresses.Envelopes.AR;
 with Tresses.Interfaces; use Tresses.Interfaces;
 
 package Tresses.Drums.Analog_Kick
@@ -13,7 +14,8 @@ is
       Phase                  : in out U32;
       Phase_Increment        : in out U32;
       Target_Phase_Increment : in out U32;
-      Env                    : in out Envelopes.AD.Instance;
+      Env                    : in out Envelopes.AR.Instance;
+      Rng                    : in out Random.Instance;
       Pitch                  :        Pitch_Range;
       Do_Init                : in out Boolean;
       Do_Strike              : in out Strike_State);
@@ -60,8 +62,10 @@ private
    type Instance
    is new Four_Params_Voice
    with record
-      Env            : Envelopes.AD.Instance;
+      Env            : Envelopes.AR.Instance;
       Phase, Target_Phase_Increment, Phase_Increment : U32 := 0;
+
+      Rng : Tresses.Random.Instance;
 
       Do_Init        : Boolean := True;
    end record;
