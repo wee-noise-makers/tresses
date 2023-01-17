@@ -38,16 +38,18 @@ begin
 
                   for Param_4 of Param_Vals loop
                      Macro.Set_Param (4, Param_4);
+                     for Velocity of Param_Vals loop
 
-                     Macro.Strike;
+                        Macro.Note_On (Velocity);
 
-                     Macro.Render (Buffer, Aux_Buffer);
+                        Macro.Render (Buffer, Aux_Buffer);
 
-                     for Elt of Buffer loop
-                        Ignore := GNAT.OS_Lib.Write
+                        for Elt of Buffer loop
+                           Ignore := GNAT.OS_Lib.Write
                           (GNAT.OS_Lib.Standout,
                            Elt'Address,
                            Elt'Size / 8);
+                        end loop;
                      end loop;
                   end loop;
                end loop;
@@ -55,5 +57,4 @@ begin
          end loop;
       end loop;
    end loop;
-
 end Tests;
