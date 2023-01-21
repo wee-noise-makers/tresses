@@ -86,7 +86,7 @@ package body Tresses.Drums.Kick is
          Squared : constant U32 := Shift_Right (Scaled * Scaled, 16);
       begin
          Scaled := Shift_Right (Squared * Scaled, 18);
-         Set_Resonance (Filter, S16 (32768 - 128 - Scaled));
+         Set_Resonance (Filter, Param_Range (32768 - 128 - Scaled));
       end;
 
       --  Control curve: Drive to the power of 2
@@ -123,7 +123,7 @@ package body Tresses.Drums.Kick is
                     ((Pitch_Offset * S32 (Value (Env))) / 2**15);
                   DSP.Clip_S16 (Target_Pitch);
 
-                  Set_Frequency (Filter, S16 (Target_Pitch));
+                  Set_Frequency (Filter, Param_Range (Target_Pitch));
                   for X in 0 .. 1 loop
                      declare
                         Resonator_Output : S32;

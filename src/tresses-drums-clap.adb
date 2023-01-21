@@ -68,8 +68,8 @@ package body Tresses.Drums.Clap is
          On (Env, Do_Strike.Velocity);
       end if;
 
-      Set_Frequency (Filter, S16 (Pitch) + S16 (2 * Octave));
-      Set_Resonance (Filter, S16 (Tone_Param));
+      Set_Frequency (Filter, Param_Range (Pitch + 2 * Octave));
+      Set_Resonance (Filter, Tone_Param);
 
       --  Control curve: Drive to the power of 2
       Drive_Amount := U32 (Drive_Param);

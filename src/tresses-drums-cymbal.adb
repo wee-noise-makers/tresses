@@ -105,8 +105,8 @@ package body Tresses.Drums.Cymbal is
 
          SD : S32;
       begin
-         Set_Frequency (Filter0, S16 (Cutoff_Param / 2));
-         Set_Frequency (Filter1, S16 (Cutoff_Param / 2));
+         Set_Frequency (Filter0, Cutoff_Param / 2);
+         Set_Frequency (Filter1, Cutoff_Param / 2);
 
          while Index <= Buffer'Last loop
             Phase := Phase + Increments (6);

@@ -90,7 +90,7 @@ package body Tresses.Voices.Acid is
          --  Sounds great with overdrive, but it would require another
          --  parameter...
          --  Sample := S32 (DSP.Interpolate88
-         --                 (Resources.WS_Extreme_Overdrive,
+         --                 (Resources.WS_Violent_Overdrive,
          --                    U16 (Sample + 32_768)));
 
          --  Apply amp envelope

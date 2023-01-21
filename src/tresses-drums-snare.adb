@@ -73,8 +73,8 @@ package body Tresses.Drums.Snare is
                   Decay := 65_535;
                end if;
 
-               Set_Resonance (Filter0, 29_000 + S16 (Decay / 2**5));
-               Set_Resonance (Filter1, 26_500 + S16 (Decay / 2**5));
+               Set_Resonance (Filter0, 29_000 + Param_Range (Decay / 2**5));
+               Set_Resonance (Filter1, 26_500 + Param_Range (Decay / 2**5));
 
                --  Pulse3 is used as an envelope
                Set_Decay (Pulse3, 4_092 + U16 (Decay / 2**14));
@@ -102,9 +102,9 @@ package body Tresses.Drums.Snare is
          when None => null;
       end case;
 
-      Set_Frequency (Filter0, S16 (Pitch) + (12 * 2**7));
-      Set_Frequency (Filter1, S16 (Pitch) + (24 * 2**7));
-      Set_Frequency (Filter2, S16 (Pitch) + (60 * 2**7));
+      Set_Frequency (Filter0, Param_Range (Pitch + 12 * 2**7));
+      Set_Frequency (Filter1, Param_Range (Pitch + 24 * 2**7));
+      Set_Frequency (Filter2, Param_Range (Pitch + 60 * 2**7));
 
       declare
          G1 : constant S32 := 22_000 - S32 (Tone_Param / 2**1);

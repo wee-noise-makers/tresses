@@ -10,8 +10,8 @@ is
    type Instance is private;
 
    procedure Init (This : in out Instance);
-   procedure Set_Frequency (This : in out Instance; Frequency : S16);
-   procedure Set_Resonance (This : in out Instance; Resonance : S16);
+   procedure Set_Frequency (This : in out Instance; Frequency : Param_Range);
+   procedure Set_Resonance (This : in out Instance; Resonance : Param_Range);
    procedure Set_Punch (This : in out Instance; Punch : U16);
    procedure Set_Mode (This : in out Instance; Mode : Mode_Kind);
 
@@ -21,8 +21,8 @@ private
 
    type Instance is record
       Dirty : Boolean := True;
-      Frequency : S16 := 33 * 2**7;
-      Resonance : S16 := 16384;
+      Frequency : Param_Range := 33 * 2**7;
+      Resonance : Param_Range := 16384;
       Punch : S32 := 0;
       F : S32 := 0;
       Damp : S32 := 0;

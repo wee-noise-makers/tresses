@@ -57,7 +57,7 @@ package body Tresses.Voices.Sand is
       Set_Release (Env, Params (P_Release));
 
       --  Filter frequency control
-      Filters.SVF.Set_Frequency (Filter1, S16 (Params (P_Band_pass)) / 2);
+      Filters.SVF.Set_Frequency (Filter1, Params (P_Band_pass) / 2);
 
       --  Render Triangle
       Osc0.Set_Param (0, Params (P_Fold));

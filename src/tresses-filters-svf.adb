@@ -28,7 +28,8 @@ package body Tresses.Filters.SVF is
    -- Set_Frequency --
    -------------------
 
-   procedure Set_Frequency (This : in out Instance; Frequency : S16) is
+   procedure Set_Frequency (This : in out Instance; Frequency : Param_Range)
+   is
    begin
       This.Dirty := This.Dirty or else (This.Frequency /= Frequency);
       This.Frequency := Frequency;
@@ -38,7 +39,8 @@ package body Tresses.Filters.SVF is
    -- Set_Resonance --
    -------------------
 
-   procedure Set_Resonance (This : in out Instance; Resonance : S16) is
+   procedure Set_Resonance (This : in out Instance; Resonance : Param_Range)
+   is
    begin
       This.Resonance := Resonance;
       This.Dirty := True;
