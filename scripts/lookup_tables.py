@@ -57,6 +57,23 @@ lookup_tables_32.append(
 
 
 """----------------------------------------------------------------------------
+LFO increments
+----------------------------------------------------------------------------"""
+min_frequency = 1.0 / 32.0  # Hertz
+max_frequency = 160.0  # Hertz
+
+num_values = 257
+min_increment = excursion * min_frequency / sample_rate
+max_increment = excursion * max_frequency / sample_rate
+
+rates = numpy.linspace(numpy.log(min_increment),
+                       numpy.log(max_increment), num_values)
+lookup_tables_32.append(
+    ('lfo_increments', numpy.exp(rates).astype(int))
+)
+
+
+"""----------------------------------------------------------------------------
 Resonator coefficients
 ----------------------------------------------------------------------------"""
 

@@ -162,7 +162,7 @@ package body Tresses.DSP is
 
       A := LUT_Oscillator_Increments (U8 (Ref_Pitch / 2**4));
       B := LUT_Oscillator_Increments (U8 (Ref_Pitch / 2**4) + 1);
-      Phase_Increment  := A +
+      Phase_Increment := A +
         U32 ((S32 (B - A) * (Ref_Pitch and 16#F#)) / 2**4);
 
       Phase_Increment := Shift_Right (Phase_Increment, Num_Shifts);
