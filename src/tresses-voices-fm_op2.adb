@@ -24,8 +24,20 @@ package body Tresses.Voices.FM_OP2 is
       Do_Init         : in out Boolean;
       Do_Strike       : in out Strike_State)
    is
+      Integral : constant U16 := U16 (Params (P_Detune) / 2**8);
+      Fractional : constant U16 := U16 (Params (P_Detune)) and 255;
+
+      A : constant S16 := S16 (Resources.LUT_Fm_Frequency_Quantizer
+                               (U8 (Integral)));
+      B : constant S16 := S16 (Resources.LUT_Fm_Frequency_Quantizer
+                               (U8 (Integral + 1)));
+
+      --  Quantize parameter for FM
+      Detune : constant Param_Range :=
+        Param_Range (A + (((B - A) * S16 (Fractional)) / 2**8));
+
       Modulator_Pitch : constant S32 :=
-        ((12 * 2**7) + S32 (Pitch) + (S32 (Params (2) - 16_384) / 2));
+        ((12 * 2**7) + S32 (Pitch) + ((S32 (Detune) - 16_384) / 2));
 
       Phase_Increment : constant U32 :=
         DSP.Compute_Phase_Increment (S16 (Pitch));
@@ -35,7 +47,9 @@ package body Tresses.Voices.FM_OP2 is
 
       PM : U32;
       Sample : S32;
+
    begin
+
 
       if Do_Init then
          Do_Init := False;
@@ -66,7 +80,7 @@ package body Tresses.Voices.FM_OP2 is
 
          PM := U32 (-S32 (S16'First) + S32 (DSP.Interpolate824
                     (Resources.WAV_Sine, Modulator_Phase)));
-         PM := (PM * U32 (Params (1))) * 2**2;
+         PM := (PM * U32 (Params (P_Modulation))) * 2**2;
 
          Sample := S32 (DSP.Interpolate824 (Resources.WAV_Sine, Phase + PM));
          Render (Env);
