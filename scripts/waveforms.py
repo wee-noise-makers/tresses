@@ -30,6 +30,7 @@
 
 import numpy
 import os
+from scipy import signal
 
 """----------------------------------------------------------------------------
 Waveforms for vowel synthesis
@@ -115,6 +116,36 @@ fill = numpy.fmod(
     WAVETABLE_SIZE)
 
 waveforms.append(('sine', scale(sine[quadrature])))
+
+# LFO
+arr = numpy.arange(WAVETABLE_SIZE + 1) / float(WAVETABLE_SIZE + 1) * 2 * numpy.pi
+triangle= scale(signal.sawtooth(arr, width = 0.5), min=0, max=32767, center=False)
+ramp_up = scale(signal.sawtooth(arr, width = 1), min=0, max=32767, center=False)
+ramp_down = scale(signal.sawtooth(arr, width = 0), min=0, max=32767, center=False)
+exp_down = scale((0.5 ** (arr)) * 2.0 - 1.0, min=0, max=32767, center=False)
+exp_up = scale((0.5 ** (2 * numpy.pi - arr)) * 2.0 - 1.0, min=0, max=32767, center=False)
+
+# arr = numpy.arange(WAVETABLE_SIZE + 1) / float(WAVETABLE_SIZE + 1) * 2 * numpy.pi
+# arr += numpy.pi / 2.0
+# b, a = signal.butter(1, 0.1, btype='low')
+# square_round= scale(signal.filtfilt(b, a, signal.square(arr, duty=0.5)), min=0, max=32767, center=False)
+
+# import matplotlib.pyplot as plt
+# plt.plot(exp_down)
+# plt.plot(exp_up)
+# plt.plot(ramp_up)
+# plt.plot(ramp_down)
+# plt.plot(triangle)
+# plt.plot(scale(sine[quadrature], min=0, max=32767))
+# # plt.plot(square_round)
+# plt.show()
+
+waveforms.append(('sine_lfo', scale(sine[quadrature], min=0, max=32767)))
+waveforms.append(('triangle_lfo', triangle))
+waveforms.append(('ramp_up_lfo', ramp_up))
+waveforms.append(('ramp_down_lfo', ramp_down))
+waveforms.append(('exp_up_lfo', exp_up))
+waveforms.append(('exp_down_lfo', exp_down))
 
 for zone in range(num_zones):
   f0 = 440.0 * 2.0 ** ((18 + 8 * zone - 69) / 12.0)
