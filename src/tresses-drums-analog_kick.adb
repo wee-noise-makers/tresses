@@ -54,8 +54,6 @@ package body Tresses.Drums.Analog_Kick is
             Phase_Increment :=
               DSP.Compute_Phase_Increment (S16 (Pitch + Octave * 4));
 
-            Phase := 0;
-
          when Off =>
             Do_Strike.Event := None;
 
