@@ -57,6 +57,7 @@ private
 
       Phase : U32 := 0;
       Modulator_Phase : U32 := 0;
+      Target_Phase_Increment, Phase_Increment : U32 := 0;
 
       Do_Init : Boolean := True;
    end record;

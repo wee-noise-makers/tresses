@@ -6,6 +6,8 @@ with Tresses.Voices.Analog_Macro;
 with Tresses.Voices.FM_OP2;
 with Tresses.Voices.Acid;
 with Tresses.Voices.Sand;
+with Tresses.Voices.Bass_808;
+with Tresses.Voices.House_Bass;
 
 package body Tresses.Macro is
 
@@ -219,8 +221,35 @@ package body Tresses.Macro is
                                          This.Pitch,
                                          This.Do_Init,
                                          This.Do_Strike);
+
          when Voice_Sand =>
             Voices.Sand.Render_Sand
+              (Buffer_A  => Buffer,
+               Buffer_B  => Aux_Buffer,
+               Params    => This.Params,
+               Osc0      => This.Osc0,
+               Osc1      => This.Osc1,
+               Filter1   => This.Filter0,
+               Env       => This.Env0,
+               Pitch     => This.Pitch,
+               Do_Init   => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_Bass_808 =>
+            Voices.Bass_808.Render_Bass_808
+              (Buffer,
+               Params => This.Params,
+               Phase => This.Phase,
+               Phase_Increment => This.Phase_Increment,
+               Target_Phase_Increment => This.Target_Phase_Increment,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_House_Bass =>
+            Voices.House_Bass.Render_House_Bass
               (Buffer_A  => Buffer,
                Buffer_B  => Aux_Buffer,
                Params    => This.Params,
@@ -287,6 +316,12 @@ package body Tresses.Macro is
 
          when Voice_Sand =>
             return Voices.Sand.Param_Label (Id);
+
+         when Voice_Bass_808 =>
+            return Voices.Bass_808.Param_Label (Id);
+
+         when Voice_House_Bass =>
+            return Voices.House_Bass.Param_Label (Id);
       end case;
 
    end Param_Label;
@@ -343,6 +378,12 @@ package body Tresses.Macro is
 
          when Voice_Sand =>
             return Voices.Sand.Param_Short_Label (Id);
+
+         when Voice_Bass_808 =>
+            return Voices.Bass_808.Param_Short_Label (Id);
+
+         when Voice_House_Bass =>
+            return Voices.House_Bass.Param_Short_Label (Id);
       end case;
    end Param_Short_Label;
 
