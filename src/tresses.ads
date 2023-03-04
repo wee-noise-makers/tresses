@@ -45,6 +45,7 @@ is
    type Engines is (Drum_Kick,
                     Drum_Analog_Kick,
                     Drum_Snare,
+                    Drum_Analog_Snare,
                     Drum_Clap,
                     Drum_Cymbal,
                     Drum_Percussion,
@@ -65,22 +66,23 @@ is
 
    function Img (E : Engines) return String
    is (case E is
-          when Drum_Kick              => "Kick",
-          when Drum_Analog_Kick       => "Analog Kick",
-          when Drum_Snare             => "Snare",
-          when Drum_Clap              => "Clap",
-          when Drum_Cymbal            => "Cymbal",
-          when Drum_Percussion        => "Percussion",
-          when Drum_Bell              => "Bell",
-          when Voice_Plucked          => "Plucked",
-          when Voice_Saw_Swarm        => "Saw Swarm",
-          when Voice_Acid             => "Acid",
-          when Voice_Analog_Buzz      => "Buzz",
-          when Voice_Analog_Morph     => "Morph",
-          when Voice_FM2OP            => "FM 2 OP",
-          when Voice_Sand             => "Sand",
-          when Voice_Bass_808         => "808 Bass",
-          when Voice_House_Bass       => "House Bass");
+          when Drum_Kick          => "Kick",
+          when Drum_Analog_Kick   => "Analog Kick",
+          when Drum_Snare         => "Snare",
+          when Drum_Analog_Snare  => "Analog Snare",
+          when Drum_Clap          => "Clap",
+          when Drum_Cymbal        => "Cymbal",
+          when Drum_Percussion    => "Percussion",
+          when Drum_Bell          => "Bell",
+          when Voice_Plucked      => "Plucked",
+          when Voice_Saw_Swarm    => "Saw Swarm",
+          when Voice_Acid         => "Acid",
+          when Voice_Analog_Buzz  => "Buzz",
+          when Voice_Analog_Morph => "Morph",
+          when Voice_FM2OP        => "FM 2 OP",
+          when Voice_Sand         => "Sand",
+          when Voice_Bass_808     => "808 Bass",
+          when Voice_House_Bass   => "House Bass");
 
    subtype Short_Label is String (1 .. 3);
 
@@ -89,6 +91,5 @@ is
       Event    : Strike_Event_Kind := None;
       Velocity : Param_Range := Param_Range'Last;
    end record;
-
 
 end Tresses;

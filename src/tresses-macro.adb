@@ -1,6 +1,7 @@
 with Tresses.Drums.Kick;
 with Tresses.Drums.Analog_Kick;
 with Tresses.Drums.Snare;
+with Tresses.Drums.Analog_Snare;
 with Tresses.Drums.Clap;
 with Tresses.Voices.Analog_Macro;
 with Tresses.Voices.FM_OP2;
@@ -113,6 +114,22 @@ package body Tresses.Macro is
                                       Pitch => This.Pitch,
                                       Do_Init => This.Do_Init,
                                       Do_Strike => This.Do_Strike);
+
+         when Drum_Analog_Snare =>
+           Drums.Analog_Snare.Render_Analog_Snare
+              (Buffer,
+               Params => This.Params,
+               Phase => This.Phase,
+               Phase_Increment => This.Phase_Increment,
+               Target_Phase_Increment => This.Target_Phase_Increment,
+               Filter => This.Filter0,
+               Tone_Env => This.Env0,
+               Noise_env => This.Env1,
+               Rng => This.Rng,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
          when Drum_Clap =>
             Drums.Clap.Render_Clap (Buffer,
                                     Params => This.Params,
@@ -282,6 +299,9 @@ package body Tresses.Macro is
          when Drum_Snare =>
             return Drums.Snare.Param_Label (Id);
 
+         when Drum_Analog_Snare =>
+            return Drums.Analog_Snare.Param_Label (Id);
+
          when Drum_Clap =>
             return Drums.Clap.Param_Label (Id);
 
@@ -343,6 +363,9 @@ package body Tresses.Macro is
 
          when Drum_Snare =>
             return Drums.Snare.Param_Short_Label (Id);
+
+         when Drum_Analog_Snare =>
+            return Drums.Analog_Snare.Param_Short_Label (Id);
 
          when Drum_Clap =>
             return Drums.Clap.Param_Short_Label (Id);

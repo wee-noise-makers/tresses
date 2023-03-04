@@ -1,6 +1,7 @@
 with Tresses.Drums.Kick;
 with Tresses.Drums.Analog_Kick;
 with Tresses.Drums.Snare;
+with Tresses.Drums.Analog_Snare;
 with Tresses.Drums.Clap;
 with Tresses.Macro;
 
@@ -108,6 +109,22 @@ package body Tresses.Drums.Macro is
                                 Pitch => This.Pitch,
                                 Do_Init => This.Do_Init,
                                 Do_Strike => This.Do_Strike);
+
+         when Drum_Analog_Snare =>
+            Analog_Snare.Render_Analog_Snare
+              (Buffer,
+               Params => This.Params,
+               Phase => This.Phase,
+               Phase_Increment => This.Phase_Increment,
+               Target_Phase_Increment => This.Target_Phase_Increment,
+               Filter => This.Filter0,
+               Tone_Env => This.Env0,
+               Noise_env => This.Env1,
+               Rng => This.Rng,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
          when Drum_Clap =>
             Clap.Render_Clap (Buffer,
                               Params => This.Params,
