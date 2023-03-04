@@ -28,6 +28,8 @@ package body Tresses.Drums.Cymbal is
    is
       Cutoff_Param : Param_Range renames Params (P_Cutoff);
       Noise_Param  : Param_Range renames Params (P_Noise);
+      Reso_Param   : Param_Range renames Params (P_Resonance);
+      Rel_Param    : Param_Range renames Params (P_Release);
 
       Increments : array (0 .. 6) of U32;
       Note : constant Pitch_Range :=
@@ -61,21 +63,14 @@ package body Tresses.Drums.Cymbal is
             --  other drum sounds.
 
             declare
-               To_U7_Div : constant := 512;
-               --  U16'Last / U7'Last = ~516.023 then rounded to the nearest
-               --  power of 2.
-
-               Limit : constant U32 := U32 (U7'Last) * To_U7_Div;
-               --  Maximum value to be converted to U7
-
-               Decay : U32 := U32 (Noise_Param) + 20_000;
+               Decay : U32 := U32 (Rel_Param) + 10_000;
                --  Add a base value to have a minimum decay
             begin
-               if Decay > Limit then
-                  Decay := Limit;
+               if Decay >  U32 (Param_Range'Last) then
+                  Decay := U32 (Param_Range'Last);
                end if;
 
-               Set_Release (Env, U7 (Decay / To_U7_Div));
+               Set_Release (Env, Param_Range (Decay));
                On (Env, Do_Strike.Velocity);
             end;
 
@@ -108,6 +103,9 @@ package body Tresses.Drums.Cymbal is
          Set_Frequency (Filter0, Cutoff_Param / 2);
          Set_Frequency (Filter1, Cutoff_Param / 2);
 
+         Set_Resonance (Filter0, Reso_Param);
+         Set_Resonance (Filter1, Reso_Param);
+
          while Index <= Buffer'Last loop
             Phase := Phase + Increments (6);
             if Phase < Increments (6) then
@@ -136,13 +134,10 @@ package body Tresses.Drums.Cymbal is
 
             Noise := S32 (State.Last_Noise / 2**16) - 32_768;
             Noise := Process (Filter1, Noise / 2**1);
-            DSP.Clip_S16 (Noise);
 
-            SD := Hat_Noise + ((Noise - Hat_Noise) * Xfade) / 2**15;
-            DSP.Clip_S16 (SD);
+            SD := Hat_Noise + (((Noise - Hat_Noise) * Xfade) / 2**15);
 
             SD := (SD * S32 (Render (Env))) / 2**15;
-            DSP.Clip_S16 (SD);
 
             Buffer (Index) := S16 (SD);
             Index := Index + 1;

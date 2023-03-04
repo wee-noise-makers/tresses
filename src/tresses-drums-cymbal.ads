@@ -20,20 +20,24 @@ is
       Do_Init          : in out Boolean;
       Do_Strike        : in out Strike_State);
 
-   P_Cutoff : constant Param_Id := 1;
-   P_Noise  : constant Param_Id := 2;
+   P_Cutoff    : constant Param_Id := 1;
+   P_Noise     : constant Param_Id := 2;
+   P_Resonance : constant Param_Id := 3;
+   P_Release   : constant Param_Id := 4;
 
    function Param_Label (Id : Param_Id) return String
    is (case Id is
-          when P_Cutoff => "Cutoff",
-          when P_Noise  => "Noise",
-          when others   => "N/A");
+          when P_Cutoff    => "Cutoff",
+          when P_Noise     => "Noise",
+          when P_Resonance => "Resonance",
+          when P_Release   => "Release");
 
    function Param_Short_Label (Id : Param_Id) return Short_Label
    is (case Id is
-          when P_Cutoff => "CTF",
-          when P_Noise  => "NOS",
-          when others   => "N/A");
+          when P_Cutoff    => "CTF",
+          when P_Noise     => "NOS",
+          when P_Resonance => "RES",
+          when P_Release   => "REL");
 
    -- Interfaces --
 
