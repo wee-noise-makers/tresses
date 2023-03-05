@@ -1,5 +1,8 @@
 with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 
+with Tresses.DSP;
+with Tresses.Resources;
+
 package body Tresses.Voices.Acid is
 
    -----------------
@@ -34,7 +37,7 @@ package body Tresses.Voices.Acid is
 
          --  Amp envelope
          Init (A_Env, Do_Hold => True);
-         Set_Attack (A_Env, U7 (50));
+         Set_Attack (A_Env, U7 (0));
          Set_Release (A_Env, U7 (0));
 
          --  Filter envelope
@@ -87,11 +90,10 @@ package body Tresses.Voices.Acid is
          Sample := S32 (Buffer (Idx));
          Sample := Filters.Ladder.Process (Filter, Sample);
 
-         --  Sounds great with overdrive, but it would require another
-         --  parameter...
-         --  Sample := S32 (DSP.Interpolate88
-         --                 (Resources.WS_Violent_Overdrive,
-         --                    U16 (Sample + 32_768)));
+         --  Symetrical softcliping, always to the max
+         Sample := S32 (DSP.Interpolate88
+                        (Resources.WS_Violent_Overdrive,
+                           U16 (Sample + 32_768)));
 
          --  Apply amp envelope
          Sample := (Sample * A_Env_Val) / 2**15;
