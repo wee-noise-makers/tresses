@@ -15,7 +15,6 @@ is
       Phase_Increment        : in out U32;
       Target_Phase_Increment : in out U32;
       Env                    : in out Envelopes.AR.Instance;
-      Rng                    : in out Random.Instance;
       Pitch                  :        Pitch_Range;
       Do_Init                : in out Boolean;
       Do_Strike              : in out Strike_State);
@@ -64,8 +63,6 @@ private
    with record
       Env            : Envelopes.AR.Instance;
       Phase, Target_Phase_Increment, Phase_Increment : U32 := 0;
-
-      Rng : Tresses.Random.Instance;
 
       Do_Init        : Boolean := True;
    end record;

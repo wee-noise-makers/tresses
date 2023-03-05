@@ -95,7 +95,6 @@ package body Tresses.Macro is
                Phase_Increment => This.Phase_Increment,
                Target_Phase_Increment => This.Target_Phase_Increment,
                Env => This.Env0,
-               Rng => This.Rng,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
