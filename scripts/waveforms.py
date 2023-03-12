@@ -96,7 +96,21 @@ def scale(array, min=-32766, max=32766, center=True, dither_level=2):
 
 # Sine wave.
 sine = -numpy.sin(numpy.arange(WAVETABLE_SIZE + 1) / float(WAVETABLE_SIZE) * \
-    2 * numpy.pi) * 127.5 + 127.5
+                  2 * numpy.pi) * 127.5 + 127.5
+
+def x_warp(x):
+  f = 2 * x + 1
+  plop = numpy.arange(WAVETABLE_SIZE + 1) / float(WAVETABLE_SIZE)
+  return ((plop - 0.5)**f) * (2**(f - 1)) + 0.5
+
+sine_warp1 = -numpy.sin(x_warp(1) * numpy.pi * 2) * 127.5 + 127.5
+sine_warp2 = -numpy.sin(x_warp(2) * numpy.pi * 2) * 127.5 + 127.5
+sine_warp3 = -numpy.sin(x_warp(3) * numpy.pi * 2) * 127.5 + 127.5
+
+sine2_warp1 = -numpy.sin(x_warp(1) * 2 * numpy.pi * 2) * 127.5 + 127.5
+sine2_warp2 = -numpy.sin(x_warp(2) * 2 * numpy.pi * 2) * 127.5 + 127.5
+sine2_warp3 = -numpy.sin(x_warp(3) * 2 * numpy.pi * 2) * 127.5 + 127.5
+
 
 # Band limited waveforms.
 num_zones = 15
@@ -115,7 +129,26 @@ fill = numpy.fmod(
     numpy.arange(WAVETABLE_SIZE + 1),
     WAVETABLE_SIZE)
 
-waveforms.append(('sine', scale(sine[quadrature])))
+waveforms.append(('sine', scale(sine)))
+waveforms.append(('sine_warp1', scale(sine_warp1)))
+waveforms.append(('sine_warp2', scale(sine_warp2)))
+waveforms.append(('sine_warp3', scale(sine_warp3)))
+waveforms.append(('sine2_warp1', scale(sine2_warp1)))
+waveforms.append(('sine2_warp2', scale(sine2_warp2)))
+waveforms.append(('sine2_warp3', scale(sine2_warp3)))
+
+# import matplotlib.pyplot as plt
+# fig, ax1 = plt.subplots()
+# ax2 = ax1.twinx()
+# ax1.plot(scale(sine))
+# ax1.plot(scale(sine_warp1))
+# ax1.plot(scale(sine_warp2))
+# ax1.plot(scale(sine_warp3))
+# ax1.plot(scale(sine2_warp1))
+# ax1.plot(scale(sine2_warp2))
+# ax1.plot(scale(sine2_warp3))
+# fig.tight_layout()
+# plt.show()
 
 # LFO
 arr = numpy.arange(WAVETABLE_SIZE + 1) / float(WAVETABLE_SIZE + 1) * 2 * numpy.pi

@@ -6,8 +6,6 @@ with Tresses.Envelopes.AR;
 
 package body Tresses.Voices.House_Bass is
 
-   F_Env : access Envelopes.AR.Instance := new Envelopes.AR.Instance;
-
    -----------------------
    -- Render_House_Bass --
    -----------------------
@@ -17,7 +15,7 @@ package body Tresses.Voices.House_Bass is
       Params             :        Param_Array;
       Osc0, Osc1         : in out Analog_Oscillator.Instance;
       Filter1            : in out Filters.SVF.Instance;
-      Env                : in out Envelopes.AR.Instance;
+      Env, F_Env         : in out Envelopes.AR.Instance;
       Pitch              :        Pitch_Range;
       Do_Init            : in out Boolean;
       Do_Strike          : in out Strike_State)
@@ -40,8 +38,8 @@ package body Tresses.Voices.House_Bass is
 
          Init (Env, Do_Hold => True);
 
-         Init (F_Env.all, Do_Hold => False);
-         Set_Attack (F_Env.all, Param_Range (0));
+         Init (F_Env, Do_Hold => False);
+         Set_Attack (F_Env, Param_Range (0));
 
          Filters.SVF.Init (Filter1);
          Filters.SVF.Set_Mode (Filter1, Filters.SVF.Low_Pass);
@@ -53,7 +51,7 @@ package body Tresses.Voices.House_Bass is
             Do_Strike.Event := None;
 
             On (Env, Do_Strike.Velocity);
-            On (F_Env.all, Do_Strike.Velocity / 8);
+            On (F_Env, Do_Strike.Velocity / 8);
 
          when Off =>
             Do_Strike.Event := None;
@@ -66,7 +64,7 @@ package body Tresses.Voices.House_Bass is
       Set_Attack (Env, Params (P_Attack));
       Set_Release (Env, Params (P_Release));
 
-      Set_Release (F_Env.all, Params (P_F_Release));
+      Set_Release (F_Env, Params (P_F_Release));
 
       Filters.SVF.Set_Resonance (Filter1, Param_Range'Last / 3);
 
@@ -81,11 +79,11 @@ package body Tresses.Voices.House_Bass is
 
       for Idx in Buffer_A'Range loop
          Render (Env);
-         Render (F_Env.all);
+         Render (F_Env);
 
          --  Filter frequency control
          Filters.SVF.Set_Frequency (Filter1,
-                                    Cutoff + Param_Range (Value (F_Env.all)));
+                                    Cutoff + Param_Range (Value (F_Env)));
 
          --  Mix
          Sample := (S32 (Buffer_A (Idx)) + S32 (Buffer_B (Idx))) / 2;

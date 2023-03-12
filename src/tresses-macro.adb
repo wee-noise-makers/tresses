@@ -9,6 +9,7 @@ with Tresses.Voices.Acid;
 with Tresses.Voices.Sand;
 with Tresses.Voices.Bass_808;
 with Tresses.Voices.House_Bass;
+with Tresses.Voices.Pluck_Bass;
 
 package body Tresses.Macro is
 
@@ -273,8 +274,22 @@ package body Tresses.Macro is
                Osc1      => This.Osc1,
                Filter1   => This.Filter0,
                Env       => This.Env0,
+               F_Env     => This.Env1,
                Pitch     => This.Pitch,
                Do_Init   => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_Pluck_Bass =>
+            Voices.Pluck_Bass.Pluck_Bass
+              (Buffer,
+               Params => This.Params,
+               Phase => This.Phase,
+               Phase_Increment => This.Phase_Increment,
+               Env => This.Env0,
+               Shape_Env => This.Env1,
+               Filter => This.Filter0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
 
       end case;
@@ -341,6 +356,10 @@ package body Tresses.Macro is
 
          when Voice_House_Bass =>
             return Voices.House_Bass.Param_Label (Id);
+
+         when Voice_Pluck_Bass =>
+            return Voices.Pluck_Bass.Param_Label (Id);
+
       end case;
 
    end Param_Label;
@@ -406,6 +425,9 @@ package body Tresses.Macro is
 
          when Voice_House_Bass =>
             return Voices.House_Bass.Param_Short_Label (Id);
+
+         when Voice_Pluck_Bass =>
+            return Voices.Pluck_Bass.Param_Short_Label (Id);
       end case;
    end Param_Short_Label;
 

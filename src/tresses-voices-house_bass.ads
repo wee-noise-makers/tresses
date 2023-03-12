@@ -13,7 +13,7 @@ is
       Params             :        Param_Array;
       Osc0, Osc1         : in out Analog_Oscillator.Instance;
       Filter1            : in out Filters.SVF.Instance;
-      Env                : in out Envelopes.AR.Instance;
+      Env, F_Env         : in out Envelopes.AR.Instance;
       Pitch              :        Pitch_Range;
       Do_Init            : in out Boolean;
       Do_Strike          : in out Strike_State);
