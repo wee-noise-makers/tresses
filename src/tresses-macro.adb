@@ -10,6 +10,7 @@ with Tresses.Voices.Sand;
 with Tresses.Voices.Bass_808;
 with Tresses.Voices.House_Bass;
 with Tresses.Voices.Pluck_Bass;
+with Tresses.Voices.Reese;
 
 package body Tresses.Macro is
 
@@ -292,6 +293,19 @@ package body Tresses.Macro is
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
 
+         when Voice_Reese =>
+            Voices.Reese.Render_Reese
+              (Buffer_A  => Buffer,
+               Buffer_B  => Aux_Buffer,
+               Params    => This.Params,
+               Osc0      => This.Osc0,
+               Osc1      => This.Osc1,
+               Filter1   => This.Filter0,
+               Env       => This.Env0,
+               Pitch     => This.Pitch,
+               Do_Init   => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
       end case;
    end Render;
 
@@ -359,6 +373,9 @@ package body Tresses.Macro is
 
          when Voice_Pluck_Bass =>
             return Voices.Pluck_Bass.Param_Label (Id);
+
+         when Voice_Reese =>
+            return Voices.Reese.Param_Label (Id);
 
       end case;
 
@@ -428,6 +445,10 @@ package body Tresses.Macro is
 
          when Voice_Pluck_Bass =>
             return Voices.Pluck_Bass.Param_Short_Label (Id);
+
+         when Voice_Reese =>
+            return Voices.Reese.Param_Short_Label (Id);
+
       end case;
    end Param_Short_Label;
 

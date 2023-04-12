@@ -60,7 +60,8 @@ is
                     Voice_Sand,
                     Voice_Bass_808,
                     Voice_House_Bass,
-                    Voice_Pluck_Bass);
+                    Voice_Pluck_Bass,
+                    Voice_Reese);
 
    subtype Drum_Engines is Engines range Drum_Kick .. Drum_Bell;
    subtype Synth_Engines is Engines range Voice_Plucked .. Engines'Last;
@@ -84,7 +85,8 @@ is
           when Voice_Sand         => "Sand",
           when Voice_Bass_808     => "808 Bass",
           when Voice_House_Bass   => "House Bass",
-          when Voice_Pluck_Bass   => "Pluck Bass");
+          when Voice_Pluck_Bass   => "Pluck Bass",
+          when Voice_Reese        => "Reese");
 
    subtype Short_Label is String (1 .. 3);
 

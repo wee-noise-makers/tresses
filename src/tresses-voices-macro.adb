@@ -5,6 +5,7 @@ with Tresses.Voices.Sand;
 with Tresses.Voices.Bass_808;
 with Tresses.Voices.House_Bass;
 with Tresses.Voices.Pluck_Bass;
+with Tresses.Voices.Reese;
 with Tresses.Macro;
 
 package body Tresses.Voices.Macro is
@@ -193,6 +194,19 @@ package body Tresses.Voices.Macro is
                Filter => This.SVF,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_Reese =>
+            Voices.Reese.Render_Reese
+              (Buffer_A  => Buffer,
+               Buffer_B  => Aux_Buffer,
+               Params    => This.Params,
+               Osc0      => This.Osc0,
+               Osc1      => This.Osc1,
+               Filter1   => This.SVF,
+               Env       => This.Env0,
+               Pitch     => This.Pitch,
+               Do_Init   => This.Do_Init,
                Do_Strike => This.Do_Strike);
 
       end case;
