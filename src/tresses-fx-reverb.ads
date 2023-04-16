@@ -39,6 +39,9 @@ generic
    Dap2a_Len : U16 := U16 ((1913.0 / 32_000.0) * Resources.SAMPLE_RATE_REAL);
    Dap2b_Len : U16 := U16 ((1663.0 / 32_000.0) * Resources.SAMPLE_RATE_REAL);
    Del2_Len  : U16 := U16 ((4782.0 / 32_000.0) * Resources.SAMPLE_RATE_REAL);
+
+   type Compressed_Sample is range <>;
+
 package Tresses.FX.Reverb
 with Preelaborate
 is
@@ -92,7 +95,8 @@ private
 
    Buffer_Size : constant U16 := Del2_Tail + 1;
 
-   type Reverb_Buffer is array (0 .. Buffer_Size - 1) of S16;
+   type Reverb_Buffer is array (0 .. Buffer_Size - 1) of Compressed_Sample
+     with Pack;
 
    type Instance
    is record
@@ -109,6 +113,5 @@ private
       Write_Ptr : S16 := 0;
 
    end record;
-
 
 end Tresses.FX.Reverb;

@@ -8,6 +8,12 @@ with Tresses.DSP;
 
 package body Tresses.FX.Reverb is
 
+   function Compress (Sample : S16) return Compressed_Sample
+   is (Compressed_Sample (Sample / 2**(S16'Size - Compressed_Sample'Size)));
+
+   function Decompress (Sample : Compressed_Sample) return S16
+   is (S16 (Sample) * 2**(S16'Size - Compressed_Sample'Size));
+
    type Context is tagged record
       Accumulator : S16 := 0;
       Prev_Read : S16 := 0;
@@ -33,7 +39,7 @@ package body Tresses.FX.Reverb is
       Index : constant U16 := (This.Write_Ptr + Offset) mod Buffer'Length;
       Acc : S32;
    begin
-      This.Prev_Read := Buffer (Index);
+      This.Prev_Read := Decompress (Buffer (Index));
 
       Acc := S32 (This.Accumulator);
 
@@ -63,7 +69,7 @@ package body Tresses.FX.Reverb is
         (This.Write_Ptr + Offset) mod Buffer'Length;
       Acc : S32;
    begin
-      Buffer (Index) := This.Accumulator;
+      Buffer (Index) := Compress (This.Accumulator);
 
       Acc := (S32 (This.Accumulator) * S32 (Scale)) / 2**15;
       Acc := Acc + S32 (This.Prev_Read);
@@ -78,7 +84,7 @@ package body Tresses.FX.Reverb is
       Index : constant U16 :=
         (This.Write_Ptr + Offset) mod Buffer'Length;
    begin
-      Buffer (Index) := This.Accumulator;
+      Buffer (Index) := Compress (This.Accumulator);
 
       This.Accumulator := S16 (DSP.Clip_S16 (S32 (This.Accumulator) * 2));
    end Write_Double;
