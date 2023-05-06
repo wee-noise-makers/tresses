@@ -43,6 +43,7 @@ is
 
    function Mix (A, B, Balance : U16) return U16;
    function Mix (A, B : S16; Balance : U16) return S16;
+   function Mix (A, B : S16; Balance : Param_Range) return S16;
 
    function "and" (A : S32; B : U32) return S32;
 

@@ -39,6 +39,15 @@ violent_overdrive = numpy.tanh(8.0 * x)
 overdrive = numpy.tanh(5.0 * x)
 moderate_overdrive = numpy.tanh(2.0 * x)
 
+# import matplotlib.pyplot as plt
+# fig, ax1 = plt.subplots()
+# ax2 = ax1.twinx()
+# ax1.plot(violent_overdrive)
+# ax1.plot(overdrive)
+# ax1.plot(moderate_overdrive)
+# fig.tight_layout()
+# plt.show()
+
 # Wavefolder curves from the first version
 # tri_fold = numpy.abs(4.0 * x - numpy.round(4.0 * x)) * numpy.sign(x)
 # sine_fold = numpy.sin(5 * numpy.pi * x)

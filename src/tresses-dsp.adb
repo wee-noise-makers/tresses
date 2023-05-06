@@ -123,6 +123,15 @@ package body Tresses.DSP is
       return S16 (((A32 * (65_535 - Balance32)) + (B32 * Balance32)) / 2**16);
    end Mix;
 
+   ---------
+   -- Mix --
+   ---------
+
+   function Mix (A, B : S16; Balance : Param_Range) return S16 is
+   begin
+      return Mix (A, B, U16 (Balance) * 2);
+   end Mix;
+
    -----------
    -- "and" --
    -----------
