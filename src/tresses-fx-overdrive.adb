@@ -8,20 +8,22 @@ package body Tresses.FX.Overdrive is
    -------------
 
    procedure Process (Buffer    : in out Mono_Buffer;
+                      Pre_Gain  :        Param_Range;
                       Amount    :        Param_Range;
                       Out_Level :        Param_Range)
    is
       Fuzzed : Tresses.Mono_Point;
+
+      Sample : S32;
    begin
       for Elt of Buffer loop
-         --  Asymmetrical soft clipping
-         if Elt > 0 then
-            Fuzzed := DSP.Interpolate88
-              (Resources.WS_Violent_Overdrive,
-               U16 (S32 (Elt) + 32_768));
-         else
-            Fuzzed := Elt;
-         end if;
+
+         Sample := (S32 (Elt) * (S32 (Pre_Gain) + S32 (S16'Last))) / 2**15;
+         DSP.Clip_S16 (Sample);
+
+         Fuzzed := DSP.Interpolate88
+           (Resources.WS_Violent_Overdrive,
+            U16 (Sample + 32_768));
 
          --  Mix clean and overdrive signals
          Elt := DSP.Mix (Elt, Fuzzed, Amount);
