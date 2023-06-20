@@ -110,5 +110,4 @@ private
 
    end record;
 
-
 end Tresses.FX.Reverb;

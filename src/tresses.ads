@@ -39,6 +39,11 @@ is
    is (Pitch_Range (Key) * 128);
    --  Convert a MIDI note to Tresses Pitch
 
+   function MIDI_Param (Val : MIDI.MIDI_Data) return Param_Range
+   is (Param_Range (Val) *
+       (Param_Range'Last / Param_Range (MIDI.MIDI_Data'Last)));
+   --  Convert a MIDI Data to Tresses Param_Range
+
    subtype Mono_Point is S16;
    type Mono_Buffer is array (Natural range <>) of Mono_Point;
 
