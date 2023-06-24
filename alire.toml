@@ -1,6 +1,6 @@
 name = "tresses"
 description = "Synth library inspired by Mutable Instruments Braids"
-version = "0.1.0-dev"
+version = "0.1.0"
 
 authors = ["Fabien Chouteau"]
 maintainers = ["Fabien Chouteau <fabien.chouteau@gmail.com>"]
