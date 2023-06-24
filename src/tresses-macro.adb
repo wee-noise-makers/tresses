@@ -117,7 +117,7 @@ package body Tresses.Macro is
                                       Do_Strike => This.Do_Strike);
 
          when Drum_Analog_Snare =>
-           Drums.Analog_Snare.Render_Analog_Snare
+            Drums.Analog_Snare.Render_Analog_Snare
               (Buffer,
                Params => This.Params,
                Phase => This.Phase,
@@ -125,7 +125,7 @@ package body Tresses.Macro is
                Target_Phase_Increment => This.Target_Phase_Increment,
                Filter => This.Filter0,
                Tone_Env => This.Env0,
-               Noise_env => This.Env1,
+               Noise_Env => This.Env1,
                Rng => This.Rng,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
@@ -261,7 +261,6 @@ package body Tresses.Macro is
                Phase_Increment => This.Phase_Increment,
                Target_Phase_Increment => This.Target_Phase_Increment,
                Env => This.Env0,
-               Rng => This.Rng,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);

@@ -1,6 +1,3 @@
-with Tresses.Excitation;
-with Tresses.Random;
-with Tresses.Filters.SVF;
 with Tresses.Envelopes.AR;
 with Tresses.Interfaces; use Tresses.Interfaces;
 

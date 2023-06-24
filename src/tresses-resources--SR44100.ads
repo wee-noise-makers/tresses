@@ -10,6 +10,7 @@ with Tresses_Config;
 package Tresses.Resources
 with Preelaborate
 is
+   pragma Style_Checks (Off);
    SAMPLE_RATE : constant := 44100;
    SAMPLE_RATE_REAL : constant := 44100.0;
    Linker_Section   : constant String := Tresses_Config.Resources_Linker_Section;

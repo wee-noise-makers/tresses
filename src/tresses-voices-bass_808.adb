@@ -16,7 +16,6 @@ package body Tresses.Voices.Bass_808 is
       Phase_Increment        : in out U32;
       Target_Phase_Increment : in out U32;
       Env                    : in out Envelopes.AR.Instance;
-      Rng                    : in out Random.Instance;
       Pitch                  :        Pitch_Range;
       Do_Init                : in out Boolean;
       Do_Strike              : in out Strike_State)

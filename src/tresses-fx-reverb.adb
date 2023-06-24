@@ -47,7 +47,8 @@ package body Tresses.FX.Reverb is
       Value := This.Accumulator;
    end Write;
 
-   procedure Write_Scale (This : in out Context; Value : out S16; Scale : S16) is
+   procedure Write_Scale (This : in out Context; Value : out S16; Scale : S16)
+   is
    begin
       Value := This.Accumulator;
       This.Accumulator :=
@@ -186,7 +187,8 @@ package body Tresses.FX.Reverb is
 
       --  This implementation is based on reverb.h from the eurorack
       --  repository of Mutable instruments:
-      --  https://github.com/pichenettes/eurorack/blob/master/clouds/dsp/fx/reverb.h
+      --  https://github.com/pichenettes/eurorack/blob/
+      --      master/clouds/dsp/fx/reverb.h
       --
       --  Itself based on the 1997 paper "Effect Design: Part
       --  1: Reverberator and Other Filters" by Jon Dattorro:

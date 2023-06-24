@@ -105,7 +105,7 @@ package body Tresses.LFO is
          if This.Loop_Mode = One_Shot
            and then
              This.Phase >
-               (2*24 * Resources.WAV_Sine_Lfo'Length) - This.Phase_Increment
+               (2 * 24 * Resources.WAV_Sine_Lfo'Length) - This.Phase_Increment
          then
             This.Halt := True;
          else

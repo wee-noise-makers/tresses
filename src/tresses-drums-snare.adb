@@ -61,7 +61,6 @@ package body Tresses.Drums.Snare is
          when On =>
             Do_Strike.Event := None;
 
-
             declare
                Decay : S32 := 49_152 - S32 (Pitch);
             begin

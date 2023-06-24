@@ -18,12 +18,12 @@ generic
    --  Lenght = (MI_Len / MI_SR) * TS_SR
    --
    --  E.g: (113 / 32_000) * 44_100 ~= 156
-   --  https://github.com/pichenettes/eurorack/blob/master/clouds/dsp/fx/reverb.h#L56
+   --  https://github.com/pichenettes/eurorack/blob/
+   --      master/clouds/dsp/fx/reverb.h#L56
    --
    --  The total delay line samples in MI is 16375. At 44.1kHz sample rate
    --  that means: (16375 / 32_000) * 44_100 ~= 22567 sample -> 45_134 Bytes
    --  of memory footprint for the reverb.
-
 
    --  4 x All-Pass
    Ap1_Len   : U16 := U16 ((113.0 / 32_000.0) * Resources.SAMPLE_RATE_REAL);

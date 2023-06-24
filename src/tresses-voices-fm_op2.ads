@@ -1,5 +1,4 @@
 with Tresses.Envelopes.AR;
-with Tresses.Interfaces; use Tresses.Interfaces;
 
 package Tresses.Voices.FM_OP2
 with Preelaborate

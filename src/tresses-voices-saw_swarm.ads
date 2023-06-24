@@ -1,6 +1,5 @@
 with Tresses.Random;
 with Tresses.Envelopes.AR;
-with Tresses.Interfaces; use Tresses.Interfaces;
 
 package Tresses.Voices.Saw_Swarm
 with Preelaborate

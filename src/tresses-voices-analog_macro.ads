@@ -1,6 +1,5 @@
 with Tresses.Envelopes.AR;
 with Tresses.Analog_Oscillator;
-with Tresses.Interfaces; use Tresses.Interfaces;
 
 package Tresses.Voices.Analog_Macro
 with Preelaborate

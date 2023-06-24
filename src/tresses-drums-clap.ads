@@ -1,4 +1,3 @@
-with Tresses.Excitation;
 with Tresses.Filters.SVF;
 with Tresses.Random;
 with Tresses.Envelopes.AR;

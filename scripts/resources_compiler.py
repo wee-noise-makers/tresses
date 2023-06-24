@@ -279,6 +279,7 @@ class ResourceLibrary(object):
     f.write("package Tresses.Resources\n")
     f.write("with Preelaborate\n")
     f.write("is\n")
+    f.write("   pragma Style_Checks (Off);\n")
     f.write("   SAMPLE_RATE : constant := %s;\n" % sample_rate)
     f.write("   SAMPLE_RATE_REAL : constant := %s.0;\n" % sample_rate)
     f.write("   Linker_Section   : constant String := Tresses_Config.Resources_Linker_Section;\n")

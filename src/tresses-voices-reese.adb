@@ -1,6 +1,4 @@
-with Tresses.Resources;
 with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
-with Tresses.DSP;
 
 package body Tresses.Voices.Reese is
 
@@ -84,7 +82,7 @@ package body Tresses.Voices.Reese is
 
          --  Apply envelope
          Render (Env);
-         Sample := (Sample * S32 (Low_Pass (Env))) / 2**15;
+         Sample := (Sample * Low_Pass (Env)) / 2**15;
 
          Buffer_A (Idx) := S16 (Sample);
       end loop;
