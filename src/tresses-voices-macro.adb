@@ -164,7 +164,6 @@ package body Tresses.Voices.Macro is
                Phase_Increment => This.Phase_Increment,
                Target_Phase_Increment => This.Target_Phase_Increment,
                Env => This.Env0,
-               Rng => This.Rng,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
@@ -183,7 +182,7 @@ package body Tresses.Voices.Macro is
                Do_Init   => This.Do_Init,
                Do_Strike => This.Do_Strike);
 
-         when Voice_Pluck_Bass=>
+         when Voice_Pluck_Bass =>
             Voices.Pluck_Bass.Pluck_Bass
               (Buffer,
                Params => This.Params,

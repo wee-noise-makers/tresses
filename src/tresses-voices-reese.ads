@@ -1,8 +1,6 @@
 with Tresses.Envelopes.AR;
-with Tresses.Interfaces; use Tresses.Interfaces;
 with Tresses.Analog_Oscillator;
 with Tresses.Filters.SVF;
-with Tresses.Filters.Ladder;
 
 package Tresses.Voices.Reese
 with Preelaborate

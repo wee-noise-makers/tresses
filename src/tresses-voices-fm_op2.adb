@@ -50,7 +50,6 @@ package body Tresses.Voices.FM_OP2 is
 
    begin
 
-
       if Do_Init then
          Do_Init := False;
 
@@ -84,7 +83,7 @@ package body Tresses.Voices.FM_OP2 is
 
          Sample := S32 (DSP.Interpolate824 (Resources.WAV_Sine, Phase + PM));
          Render (Env);
-         Sample := (Sample * S32 (Low_Pass (Env))) / 2**15;
+         Sample := (Sample * Low_Pass (Env)) / 2**15;
          DSP.Clip_S16 (Sample);
 
          Buffer (Index) := S16 (Sample);

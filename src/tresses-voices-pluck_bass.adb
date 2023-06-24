@@ -26,8 +26,6 @@ package body Tresses.Voices.Pluck_Bass is
       Attack        : Param_Range renames Params (P_Attack);
       Release       : Param_Range renames Params (P_Release);
 
-      Phase_Incr_Delta : U32 := 0;
-
       Sample : S32;
 
       Cutoff : constant Param_Range := Cutoff_Param / 2;

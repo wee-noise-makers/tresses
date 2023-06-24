@@ -62,7 +62,6 @@ package body Tresses.Drums.Kick is
          when On =>
             Do_Strike.Event := None;
 
-
          Trigger (Pulse0, S32 (12.0 * 32_768.0 * 0.7));
          Trigger (Pulse1, S32 (-19_662.0 * 0.7));
          Set_Punch (Filter, 24_000);
@@ -77,7 +76,6 @@ package body Tresses.Drums.Kick is
 
          when None => null;
       end case;
-
 
       Pitch_Offset := S32 (Octave) * 4;
 

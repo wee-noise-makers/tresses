@@ -1,6 +1,4 @@
 with Tresses.Envelopes.AR;
-with Tresses.Interfaces; use Tresses.Interfaces;
-with Tresses.Random;
 
 package Tresses.Voices.Bass_808
 with Preelaborate
@@ -13,7 +11,6 @@ is
       Phase_Increment        : in out U32;
       Target_Phase_Increment : in out U32;
       Env                    : in out Envelopes.AR.Instance;
-      Rng                    : in out Random.Instance;
       Pitch                  :        Pitch_Range;
       Do_Init                : in out Boolean;
       Do_Strike              : in out Strike_State);

@@ -50,7 +50,6 @@ package body Tresses.Voices.Acid is
          when On =>
             Do_Strike.Event := None;
 
-
             Set_Release (A_Env, (if F_Decay < (Param_Range'Last - 10_000)
                                then F_Decay + 10_000
                                else Param_Range'Last));
@@ -68,7 +67,6 @@ package body Tresses.Voices.Acid is
          when None => null;
       end case;
 
-
       Osc0.Set_Pitch (Pitch);
       Osc0.Render (Buffer);
 
@@ -76,7 +74,7 @@ package body Tresses.Voices.Acid is
 
       for Idx in Buffer'Range loop
          Render (A_Env);
-         A_Env_Val := S32 (Low_Pass (A_Env));
+         A_Env_Val := Low_Pass (A_Env);
          F_Env_Val := S32 (Render (F_Env));
 
          --  Apply Filter envelope intensity control

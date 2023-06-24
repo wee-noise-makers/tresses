@@ -51,7 +51,8 @@ package body Tresses.FX.Bitcrusher is
             --  Prepare for linear interpolation
             This.Acc := This.Last_Sample;
             This.Step :=
-              S16 ((S32 (This.Sample) - S32 (This.Last_Sample)) / S32 (Down_Factor));
+              S16 ((S32 (This.Sample) - S32 (This.Last_Sample)) /
+                     S32 (Down_Factor));
          else
             --  Next sample interpolation
             This.Acc := This.Acc + This.Step;

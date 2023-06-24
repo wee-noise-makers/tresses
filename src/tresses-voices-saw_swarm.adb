@@ -67,10 +67,9 @@ package body Tresses.Voices.Saw_Swarm is
          end;
       end loop;
 
-     case Do_Strike.Event is
+      case Do_Strike.Event is
          when On =>
             Do_Strike.Event := None;
-
 
             for Elt of State.Phase loop
                Elt := Get_Word (Rng);
@@ -150,7 +149,7 @@ package body Tresses.Voices.Saw_Swarm is
             DSP.Clip_S16 (BP);
 
             Render (Env);
-            HP := (HP * S32 (Low_Pass (Env))) / 2**15;
+            HP := (HP * Low_Pass (Env)) / 2**15;
 
             DSP.Clip_S16 (HP);
 

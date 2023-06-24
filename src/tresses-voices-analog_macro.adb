@@ -70,7 +70,7 @@ package body Tresses.Voices.Analog_Macro is
          Sample := S32 ((Buffer_A (Idx) / 2) + (Buffer_B (Idx) / 2));
 
          Render (Env);
-         Sample := (Sample * S32 (Low_Pass (Env))) / 2**15;
+         Sample := (Sample * Low_Pass (Env)) / 2**15;
 
          Buffer_A (Idx) := S16 (Sample);
       end loop;
@@ -156,7 +156,7 @@ package body Tresses.Voices.Analog_Macro is
          Sample := S32 (DSP.Mix (S16 (Sample), Fuzzed, U16 (Fuzz_Amount)));
 
          Render (Env);
-         Sample := (Sample * S32 (Low_Pass (Env))) / 2**15;
+         Sample := (Sample * Low_Pass (Env)) / 2**15;
          Buffer_A (Idx) := S16 (Sample);
       end loop;
 

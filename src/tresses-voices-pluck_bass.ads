@@ -1,7 +1,4 @@
 with Tresses.Envelopes.AR;
-with Tresses.Interfaces; use Tresses.Interfaces;
-with Tresses.Random;
-with Tresses.Analog_Oscillator;
 with Tresses.Filters.SVF;
 
 package Tresses.Voices.Pluck_Bass

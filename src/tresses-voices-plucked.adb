@@ -200,7 +200,7 @@ package body Tresses.Voices.Plucked is
 
             DSP.Clip_S16 (Sample);
             Render (Env);
-            Sample := (Sample * S32 (Low_Pass (Env))) / 2**15;
+            Sample := (Sample * Low_Pass (Env)) / 2**15;
             DSP.Clip_S16 (Sample);
 
             Buffer (Index) := S16 ((Previous_Sample + Sample) / 2**1);

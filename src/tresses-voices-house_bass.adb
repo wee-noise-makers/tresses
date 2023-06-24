@@ -1,8 +1,4 @@
-with Tresses.Resources;
 with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
-with Tresses.DSP;
-
-with Tresses.Envelopes.AR;
 
 package body Tresses.Voices.House_Bass is
 
@@ -92,7 +88,7 @@ package body Tresses.Voices.House_Bass is
          Sample := Filters.SVF.Process (Filter1, Sample);
 
          --  Apply envelope
-         Sample := (Sample * S32 (Low_Pass (Env))) / 2**15;
+         Sample := (Sample * Low_Pass (Env)) / 2**15;
 
          Buffer_A (Idx) := S16 (Sample);
       end loop;

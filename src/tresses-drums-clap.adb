@@ -1,4 +1,3 @@
-with Tresses.Excitation; use Tresses.Excitation;
 with Tresses.Filters.SVF; use Tresses.Filters.SVF;
 with Tresses.Random; use Tresses.Random;
 with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;

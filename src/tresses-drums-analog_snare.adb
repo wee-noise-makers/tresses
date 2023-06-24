@@ -2,7 +2,6 @@ with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 
 with Tresses.DSP;
 with Tresses.Resources;
-with Tresses.Random;
 with Tresses.Filters.SVF; use Tresses.Filters.SVF;
 
 package body Tresses.Drums.Analog_Snare is
@@ -57,8 +56,8 @@ package body Tresses.Drums.Analog_Snare is
             Set_Release (Tone_Env, Param_Range'Last / 4 + (Decay / 2));
             On (Tone_Env, Do_Strike.Velocity);
 
-            Set_Release (Noise_env, Param_Range'Last / 4 + (Noise_Decay / 2));
-            On (Noise_env, Do_Strike.Velocity);
+            Set_Release (Noise_Env, Param_Range'Last / 4 + (Noise_Decay / 2));
+            On (Noise_Env, Do_Strike.Velocity);
 
             Target_Phase_Increment :=
               DSP.Compute_Phase_Increment (S16 (Pitch));
