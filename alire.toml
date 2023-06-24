@@ -2,6 +2,9 @@ name = "tresses"
 description = "Synth library inspired by Mutable Instruments Braids"
 version = "0.1.0"
 
+licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
+tags = ["embedded", "audio", "synthesis", "nostd"]
+website = "https://weenoisemaker.com/"
 authors = ["Fabien Chouteau"]
 maintainers = ["Fabien Chouteau <fabien.chouteau@gmail.com>"]
 maintainers-logins = ["Fabien-Chouteau"]
