@@ -18,8 +18,10 @@ package body Tresses.Voices.Sand is
       Do_Init            : in out Boolean;
       Do_Strike          : in out Strike_State)
    is
-      Trig_Pitch : constant Pitch_Range := Pitch - (7 * Semitone + Octave);
-      Pulse_Pitch : constant Pitch_Range := Pitch + Octave;
+      Trig_Pitch : constant Pitch_Range :=
+        Sub_Sat (Pitch, (7 * Semitone + Octave));
+
+      Pulse_Pitch : constant Pitch_Range := Add_Sat (Pitch, Octave);
 
       Sample : S32;
    begin

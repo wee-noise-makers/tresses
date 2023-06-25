@@ -31,6 +31,9 @@ is
 
    type Pitch_Range is new S16 range 0 .. 127 * 128;
 
+   function Add_Sat (A, B : Pitch_Range) return Pitch_Range;
+   function Sub_Sat (A, B : Pitch_Range) return Pitch_Range;
+
    Semitone   : constant Pitch_Range := 128;
    Octave     : constant Pitch_Range := 12 * Semitone;
    Init_Pitch : constant Pitch_Range := 60 * Semitone;

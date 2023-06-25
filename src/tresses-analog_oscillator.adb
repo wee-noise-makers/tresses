@@ -314,6 +314,7 @@ package body Tresses.Analog_Oscillator is
 
       for Sample of Buffer loop
          Phase_Increment := Interpolate (Phase_Incr_Interp);
+
          declare
             --  Sync_Reset : Boolean := False;
             Self_Reset : Boolean := False;
@@ -340,7 +341,12 @@ package body Tresses.Analog_Oscillator is
                if not This.High then
                   exit when This.Phase < PW;
 
-                  T := (This.Phase - PW)  / Shift_Right (Phase_Increment, 16);
+                  if Shift_Right (Phase_Increment, 16) /= 0 then
+                     T := (This.Phase - PW)  /
+                       Shift_Right (Phase_Increment, 16);
+                  else
+                     T := 65_535;
+                  end if;
                   This_Sample := This_Sample - This_Blep_Sample (T);
                   Next_Sample := Next_Sample - Next_Blep_Sample (T);
                   This.High := True;
@@ -362,7 +368,7 @@ package body Tresses.Analog_Oscillator is
             Next_Sample := Next_Sample + S32 (This.Phase / 2**18);
             Next_Sample := Next_Sample + S32 ((This.Phase - PW) / 2**18);
 
-            Sample := S16 ((This_Sample - 16_384) * 2);
+            Sample := S16 (DSP.Clip_S16 ((This_Sample - 16_384) * 2));
          end;
       end loop;
 
