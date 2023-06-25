@@ -1,7 +1,10 @@
+with Ada.Text_IO;
+with Ada.Command_Line;
+
 with Tresses;    use Tresses;
 with Tresses.Macro;
 
-with GNAT.OS_Lib;
+with GNAT.OS_Lib; use GNAT.OS_Lib;
 procedure Tests is
 
    Macro : Tresses.Macro.Instance;
@@ -17,7 +20,39 @@ procedure Tests is
    Param_Vals : constant array (Natural range <>) of Param_Range :=
      (Param_Range'First, Param_Range'Last);
 
+   Out_FD : File_Descriptor := Invalid_FD;
 begin
+
+   case Ada.Command_Line.Argument_Count is
+      when 0 =>
+         Ada.Text_IO.Put_Line ("No audio output for this run.");
+         Ada.Text_IO.Put_Line
+           ("Use `./bin/tests -- | aplay -f S16_LE -c1 -r44100` " &
+              "to listen to the generated sound");
+      when 1 =>
+         declare
+            Filename : constant String :=
+              Ada.Command_Line.Argument (1);
+         begin
+            if Filename = "--" then
+               Out_FD := Standout;
+            else
+
+               Out_FD := Open_Read_Write (Filename, Binary);
+               if Out_FD = Invalid_FD then
+                  Ada.Text_IO.Put_Line
+                    ("Cannot open output file '" &  Filename & "': " &
+                       Errno_Message);
+                  OS_Exit (1);
+               end if;
+            end if;
+         end;
+      when others =>
+         Ada.Text_IO.Put_Line
+           ("Invalid number of argument. " &
+              "Just specify a filename or '--' for stdout");
+         OS_Exit (1);
+   end case;
 
    --  Run every engine with all combinations of limit settings
 
@@ -44,12 +79,14 @@ begin
 
                         Macro.Render (Buffer, Aux_Buffer);
 
-                        for Elt of Buffer loop
-                           Ignore := GNAT.OS_Lib.Write
-                          (GNAT.OS_Lib.Standout,
-                           Elt'Address,
-                           Elt'Size / 8);
-                        end loop;
+                        if Out_FD /= Invalid_FD then
+                           for Elt of Buffer loop
+                              Ignore := GNAT.OS_Lib.Write
+                                (Out_FD,
+                                 Elt'Address,
+                                 Elt'Size / 8);
+                           end loop;
+                        end if;
                      end loop;
                   end loop;
                end loop;
