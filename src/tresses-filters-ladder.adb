@@ -53,8 +53,9 @@ package body Tresses.Filters.Ladder is
       This.P33 := This.P32;
       This.P32 := This.P3;
 
-      This.P0 := This.P0 + ((Tanh (Input - ((K * Output) / 2**15))
-                            - Tanh (This.P0)) * This.Cutoff) / 2**15;
+      This.P0 := This.P0 +
+        DSP.Clip_S16 ((Tanh (Input - ((K * Output) / 2**15))
+                      - Tanh (This.P0)) * This.Cutoff) / 2**15;
 
       This.P1 := This.P1 +
         ((Tanh (This.P0) - Tanh (This.P1)) * This.Cutoff) / 2**15;

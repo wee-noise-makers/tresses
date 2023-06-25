@@ -16,10 +16,12 @@ package body Tresses.Voices.House_Bass is
       Do_Init            : in out Boolean;
       Do_Strike          : in out Strike_State)
    is
-      Trig_Pitch : constant Pitch_Range := Pitch + Octave;
+      Trig_Pitch : constant Pitch_Range := Add_Sat (Pitch, Octave);
       Pulse_Pitch : constant Pitch_Range := Pitch;
 
-      Cutoff : constant Param_Range := Param_Range (Pitch + 2 * Octave);
+      Cutoff : constant Param_Range :=
+        Param_Range (Add_Sat (Pitch, 2 * Octave));
+
       Sample : S32;
    begin
 

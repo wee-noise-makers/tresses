@@ -24,7 +24,7 @@ package body Tresses.Voices.Reese is
         Pitch_Range (Params (P_Detune) / Detune_Div);
 
       Osc0_Pitch : constant Pitch_Range := Pitch;
-      Osc1_Pitch : constant Pitch_Range := Pitch - Detune;
+      Osc1_Pitch : constant Pitch_Range := Sub_Sat (Pitch, Detune);
 
       Osc_Param : constant Param_Range := 2 * (Param_Range'Last / 3);
 
