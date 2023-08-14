@@ -26,20 +26,26 @@ is
 
    end record;
 
-   procedure Init (This : in out Instance);
+   procedure Init (This : in out Instance)
+     with Linker_Section => Code_Linker_Section;
 
-   procedure Sync (This : in out Instance);
+   procedure Sync (This : in out Instance)
+     with Linker_Section => Code_Linker_Section;
 
-   procedure Set_Shape (This : in out Instance; S : Shape_Kind);
+   procedure Set_Shape (This : in out Instance; S : Shape_Kind)
+     with Linker_Section => Code_Linker_Section;
 
    procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer);
+                     Buffer :    out Mono_Buffer)
+     with Linker_Section => Code_Linker_Section;
 
    procedure Set_Param (This : in out Instance;
                         Id   :        Param_Id;
-                        P    :        Param_Range);
+                        P    :        Param_Range)
+     with Linker_Section => Code_Linker_Section;
 
-   procedure Set_Pitch (This : in out Instance; P : Pitch_Range);
+   procedure Set_Pitch (This : in out Instance; P : Pitch_Range)
+     with Linker_Section => Code_Linker_Section;
 
 private
 
@@ -55,15 +61,18 @@ private
      (This        : in out Param_Interpolator;
       Osc         : in out Instance;
       Id          :        Param_Id;
-      Buffer_Size :        U32);
+      Buffer_Size :        U32)
+     with Linker_Section => Code_Linker_Section;
 
    function Interpolate
      (This : in out Param_Interpolator)
-      return Param_Range;
+      return Param_Range
+     with Inline_Always;
 
    procedure End_Interpolate
      (This : in out Param_Interpolator;
-      Osc  : in out Instance);
+      Osc  : in out Instance)
+     with Linker_Section => Code_Linker_Section;
 
    type Phase_Increment_Interpolator is record
       Phase_Increment           : U32 := 1;
@@ -73,38 +82,49 @@ private
    procedure Begin_Interpolate
      (This        : in out Phase_Increment_Interpolator;
       Osc         : in out Instance;
-      Buffer_Size :        U32);
+      Buffer_Size :        U32)
+     with Linker_Section => Code_Linker_Section;
 
    function Interpolate
      (This : in out Phase_Increment_Interpolator)
-      return U32;
+      return U32
+   with Inline_Always;
 
    procedure End_Interpolate
      (This : in out Phase_Increment_Interpolator;
-      Osc  : in out Instance);
+      Osc  : in out Instance)
+     with Linker_Section => Code_Linker_Section;
 
    procedure Render_Saw (This   : in out Instance;
-                         Buffer :    out Mono_Buffer);
+                         Buffer :    out Mono_Buffer)
+     with Linker_Section => Code_Linker_Section;
 
    procedure Render_Variable_Saw (This   : in out Instance;
-                                  Buffer :    out Mono_Buffer);
+                                  Buffer :    out Mono_Buffer)
+     with Linker_Section => Code_Linker_Section;
 
    procedure Render_Square (This   : in out Instance;
-                            Buffer :    out Mono_Buffer);
+                            Buffer :    out Mono_Buffer)
+     with Linker_Section => Code_Linker_Section;
 
    procedure Render_Triangle (This   : in out Instance;
-                              Buffer :    out Mono_Buffer);
+                              Buffer :    out Mono_Buffer)
+     with Linker_Section => Code_Linker_Section;
 
    procedure Render_Sine (This   : in out Instance;
-                          Buffer :    out Mono_Buffer);
+                          Buffer :    out Mono_Buffer)
+     with Linker_Section => Code_Linker_Section;
 
    procedure Render_Triangle_Fold (This   : in out Instance;
-                                   Buffer :    out Mono_Buffer);
+                                   Buffer :    out Mono_Buffer)
+     with Linker_Section => Code_Linker_Section;
 
    procedure Render_Sine_Fold (This   : in out Instance;
-                               Buffer :    out Mono_Buffer);
+                               Buffer :    out Mono_Buffer)
+     with Linker_Section => Code_Linker_Section;
 
    procedure Render_Buzz (This   : in out Instance;
-                          Buffer :    out Mono_Buffer);
+                          Buffer :    out Mono_Buffer)
+     with Linker_Section => Code_Linker_Section;
 
 end Tresses.Analog_Oscillator;

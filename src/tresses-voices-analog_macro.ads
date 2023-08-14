@@ -19,7 +19,8 @@ is
       Do_Strike          : in out Strike_State)
      with Pre => Buffer_A'First = Buffer_B'First
                and then
-                 Buffer_A'Last = Buffer_B'Last;
+                 Buffer_A'Last = Buffer_B'Last,
+          Linker_Section => Code_Linker_Section;
 
    function Param_Label (Shape : Analog_Macro_Shape; Id : Param_Id)
                          return String;

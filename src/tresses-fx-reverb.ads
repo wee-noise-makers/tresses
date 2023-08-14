@@ -45,17 +45,24 @@ is
 
    type Instance is private;
 
-   procedure Reset (This : in out Instance);
+   procedure Reset (This : in out Instance)
+     with Linker_Section => Code_Linker_Section;
 
-   procedure Set_Amount (This : in out Instance; V : Param_Range);
-   procedure Set_Gain (This : in out Instance; V : Param_Range);
-   procedure Set_Time (This : in out Instance; V : Param_Range);
-   procedure Set_Diffusion (This : in out Instance; V : Param_Range);
-   procedure Set_Low_Pass (This : in out Instance; V : Param_Range);
+   procedure Set_Amount (This : in out Instance; V : Param_Range)
+     with Inline_Always;
+   procedure Set_Gain (This : in out Instance; V : Param_Range)
+     with Inline_Always;
+   procedure Set_Time (This : in out Instance; V : Param_Range)
+     with Inline_Always;
+   procedure Set_Diffusion (This : in out Instance; V : Param_Range)
+     with Inline_Always;
+   procedure Set_Low_Pass (This : in out Instance; V : Param_Range)
+     with Inline_Always;
 
    procedure Process (This  : in out Instance;
                       Left  : in out Mono_Buffer;
-                      Right : in out Mono_Buffer);
+                      Right : in out Mono_Buffer)
+     with Linker_Section => Code_Linker_Section;
 
 private
 

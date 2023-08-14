@@ -8,25 +8,38 @@ is
    type Instance is private;
 
    procedure Init (This    : in out Instance;
-                   Do_Hold :        Boolean);
+                   Do_Hold :        Boolean)
+     with Linker_Section => Code_Linker_Section;
 
-   procedure Set_Attack (This : in out Instance; A : U7);
-   procedure Set_Release (This : in out Instance; R : U7);
+   procedure Set_Attack (This : in out Instance; A : U7)
+     with Linker_Section => Code_Linker_Section;
+   procedure Set_Release (This : in out Instance; R : U7)
+     with Linker_Section => Code_Linker_Section;
 
-   procedure Set_Attack (This : in out Instance; A : Param_Range);
-   procedure Set_Release (This : in out Instance; R : Param_Range);
+   procedure Set_Attack (This : in out Instance; A : Param_Range)
+     with Linker_Section => Code_Linker_Section;
+   procedure Set_Release (This : in out Instance; R : Param_Range)
+     with Linker_Section => Code_Linker_Section;
 
-   procedure On (This : in out Instance; Velocity : Param_Range);
-   procedure Off (This : in out Instance);
+   procedure On (This : in out Instance; Velocity : Param_Range)
+     with Linker_Section => Code_Linker_Section;
+   procedure Off (This : in out Instance)
+     with Linker_Section => Code_Linker_Section;
 
-   procedure Trigger (This : in out Instance; Seg : Segment_Kind);
+   procedure Trigger (This : in out Instance; Seg : Segment_Kind)
+     with Linker_Section => Code_Linker_Section;
 
-   function Current_Segment (This : Instance) return Segment_Kind;
-   function Render (This : in out Instance) return U16;
-   procedure Render (This : in out Instance);
+   function Current_Segment (This : Instance) return Segment_Kind
+     with Linker_Section => Code_Linker_Section;
+   function Render (This : in out Instance) return U16
+     with Linker_Section => Code_Linker_Section;
+   procedure Render (This : in out Instance)
+     with Linker_Section => Code_Linker_Section;
 
-   function Value (This : Instance) return U16;
-   function Low_Pass (This : in out Instance) return S32;
+   function Value (This : Instance) return U16
+     with Inline_Always;
+   function Low_Pass (This : in out Instance) return S32
+     with Inline_Always;
 
 private
 

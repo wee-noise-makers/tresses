@@ -21,3 +21,4 @@ Sample_Rate = {type = "Enum", values = ["SR8000", "SR11025", "SR16000",
                                         "SR48000",
                                         "SR96000"], default = "SR44100"}
 Resources_Linker_Section = {type = "string", default = ""}
+Code_Linker_Section      = {type = "string", default = ""}

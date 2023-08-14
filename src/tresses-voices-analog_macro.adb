@@ -4,6 +4,23 @@ with Tresses.Resources;
 
 package body Tresses.Voices.Analog_Macro is
 
+   procedure Render_Buzz
+     (Buffer_A, Buffer_B :    out Mono_Buffer;
+      Param1, Param2     :        Param_Range;
+      Osc0, Osc1         : in out Analog_Oscillator.Instance;
+      Env                : in out Envelopes.AR.Instance;
+      Pitch              :        Pitch_Range)
+     with Linker_Section => Code_Linker_Section;
+
+   procedure Render_Morph
+     (Buffer_A, Buffer_B :    out Mono_Buffer;
+      Param1, Param2     :        Param_Range;
+      Osc0, Osc1         : in out Analog_Oscillator.Instance;
+      Env                : in out Envelopes.AR.Instance;
+      LP_State           : in out S32;
+      Pitch              :        Pitch_Range)
+     with Linker_Section => Code_Linker_Section;
+
    -----------------
    -- Param_Label --
    -----------------

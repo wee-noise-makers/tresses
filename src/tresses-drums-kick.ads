@@ -16,7 +16,8 @@ is
       LP_State       : in out S32;
       Pitch          :        Pitch_Range;
       Do_Init        : in out Boolean;
-      Do_Strike      : in out Strike_State);
+      Do_Strike      : in out Strike_State)
+     with Linker_Section => Code_Linker_Section;
 
    P_Decay       : constant Param_Id := 1;
    P_Coefficient : constant Param_Id := 2;

@@ -14,7 +14,8 @@ is
       Filter             : in out Filters.Ladder.Instance;
       Pitch              :        Pitch_Range;
       Do_Init            : in out Boolean;
-      Do_Strike          : in out Strike_State);
+      Do_Strike          : in out Strike_State)
+     with Linker_Section => Code_Linker_Section;
 
    P_Cutoff    : constant Param_Id := 1;
    P_Resonance : constant Param_Id := 2;
