@@ -18,15 +18,21 @@ is
    is new Four_Params_Voice
    with private;
 
-   function Engine (This : Instance) return Drum_Engines;
-   procedure Set_Engine (This : in out Instance; E : Drum_Engines);
-   procedure Next_Engine (This : in out Instance);
-   procedure Prev_Engine (This : in out Instance);
+   function Engine (This : Instance) return Drum_Engines
+     with Linker_Section => Code_Linker_Section;
+   procedure Set_Engine (This : in out Instance; E : Drum_Engines)
+     with Linker_Section => Code_Linker_Section;
+   procedure Next_Engine (This : in out Instance)
+     with Linker_Section => Code_Linker_Section;
+   procedure Prev_Engine (This : in out Instance)
+     with Linker_Section => Code_Linker_Section;
 
-   procedure Init (This : in out Instance);
+   procedure Init (This : in out Instance)
+     with Linker_Section => Code_Linker_Section;
 
    procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer);
+                     Buffer :    out Mono_Buffer)
+     with Linker_Section => Code_Linker_Section;
 
    --  Interfaces --
 

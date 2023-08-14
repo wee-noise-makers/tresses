@@ -9,13 +9,19 @@ is
 
    type Instance is private;
 
-   procedure Init (This : in out Instance);
-   procedure Set_Frequency (This : in out Instance; Frequency : Param_Range);
-   procedure Set_Resonance (This : in out Instance; Resonance : Param_Range);
-   procedure Set_Punch (This : in out Instance; Punch : U16);
-   procedure Set_Mode (This : in out Instance; Mode : Mode_Kind);
+   procedure Init (This : in out Instance)
+     with Linker_Section => Code_Linker_Section;
+   procedure Set_Frequency (This : in out Instance; Frequency : Param_Range)
+     with Inline_Always;
+   procedure Set_Resonance (This : in out Instance; Resonance : Param_Range)
+     with Inline_Always;
+   procedure Set_Punch (This : in out Instance; Punch : U16)
+     with Inline_Always;
+   procedure Set_Mode (This : in out Instance; Mode : Mode_Kind)
+     with Inline_Always;
 
-   function Process (This : in out Instance; Input : S32) return S32;
+   function Process (This : in out Instance; Input : S32) return S32
+     with Linker_Section => Code_Linker_Section;
 
 private
 

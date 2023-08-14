@@ -25,30 +25,41 @@ is
    function Crossfade (Table_A, Table_B : Resources.Table_257_S16;
                        Phase            : U32;
                        Balance          : N16)
-                       return S16;
+                       return S16
+     with Inline_Always;
 
    function Clip (V : S32; First, Last : S32) return S32
-     with Post => Clip'Result in First .. Last;
+     with Post => Clip'Result in First .. Last,
+          Inline_Always;
 
    procedure Clip (V : in out S32; First, Last : S32)
-     with Post => V in First .. Last;
+     with Post => V in First .. Last,
+          Inline_Always;
 
    procedure Clip_S16 (V : in out S32)
-     with Post => V in -32_767 .. 32_767;
+     with Post => V in -32_767 .. 32_767,
+          Inline_Always;
    --  Clip a value to fit in a signed 16bit
 
    function Clip_S16 (V : S32) return S32
-     with Post => Clip_S16'Result in -32_767 .. 32_767;
+     with Post => Clip_S16'Result in -32_767 .. 32_767,
+          Inline_Always;
    --  Clip a value to fit in a signed 16bit
 
-   function Mix (A, B, Balance : U16) return U16;
-   function Mix (A, B : S16; Balance : U16) return S16;
-   function Mix (A, B : S16; Balance : Param_Range) return S16;
+   function Mix (A, B, Balance : U16) return U16
+     with Inline_Always;
+   function Mix (A, B : S16; Balance : U16) return S16
+     with Inline_Always;
+   function Mix (A, B : S16; Balance : Param_Range) return S16
+     with Inline_Always;
 
-   function "and" (A : S32; B : U32) return S32;
+   function "and" (A : S32; B : U32) return S32
+     with Inline_Always;
 
-   function Compute_Phase_Increment (Pitch : S16) return U32;
+   function Compute_Phase_Increment (Pitch : S16) return U32
+     with Linker_Section => Code_Linker_Section;
 
-   function Tanh (X : S16) return S16;
+   function Tanh (X : S16) return S16
+     with Inline_Always;
 
 end Tresses.DSP;

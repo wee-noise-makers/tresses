@@ -20,7 +20,8 @@ is
                       Depth    :        Bitdepth;
                       DS       :        Downsampling;
                       Amount   :        Param_Range;
-                      Cutoff   :        Param_Range);
+                      Cutoff   :        Param_Range)
+     with Linker_Section => Code_Linker_Section;
 
 private
 

@@ -18,7 +18,8 @@ is
       Phase            : in out U32;
       Pitch            :        Pitch_Range;
       Do_Init          : in out Boolean;
-      Do_Strike        : in out Strike_State);
+      Do_Strike        : in out Strike_State)
+     with Linker_Section => Code_Linker_Section;
 
    P_Cutoff    : constant Param_Id := 1;
    P_Noise     : constant Param_Id := 2;

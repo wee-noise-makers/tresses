@@ -6,6 +6,7 @@ use Interfaces;
 pragma Warnings (On, "has no effect");
 
 with MIDI;
+with Tresses_Config;
 
 package Tresses
 with Preelaborate
@@ -103,5 +104,8 @@ is
       Event    : Strike_Event_Kind := None;
       Velocity : Param_Range := Param_Range'Last;
    end record;
+
+   Code_Linker_Section : constant String :=
+     Tresses_Config.Code_Linker_Section;
 
 end Tresses;

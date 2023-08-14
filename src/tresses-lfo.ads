@@ -22,25 +22,33 @@ is
       Phase_Increment : U32 := 1;
    end record;
 
-   procedure Init (This : in out Instance);
+   procedure Init (This : in out Instance)
+     with Linker_Section => Code_Linker_Section;
 
-   procedure Sync (This : in out Instance);
+   procedure Sync (This : in out Instance)
+     with Linker_Section => Code_Linker_Section;
 
-   procedure Set_Shape (This : in out Instance; S : Shape_Kind);
+   procedure Set_Shape (This : in out Instance; S : Shape_Kind)
+     with Linker_Section => Code_Linker_Section;
 
    procedure Set_Rate (This  : in out Instance;
                        R     : Param_Range;
-                       Scale : U32 := 1);
+                       Scale : U32 := 1)
+     with Linker_Section => Code_Linker_Section;
 
    procedure Set_Amplitude (This : in out Instance;
-                            A    :        Param_Range);
+                            A    :        Param_Range)
+     with Linker_Section => Code_Linker_Section;
 
    procedure Set_Amp_Mode (This : in out Instance;
-                           Mode :        Amplitude_Kind);
+                           Mode :        Amplitude_Kind)
+     with Linker_Section => Code_Linker_Section;
 
    procedure Set_Loop_Mode (This : in out Instance;
-                            Mode :        Loop_Kind);
+                            Mode :        Loop_Kind)
+     with Linker_Section => Code_Linker_Section;
 
-   function Render (This : in out Instance) return S16;
+   function Render (This : in out Instance) return S16
+     with Linker_Section => Code_Linker_Section;
 
 end Tresses.LFO;

@@ -23,6 +23,12 @@ package body Tresses.Analog_Oscillator is
       13 => WAV_Bandlimited_Comb_13'Access,
       14 => WAV_Bandlimited_Comb_14'Access);
 
+
+   function This_Blep_Sample (T : U32) return S32
+     with Linker_Section => Code_Linker_Section;
+   function Next_Blep_Sample (T : U32) return S32
+     with Linker_Section => Code_Linker_Section;
+
    ----------------------
    -- This_Blep_Sample --
    ----------------------

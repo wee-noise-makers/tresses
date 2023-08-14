@@ -14,7 +14,8 @@ is
       Env, F_Env         : in out Envelopes.AR.Instance;
       Pitch              :        Pitch_Range;
       Do_Init            : in out Boolean;
-      Do_Strike          : in out Strike_State);
+      Do_Strike          : in out Strike_State)
+     with Linker_Section => Code_Linker_Section;
 
    P_Fold      : constant Param_Id := 1;
    P_F_Release : constant Param_Id := 2;

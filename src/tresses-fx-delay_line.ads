@@ -21,6 +21,7 @@ is
    procedure Process (This     : in out Instance;
                       Buffer   : in out Mono_Buffer;
                       Time     :        Param_Range;
-                      Feedback :        Param_Range);
+                      Feedback :        Param_Range)
+     with Linker_Section => Code_Linker_Section;
 
 end Tresses.FX.Delay_Line;
