@@ -84,6 +84,22 @@ package body Tresses.DSP is
       V := Clip (V, First, Last);
    end Clip;
 
+   ----------
+   -- Clip --
+   ----------
+
+   function Clip (V : S64; First, Last : S64) return S64
+   is (S64'Min (S64'Max (V, First), Last));
+
+   ----------
+   -- Clip --
+   ----------
+
+   procedure Clip (V : in out S64; First, Last : S64) is
+   begin
+      V := Clip (V, First, Last);
+   end Clip;
+
    --------------
    -- Clip_S16 --
    --------------

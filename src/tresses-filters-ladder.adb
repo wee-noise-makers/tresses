@@ -43,6 +43,8 @@ package body Tresses.Filters.Ladder is
       function Tanh (X : S32) return S32
       is (S32 (DSP.Tanh (
           S16 (DSP.Clip (X, S32 (S16'First), S32 (S16'Last))))));
+
+      P0_64 : S64;
    begin
       Output := (This.P3 * C3) / 2**15;
       Output := Output + (This.P32 * C32) / 2**15;
@@ -53,9 +55,11 @@ package body Tresses.Filters.Ladder is
       This.P33 := This.P32;
       This.P32 := This.P3;
 
-      This.P0 := This.P0 +
-        DSP.Clip_S16 ((Tanh (Input - ((K * Output) / 2**15))
-                      - Tanh (This.P0)) * This.Cutoff) / 2**15;
+      P0_64 := S64 (This.P0) +
+        S64 ((Tanh (Input - ((K * Output) / 2**15))
+             - Tanh (This.P0)) * This.Cutoff) / 2**15;
+
+      This.P0 := S32 (DSP.Clip (P0_64, S64 (S32'First), S64 (S32'Last)));
 
       This.P1 := This.P1 +
         ((Tanh (This.P0) - Tanh (This.P1)) * This.Cutoff) / 2**15;

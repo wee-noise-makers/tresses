@@ -33,6 +33,12 @@ is
    procedure Clip (V : in out S32; First, Last : S32)
      with Post => V in First .. Last;
 
+   function Clip (V : S64; First, Last : S64) return S64
+     with Post => Clip'Result in First .. Last;
+
+   procedure Clip (V : in out S64; First, Last : S64)
+     with Post => V in First .. Last;
+
    procedure Clip_S16 (V : in out S32)
      with Post => V in -32_767 .. 32_767;
    --  Clip a value to fit in a signed 16bit
