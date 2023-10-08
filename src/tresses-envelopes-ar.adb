@@ -13,12 +13,51 @@ package body Tresses.Envelopes.AR is
    -- Init --
    ----------
 
-   procedure Init (This    : in out Instance;
-                   Do_Hold :        Boolean)
+   procedure Init (This          : in out Instance;
+                   Do_Hold       :        Boolean;
+                   Attack_Curve  : Curve         := Logarithmic;
+                   Attack_Speed  : Segment_Speed := S_5_Seconds;
+                   Release_Curve : Curve         := Exponential;
+                   Release_Speed : Segment_Speed := S_10_Seconds)
    is
    begin
-      This := (Do_Hold => Do_Hold, others => <>);
+      This := (Do_Hold       => Do_Hold,
+               Attack_Speed  => Attack_Speed,
+               Release_Speed => Release_Speed,
+               others => <>);
+
+      This.LUT_Arr (Attack) :=
+        (case Attack_Curve is
+            when Linear      => Resources.LUT_Env_Linear'Access,
+            when Logarithmic => Resources.LUT_Env_Log'Access,
+            when Exponential => Resources.LUT_Env_Expo'Access);
+
+      This.LUT_Arr (Release) :=
+        (case Release_Curve is
+            when Linear      => Resources.LUT_Env_Linear'Access,
+            when Logarithmic => Resources.LUT_Env_Expo'Access,
+            when Exponential => Resources.LUT_Env_Log'Access);
    end Init;
+
+   -------------------
+   -- Get_Increment --
+   -------------------
+
+   function Get_Increment (Speed : Segment_Speed; A : U7) return U32 is
+   begin
+      case Speed is
+         when S_10_Seconds =>
+            return LUT_Env_Increments_10seconds (U8 (A));
+         when S_5_Seconds =>
+            return LUT_Env_Increments_5seconds (U8 (A));
+         when S_2_Seconds =>
+            return LUT_Env_Increments_2seconds (U8 (A));
+         when S_1_Seconds =>
+            return LUT_Env_Increments_1seconds (U8 (A));
+         when S_Half_Second =>
+            return LUT_Env_Increments_Half_Second (U8 (A));
+      end case;
+   end Get_Increment;
 
    ----------------
    -- Set_Attack --
@@ -26,7 +65,7 @@ package body Tresses.Envelopes.AR is
 
    procedure Set_Attack (This : in out Instance; A : U7) is
    begin
-      This.Increment (Attack) := LUT_Env_Portamento_Increments (U8 (A));
+      This.Increment (Attack) := Get_Increment (This.Attack_Speed, A);
    end Set_Attack;
 
    -----------------
@@ -35,7 +74,7 @@ package body Tresses.Envelopes.AR is
 
    procedure Set_Release (This : in out Instance; R : U7) is
    begin
-      This.Increment (Release) := LUT_Env_Portamento_Increments (U8 (R));
+      This.Increment (Release) := Get_Increment (This.Release_Speed, R);
    end Set_Release;
 
    ----------------
@@ -96,6 +135,8 @@ package body Tresses.Envelopes.AR is
 
       This.A := This.Value;
       This.B := This.Target (Next_Segment);
+      This.LUT := This.LUT_Arr (Next_Segment);
+
       This.Segement := Next_Segment;
       This.Phase := 0;
    end Trigger;
@@ -130,8 +171,8 @@ package body Tresses.Envelopes.AR is
 
       if This.Increment (This.Segement) /= 0 then
          This.Value := DSP.Mix (This.A, This.B,
-                                DSP.Interpolate824 (LUT_Env_Expo,
-                                  This.Phase));
+                                DSP.Interpolate824 (This.LUT.all,
+                                                    This.Phase));
       end if;
 
       return This.Value;
@@ -161,7 +202,7 @@ package body Tresses.Envelopes.AR is
    function Low_Pass (This : in out Instance) return S32 is
       Result : constant S32 := This.LP;
    begin
-      This.LP := This.LP + ((S32 (This.Value) - This.LP) / 2**4);
+      This.LP := This.LP + ((S32 (This.Value) - This.LP) / 2**1);
       return Result;
    end Low_Pass;
 

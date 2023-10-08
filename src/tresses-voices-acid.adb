@@ -37,13 +37,13 @@ package body Tresses.Voices.Acid is
 
          --  Amp envelope
          Init (A_Env, Do_Hold => True);
-         Set_Attack (A_Env, U7 (0));
-         Set_Release (A_Env, U7 (0));
+         Set_Attack (A_Env, 0);
+         Set_Release (A_Env, 0);
 
          --  Filter envelope
          Init (F_Env, Do_Hold => True);
-         Set_Attack (F_Env, U7 (0));
-         Set_Release (A_Env, U7 (0));
+         Set_Attack (F_Env, 0);
+         Set_Release (A_Env, 0);
       end if;
 
       case Do_Strike.Event is

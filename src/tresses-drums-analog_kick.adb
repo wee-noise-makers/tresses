@@ -33,7 +33,7 @@ package body Tresses.Drums.Analog_Kick is
       if Do_Init then
          Do_Init := False;
 
-         Set_Attack (Env, U7 (0));
+         Set_Attack (Env, 0);
 
          Target_Phase_Increment := 0;
          Phase := 0;

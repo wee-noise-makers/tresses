@@ -122,7 +122,7 @@ package body Tresses.DSP is
 
    function Mix (A, B, Balance : U16) return U16 is
    begin
-      return U16 (Shift_Right (U32 (A) * (65_535 - U32 (Balance)) +
+      return U16 (Shift_Right (U32 (A) * (U32 (U16'Last) - U32 (Balance)) +
                     U32 (B) * U32 (Balance),
                   16));
    end Mix;
@@ -146,6 +146,17 @@ package body Tresses.DSP is
    function Mix (A, B : S16; Balance : Param_Range) return S16 is
    begin
       return Mix (A, B, U16 (Balance) * 2);
+   end Mix;
+
+   ---------
+   -- Mix --
+   ---------
+
+   function Mix (A, B : U32; Balance : Param_Range) return U32 is
+   begin
+      return U32 (Shift_Right (U64 (A) * (U64 (Param_Range'Last) - U64 (Balance)) +
+                    U64 (B) * U64 (Balance),
+                  15));
    end Mix;
 
    -----------

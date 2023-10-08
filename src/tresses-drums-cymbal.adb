@@ -51,7 +51,7 @@ package body Tresses.Drums.Cymbal is
          Set_Resonance (Filter1, 2_000);
 
          Init (Env, Do_Hold => False);
-         Set_Attack (Env, U7 (0));
+         Set_Attack (Env, 0);
       end if;
 
       case Do_Strike.Event is

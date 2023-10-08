@@ -34,10 +34,10 @@ package body Tresses.Voices.Pluck_Bass is
          Do_Init := False;
 
          Init (Env, Do_Hold => True);
-         Set_Attack (Env, U7 (0));
+         Set_Attack (Env, 0);
 
          Init (Shape_Env, Do_Hold => False);
-         Set_Attack (Shape_Env, U7 (0));
+         Set_Attack (Shape_Env, 0);
 
          Init (Filter);
          Set_Mode (Filter, Low_Pass);

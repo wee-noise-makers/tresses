@@ -58,6 +58,8 @@ is
      with Inline_Always;
    function Mix (A, B : S16; Balance : Param_Range) return S16
      with Inline_Always;
+   function Mix (A, B : U32; Balance : Param_Range) return U32
+     with Inline_Always;
 
    function "and" (A : S32; B : U32) return S32
      with Inline_Always;

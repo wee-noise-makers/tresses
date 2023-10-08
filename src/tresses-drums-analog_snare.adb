@@ -36,8 +36,8 @@ package body Tresses.Drums.Analog_Snare is
       if Do_Init then
          Do_Init := False;
 
-         Set_Attack (Tone_Env, U7 (0));
-         Set_Attack (Noise_Env, U7 (20));
+         Set_Attack (Tone_Env, 0);
+         Set_Attack (Noise_Env, 20 * 2**8);
 
          Target_Phase_Increment := 0;
          Phase := 0;

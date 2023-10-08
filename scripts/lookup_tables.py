@@ -277,17 +277,47 @@ Envelope increments.
 # buffers. So we remove this factor and call Render on every sample.
 #
 
-control_rate = sample_rate
-max_time = 12.0  # seconds
-min_time = 3.0 / control_rate  # seconds
-gamma = 0.175
-min_increment = excursion / (max_time * control_rate)
-max_increment = excursion / (min_time * control_rate)
-rates = numpy.linspace(numpy.power(max_increment, -gamma),
-                       numpy.power(min_increment, -gamma), 128)
-values = numpy.power(rates, -1/gamma).astype(int)
+def env_increments(max_time):
+    control_rate = sample_rate
+    min_time = 3.0 / control_rate
+    gamma = 0.700
+    min_increment = excursion / (max_time * control_rate)
+    max_increment = excursion / (min_time * control_rate)
+    rates = numpy.linspace(numpy.power(max_increment, -gamma),
+                           numpy.power(min_increment, -gamma), 128)
+    return numpy.power(rates, -1/gamma).astype(int)
+
+# import matplotlib.pyplot as plt
+# fig, ax1 = plt.subplots()
+# ax2 = ax1.twinx()
+# ax1.plot(env_increments(max_time=0.5))
+# fig.tight_layout()
+# plt.show()
+
+
 lookup_tables_32.append(
-    ('env_portamento_increments', values)
+    ('env_increments_10seconds',
+      env_increments(max_time=10.0))
+)
+
+lookup_tables_32.append(
+    ('env_increments_5seconds',
+      env_increments(max_time=5.0))
+)
+
+lookup_tables_32.append(
+    ('env_increments_2seconds',
+      env_increments(max_time=2.0))
+)
+
+lookup_tables_32.append(
+    ('env_increments_1seconds',
+      env_increments(max_time=1.0))
+)
+
+lookup_tables_32.append(
+    ('env_increments_half_second',
+      env_increments(max_time=0.5))
 )
 
 
@@ -296,9 +326,30 @@ Envelope curves
 -----------------------------------------------------------------------------"""
 
 env_linear = numpy.arange(0, 257.0) / 256.0
-env_expo = 1.0 - numpy.exp(-4 * env_linear)
+env_expo = numpy.exp(5 * env_linear)
+env_log = 1.0 - numpy.exp(-4 * env_linear)
 
-lookup_tables.append(('env_expo', env_expo / env_expo.max() * 65535.0))
+# Scale
+env_linear = env_linear / env_linear.max() * 65535.0
+
+env_expo = env_expo - env_expo.min()
+env_expo = env_expo / env_expo.max() * 65535.0
+
+env_log = env_log / env_log.max() * 65535.0
+
+lookup_tables.append(('env_linear', env_linear))
+lookup_tables.append(('env_expo', env_expo))
+lookup_tables.append(('env_log', env_log))
+
+# import matplotlib.pyplot as plt
+# fig, ax1 = plt.subplots()
+# ax2 = ax1.twinx()
+# ax1.plot(env_expo)
+# ax1.plot(env_linear)
+# ax1.plot(env_log)
+# fig.tight_layout()
+# plt.show()
+
 
 """----------------------------------------------------------------------------
 tanh

@@ -39,7 +39,7 @@ package body Tresses.Drums.Clap is
          Set_Mode (Filter, Band_Pass);
 
          Init (Env, Do_Hold => False);
-         Set_Attack (Env, U7 (5));
+         Set_Attack (Env, 5 * 2**8);
       end if;
 
       --  Strike

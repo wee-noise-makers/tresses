@@ -53,7 +53,7 @@ package body Tresses.Drums.Kick is
          Set_Punch (Filter, 32768);
          Set_Mode (Filter, Band_Pass);
 
-         Set_Attack (Env, U7'First);
+         Set_Attack (Env, 0);
 
       end if;
 
