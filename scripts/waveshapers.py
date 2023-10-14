@@ -35,18 +35,51 @@ def scale(x, min=-32766, max=32766, center=True):
 
 x = ((numpy.arange(0, 257) / 128.0 - 1.0))
 x[-1] = x[-2]
-violent_overdrive = numpy.tanh(8.0 * x)
-overdrive = numpy.tanh(5.0 * x)
+
+
 moderate_overdrive = numpy.tanh(2.0 * x)
+overdrive = numpy.tanh(5.0 * x)
+violent_overdrive = numpy.tanh(8.0 * x)
+extreme_overdrive = numpy.tanh(20.0 * x)
+
+
+#  Mix two tanh curves to create a "step" overdrive waveshaper that looks
+#  like this:
+#         .--
+#        /
+#    .--`
+#   /
+# -`
+#
+# There's probably a proper name for this shape/effect...
+
+def make_step_overdrive(factor):
+    x_shift_right = ((numpy.arange(0, 257) / 128.0 - 1.5))
+    x_shift_left = ((numpy.arange(0, 257) / 128.0 - 0.5))
+    shift_right_overdrive = numpy.tanh(factor * x_shift_right) / 2 + 0.5
+    shift_left_overdrive = numpy.tanh(factor * x_shift_left) / 2 - 0.5
+
+    return shift_left_overdrive + shift_right_overdrive
+
+step_overdrive = make_step_overdrive(5)
+violent_step_overdrive = make_step_overdrive(8)
+extreme_step_overdrive = make_step_overdrive(100)
 
 # import matplotlib.pyplot as plt
 # fig, ax1 = plt.subplots()
 # ax2 = ax1.twinx()
-# ax1.plot(violent_overdrive)
-# ax1.plot(overdrive)
+# ax1.plot(x)
 # ax1.plot(moderate_overdrive)
+# ax1.plot(overdrive)
+# ax1.plot(violent_overdrive)
+# ax1.plot(extreme_overdrive)
+
+# ax1.plot(step_overdrive)
+# ax1.plot(violent_step_overdrive)
+# ax1.plot(extreme_step_overdrive)
 # fig.tight_layout()
 # plt.show()
+
 
 # Wavefolder curves from the first version
 # tri_fold = numpy.abs(4.0 * x - numpy.round(4.0 * x)) * numpy.sign(x)
@@ -69,6 +102,13 @@ sine_fold /= numpy.abs(sine_fold).max()
 # sine_fold = sine + cubic + knee
 
 waveshapers.append(('moderate_overdrive', scale(moderate_overdrive)))
+waveshapers.append(('overdrive', scale(moderate_overdrive)))
 waveshapers.append(('violent_overdrive', scale(violent_overdrive)))
+waveshapers.append(('extreme_overdrive', scale(extreme_overdrive)))
+
+waveshapers.append(('step_overdrive', scale(step_overdrive)))
+waveshapers.append(('violent_step_overdrive', scale(violent_step_overdrive)))
+waveshapers.append(('extreme_step_overdrive', scale(extreme_step_overdrive)))
+
 waveshapers.append(('sine_fold', scale(sine_fold, center=False)))
 waveshapers.append(('tri_fold', scale(tri_fold)))

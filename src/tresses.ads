@@ -15,6 +15,7 @@ is
    subtype U8 is Interfaces.Unsigned_8;
    subtype U16 is Interfaces.Unsigned_16;
    subtype U32 is Interfaces.Unsigned_32;
+   subtype U64 is Interfaces.Unsigned_64;
 
    type U7 is mod 2**7 with Size => 7;
 
@@ -27,6 +28,9 @@ is
    --  Natural on 16 bit
 
    type Param_Range is new N16;
+
+   function Add_Sat (A, B : Param_Range) return Param_Range;
+   function Sub_Sat (A, B : Param_Range) return Param_Range;
 
    type Param_Id is range 1 .. 4;
    type Param_Array is array (Param_Id) of Param_Range;
@@ -71,7 +75,8 @@ is
                     Voice_Bass_808,
                     Voice_House_Bass,
                     Voice_Pluck_Bass,
-                    Voice_Reese);
+                    Voice_Reese,
+                    Voice_Screech);
 
    subtype Drum_Engines is Engines range Drum_Kick .. Drum_Bell;
    subtype Synth_Engines is Engines range Voice_Plucked .. Engines'Last;
@@ -96,7 +101,8 @@ is
           when Voice_Bass_808     => "808 Bass",
           when Voice_House_Bass   => "House Bass",
           when Voice_Pluck_Bass   => "Pluck Bass",
-          when Voice_Reese        => "Reese");
+          when Voice_Reese        => "Reese",
+          when Voice_Screech      => "Screech");
 
    subtype Short_Label is String (1 .. 3);
 

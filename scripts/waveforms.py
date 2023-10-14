@@ -129,6 +129,16 @@ fill = numpy.fmod(
     numpy.arange(WAVETABLE_SIZE + 1),
     WAVETABLE_SIZE)
 
+arr = numpy.arange(WAVETABLE_SIZE + 1) / float(WAVETABLE_SIZE + 1) * 2 * numpy.pi
+sawtooth = signal.sawtooth(arr, width = 1)
+triangle = signal.sawtooth(arr, width = 0.5)
+
+# Combine sawtooth signals at different frequencies to make a noisy waveform
+# with high harmonics.
+screech = signal.sawtooth(arr * 1.3, width = 0.1) * \
+           signal.sawtooth(arr * 5.1, width=0.2) * \
+           signal.sawtooth(arr * 10.4, width=0.9)
+
 waveforms.append(('sine', scale(sine)))
 waveforms.append(('sine_warp1', scale(sine_warp1)))
 waveforms.append(('sine_warp2', scale(sine_warp2)))
@@ -136,19 +146,15 @@ waveforms.append(('sine_warp3', scale(sine_warp3)))
 waveforms.append(('sine2_warp1', scale(sine2_warp1)))
 waveforms.append(('sine2_warp2', scale(sine2_warp2)))
 waveforms.append(('sine2_warp3', scale(sine2_warp3)))
+waveforms.append(('sawtooth', scale(sawtooth)))
+waveforms.append(('triangle', scale(triangle)))
+waveforms.append(('screech', scale(screech)))
 
 # import matplotlib.pyplot as plt
-# fig, ax1 = plt.subplots()
-# ax2 = ax1.twinx()
-# ax1.plot(scale(sine))
-# ax1.plot(scale(sine_warp1))
-# ax1.plot(scale(sine_warp2))
-# ax1.plot(scale(sine_warp3))
-# ax1.plot(scale(sine2_warp1))
-# ax1.plot(scale(sine2_warp2))
-# ax1.plot(scale(sine2_warp3))
-# fig.tight_layout()
+# plt.plot(scale(screech))
+# plt.plot(scale(sine_warp3))
 # plt.show()
+
 
 # LFO
 arr = numpy.arange(WAVETABLE_SIZE + 1) / float(WAVETABLE_SIZE + 1) * 2 * numpy.pi

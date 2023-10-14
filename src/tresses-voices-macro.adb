@@ -6,6 +6,7 @@ with Tresses.Voices.Bass_808;
 with Tresses.Voices.House_Bass;
 with Tresses.Voices.Pluck_Bass;
 with Tresses.Voices.Reese;
+with Tresses.Voices.Screech;
 with Tresses.Macro;
 
 package body Tresses.Voices.Macro is
@@ -206,6 +207,17 @@ package body Tresses.Voices.Macro is
                Env       => This.Env0,
                Pitch     => This.Pitch,
                Do_Init   => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_Screech =>
+            Voices.Screech.Render_Screech
+              (Buffer => Buffer,
+               Params => This.Params,
+               Env => This.Env0,
+               Filter => This.SVF,
+               Phase => This.Phase,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
 
       end case;
