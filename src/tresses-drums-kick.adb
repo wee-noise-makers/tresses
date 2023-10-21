@@ -53,6 +53,8 @@ package body Tresses.Drums.Kick is
          Set_Punch (Filter, 32768);
          Set_Mode (Filter, Band_Pass);
 
+         Init (Env, Do_Hold => False,
+               Release_Speed => S_Half_Second);
          Set_Attack (Env, 0);
 
       end if;
@@ -66,7 +68,7 @@ package body Tresses.Drums.Kick is
          Trigger (Pulse1, S32 (-19_662.0 * 0.7));
          Set_Punch (Filter, 24_000);
 
-         Set_Release (Env, 4096 + Pitch_Decay / 4);
+         Set_Release (Env, Pitch_Decay / 2);
          On (Env, Do_Strike.Velocity);
 
          when Off =>

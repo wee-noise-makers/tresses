@@ -33,6 +33,10 @@ package body Tresses.Drums.Analog_Kick is
       if Do_Init then
          Do_Init := False;
 
+         Init (Env,
+               Do_Hold => False,
+               Release_Speed => S_1_Seconds);
+
          Set_Attack (Env, 0);
 
          Target_Phase_Increment := 0;
@@ -44,14 +48,15 @@ package body Tresses.Drums.Analog_Kick is
          when On =>
             Do_Strike.Event := None;
 
-            Set_Release (Env, Param_Range'Last / 4 + (Decay / 2));
+            Set_Release (Env, Decay);
             On (Env, Do_Strike.Velocity);
 
             Target_Phase_Increment :=
               DSP.Compute_Phase_Increment (S16 (Pitch));
 
             Phase_Increment :=
-              DSP.Compute_Phase_Increment (S16 (Pitch + Octave * 4));
+              DSP.Compute_Phase_Increment
+                (S16 (Add_Sat (Pitch, Octave * 3)));
 
             Phase := 0;
 
