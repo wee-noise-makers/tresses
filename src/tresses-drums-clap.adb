@@ -38,8 +38,11 @@ package body Tresses.Drums.Clap is
          Init (Filter);
          Set_Mode (Filter, Band_Pass);
 
-         Init (Env, Do_Hold => False);
-         Set_Attack (Env, 5 * 2**8);
+         Init (Env,
+               Do_Hold       => False,
+               Attack_Speed  => S_Half_Second,
+               Release_Speed => S_Half_Second);
+         Set_Attack (Env, 0);
       end if;
 
       --  Strike
@@ -57,11 +60,10 @@ package body Tresses.Drums.Clap is
 
          if Re_Trig = 0 then
             --  Last clap
-            Set_Release (Env, Param_Range'Last / 4 + Decay_Param / 6);
+            Set_Release (Env, Decay_Param);
          else
             --  First claps
-            Set_Release (Env, Param_Range'Last / 8 +
-                       (Param_Range'Last - Sync_Param) / 8);
+            Set_Release (Env, Sync_Param / 8);
          end if;
 
          On (Env, Do_Strike.Velocity);

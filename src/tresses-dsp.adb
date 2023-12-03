@@ -154,7 +154,8 @@ package body Tresses.DSP is
 
    function Mix (A, B : U32; Balance : Param_Range) return U32 is
    begin
-      return U32 (Shift_Right (U64 (A) * (U64 (Param_Range'Last) - U64 (Balance)) +
+      return U32 (Shift_Right
+                  (U64 (A) * (U64 (Param_Range'Last) - U64 (Balance)) +
                     U64 (B) * U64 (Balance),
                   15));
    end Mix;
