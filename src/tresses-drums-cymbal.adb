@@ -50,7 +50,9 @@ package body Tresses.Drums.Cymbal is
          Set_Mode (Filter1, High_Pass);
          Set_Resonance (Filter1, 2_000);
 
-         Init (Env, Do_Hold => False);
+         Init (Env,
+               Do_Hold => False,
+               Release_Speed => S_1_Seconds);
          Set_Attack (Env, 0);
       end if;
 
