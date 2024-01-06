@@ -13,7 +13,7 @@ package body Tresses.Voices.Acid is
      (Buffer             :    out Mono_Buffer;
       Params             :        Param_Array;
       Osc0               : in out Analog_Oscillator.Instance;
-      A_Env, F_Env       : in out Envelopes.AR.Instance;
+      F_Env              : in out Envelopes.AR.Instance;
       Filter             : in out Filters.Ladder.Instance;
       Pitch              :        Pitch_Range;
       Do_Init            : in out Boolean;
@@ -33,35 +33,27 @@ package body Tresses.Voices.Acid is
          Do_Init := False;
 
          Osc0.Set_Param (0, 0);
-         Osc0.Set_Shape (Analog_Oscillator.Square);
-
-         --  Amp envelope
-         Init (A_Env, Do_Hold => True);
-         Set_Attack (A_Env, 0);
-         Set_Release (A_Env, 0);
+         Osc0.Set_Shape (Analog_Oscillator.Saw);
 
          --  Filter envelope
-         Init (F_Env, Do_Hold => True);
+         Init (F_Env,
+               Do_Hold => False,
+               Attack_Speed => S_Half_Second,
+               Release_Speed => S_5_Seconds);
          Set_Attack (F_Env, 0);
-         Set_Release (A_Env, 0);
+         Set_Release (F_Env, 0);
       end if;
 
       case Do_Strike.Event is
          when On =>
             Do_Strike.Event := None;
 
-            Set_Release (A_Env, (if F_Decay < (Param_Range'Last - 10_000)
-                               then F_Decay + 10_000
-                               else Param_Range'Last));
-            On (A_Env, Do_Strike.Velocity);
-
+            Set_Attack (F_Env, F_Decay / 2);
             Set_Release (F_Env, F_Decay);
             On (F_Env, Do_Strike.Velocity);
 
          when Off =>
             Do_Strike.Event := None;
-
-            Off (A_Env);
             Off (F_Env);
 
          when None => null;
@@ -73,9 +65,8 @@ package body Tresses.Voices.Acid is
       Filters.Ladder.Set_Resonance (Filter, Resonance);
 
       for Idx in Buffer'Range loop
-         Render (A_Env);
-         A_Env_Val := Low_Pass (A_Env);
          F_Env_Val := S32 (Render (F_Env));
+         A_Env_Val := Low_Pass (F_Env);
 
          --  Apply Filter envelope intensity control
          F_Env_Val := (F_Env_Val * S32 (F_EG_Int)) / 2**15;
@@ -90,7 +81,7 @@ package body Tresses.Voices.Acid is
 
          --  Symetrical softcliping, always to the max
          Sample := S32 (DSP.Interpolate88
-                        (Resources.WS_Violent_Overdrive,
+                        (Resources.WS_Extreme_Overdrive,
                            U16 (Sample + 32_768)));
 
          --  Apply amp envelope

@@ -10,7 +10,7 @@ is
      (Buffer             :    out Mono_Buffer;
       Params             :        Param_Array;
       Osc0               : in out Analog_Oscillator.Instance;
-      A_Env, F_Env       : in out Envelopes.AR.Instance;
+      F_Env              : in out Envelopes.AR.Instance;
       Filter             : in out Filters.Ladder.Instance;
       Pitch              :        Pitch_Range;
       Do_Init            : in out Boolean;
