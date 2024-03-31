@@ -115,7 +115,7 @@ package body Tresses.FX.Reverb is
 
    procedure Reset (This : in out Instance) is
    begin
-      This.Buffer := (others => 0);
+      This.Buffer.all := (others => 0);
    end Reset;
 
    ----------------
@@ -208,17 +208,17 @@ package body Tresses.FX.Reverb is
             C.Read (S16 (DSP.Clip_S16 (S32 (L) + S32 (R))), Gain);
 
             --  Diffuse through 4 allpasses
-            C.Read_Offset (This.Buffer, Ap1_Tail, Kap);
-            C.Write_All_Pass (This.Buffer, Ap1_Base, -Kap);
+            C.Read_Offset (This.Buffer.all, Ap1_Tail, Kap);
+            C.Write_All_Pass (This.Buffer.all, Ap1_Base, -Kap);
 
-            C.Read_Offset (This.Buffer, Ap2_Tail, Kap);
-            C.Write_All_Pass (This.Buffer, Ap2_Base, -Kap);
+            C.Read_Offset (This.Buffer.all, Ap2_Tail, Kap);
+            C.Write_All_Pass (This.Buffer.all, Ap2_Base, -Kap);
 
-            C.Read_Offset (This.Buffer, Ap3_Tail, Kap);
-            C.Write_All_Pass (This.Buffer, Ap3_Base, -Kap);
+            C.Read_Offset (This.Buffer.all, Ap3_Tail, Kap);
+            C.Write_All_Pass (This.Buffer.all, Ap3_Base, -Kap);
 
-            C.Read_Offset (This.Buffer, Ap4_Tail, Kap);
-            C.Write_All_Pass (This.Buffer, Ap4_Base, -Kap);
+            C.Read_Offset (This.Buffer.all, Ap4_Tail, Kap);
+            C.Write_All_Pass (This.Buffer.all, Ap4_Base, -Kap);
 
             C.Write (Apout);
 
@@ -226,13 +226,13 @@ package body Tresses.FX.Reverb is
             C.Load (Apout);
 
             C.LP (LP1, Klp);
-            C.Read_Offset (This.Buffer, Del2_Tail, Krt);
+            C.Read_Offset (This.Buffer.all, Del2_Tail, Krt);
 
-            C.Read_Offset (This.Buffer, Dap1a_Tail, -Kap);
-            C.Write_All_Pass (This.Buffer, Dap1a_Base, Kap);
-            C.Read_Offset (This.Buffer, Dap1b_Tail, Kap);
-            C.Write_All_Pass (This.Buffer, Dap1b_Base, -Kap);
-            C.Write_Double (This.Buffer, Del1_Base);
+            C.Read_Offset (This.Buffer.all, Dap1a_Tail, -Kap);
+            C.Write_All_Pass (This.Buffer.all, Dap1a_Base, Kap);
+            C.Read_Offset (This.Buffer.all, Dap1b_Tail, Kap);
+            C.Write_All_Pass (This.Buffer.all, Dap1b_Base, -Kap);
+            C.Write_Double (This.Buffer.all, Del1_Base);
             C.Write_Scale (Wet, 0);
 
             L := L +
@@ -242,13 +242,13 @@ package body Tresses.FX.Reverb is
             C.Load (Apout);
 
             C.LP (LP2, Klp);
-            C.Read_Offset (This.Buffer, Del1_Tail, Krt);
+            C.Read_Offset (This.Buffer.all, Del1_Tail, Krt);
 
-            C.Read_Offset (This.Buffer, Dap2a_Tail, Kap);
-            C.Write_All_Pass (This.Buffer, Dap2a_Base, -Kap);
-            C.Read_Offset (This.Buffer, Dap2b_Tail, -Kap);
-            C.Write_All_Pass (This.Buffer, Dap2b_Base, Kap);
-            C.Write_Double (This.Buffer, Del2_Base);
+            C.Read_Offset (This.Buffer.all, Dap2a_Tail, Kap);
+            C.Write_All_Pass (This.Buffer.all, Dap2a_Base, -Kap);
+            C.Read_Offset (This.Buffer.all, Dap2b_Tail, -Kap);
+            C.Write_All_Pass (This.Buffer.all, Dap2b_Base, Kap);
+            C.Write_Double (This.Buffer.all, Del2_Base);
             C.Write_Scale (Wet, 0);
 
             R := R +

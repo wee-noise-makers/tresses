@@ -43,29 +43,6 @@ package Tresses.FX.Reverb
 with Preelaborate
 is
 
-   type Instance is private;
-
-   procedure Reset (This : in out Instance)
-     with Linker_Section => Code_Linker_Section;
-
-   procedure Set_Amount (This : in out Instance; V : Param_Range)
-     with Inline_Always;
-   procedure Set_Gain (This : in out Instance; V : Param_Range)
-     with Inline_Always;
-   procedure Set_Time (This : in out Instance; V : Param_Range)
-     with Inline_Always;
-   procedure Set_Diffusion (This : in out Instance; V : Param_Range)
-     with Inline_Always;
-   procedure Set_Low_Pass (This : in out Instance; V : Param_Range)
-     with Inline_Always;
-
-   procedure Process (This  : in out Instance;
-                      Left  : in out Mono_Buffer;
-                      Right : in out Mono_Buffer)
-     with Linker_Section => Code_Linker_Section;
-
-private
-
    --  Indexes for the first and last element of each delay line
    Ap1_Base   : constant U16 := 0;
    Ap1_Tail   : constant U16 := Ap1_Base + Ap1_Len - 1;
@@ -101,10 +78,32 @@ private
 
    type Reverb_Buffer is array (0 .. Buffer_Size - 1) of S16;
 
-   type Instance
-   is record
-      Buffer : Reverb_Buffer;
+   type Instance (Buffer : not null access Reverb_Buffer)
+   is private;
 
+   procedure Reset (This : in out Instance)
+     with Linker_Section => Code_Linker_Section;
+
+   procedure Set_Amount (This : in out Instance; V : Param_Range)
+     with Inline_Always;
+   procedure Set_Gain (This : in out Instance; V : Param_Range)
+     with Inline_Always;
+   procedure Set_Time (This : in out Instance; V : Param_Range)
+     with Inline_Always;
+   procedure Set_Diffusion (This : in out Instance; V : Param_Range)
+     with Inline_Always;
+   procedure Set_Low_Pass (This : in out Instance; V : Param_Range)
+     with Inline_Always;
+
+   procedure Process (This  : in out Instance;
+                      Left  : in out Mono_Buffer;
+                      Right : in out Mono_Buffer)
+     with Linker_Section => Code_Linker_Section;
+
+private
+
+   type Instance (Buffer : not null access Reverb_Buffer)
+   is record
       Amount : Param_Range      := Param_Range (0.54 * 32_767.0);
       Input_Gain : Param_Range  := Param_Range (0.2 * 32_767.0);
       Reverb_Time : Param_Range := Param_Range (0.35 * 32_767.0);
