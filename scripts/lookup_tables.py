@@ -28,6 +28,7 @@
 
 import numpy
 import os
+import math
 
 lookup_tables = []
 lookup_tables_signed = []
@@ -358,6 +359,25 @@ tanh
 x = ((numpy.arange(0, 257) / 128.0 - 1.0)) # 257 values between -1.0 and 1.0
 tanh = numpy.tanh(x) # Applay tanh to each of those values
 lookup_tables_signed.append(
-    ('tanh', tanh * 32767.0) # Multiply by 32767 (2^14) to get a Q0.15 number
+    ('tanh', tanh * 32767.0) # Multiply by 32767 (2^15) to get a Q0.15 number
 )
 
+# """----------------------------------------------------------------------------
+# FFT
+# ----------------------------------------------------------------------------"""
+
+# N = 4096
+# PI = math.pi
+# twiddleCoefq15 = [0] * 6144
+# for i in range(3 * N / 4):
+#     twiddleCoefq15[2*i]   = int(round(math.cos(i * (2 * PI / N)) * float((1 << 15)- 1)));
+#     twiddleCoefq15[2*i+1] = int(round(math.sin(i * (2 * PI / N)) * float((1 << 15)- 1)));
+#     # twiddleCoefq15[2*i]   = math.cos(i * (2 * PI / N))
+#     # twiddleCoefq15[2*i+1] = math.sin(i * (2 * PI / N))
+
+# # print(" ".join("{:04x}".format(c) for c in twiddleCoefq15))
+# print(" ".join("{}".format(c) for c in twiddleCoefq15))
+
+# lookup_tables_signed.append(
+#     ('twiddleCoefq15', twiddleCoefq15)
+# )
