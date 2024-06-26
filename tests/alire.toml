@@ -16,3 +16,5 @@ tresses = { path='..' }
 
 [build-profiles]
 tresses = "validation"
+[[depends-on]]
+aaa = "~0.2.6"

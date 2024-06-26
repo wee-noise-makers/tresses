@@ -29,27 +29,23 @@ is
      with Inline_Always;
 
    function Clip (V : S32; First, Last : S32) return S32
-     with Post => Clip'Result in First .. Last,
-          Inline_Always;
+     with Inline_Always;
 
    procedure Clip (V : in out S32; First, Last : S32)
-     with Post => V in First .. Last,
-          Inline_Always;
+     with Inline_Always;
 
    function Clip (V : S64; First, Last : S64) return S64
-     with Post => Clip'Result in First .. Last;
+     with Inline_Always;
 
    procedure Clip (V : in out S64; First, Last : S64)
-     with Post => V in First .. Last;
+     with Inline_Always;
 
    procedure Clip_S16 (V : in out S32)
-     with Post => V in -32_767 .. 32_767,
-          Inline_Always;
+     with Inline_Always;
    --  Clip a value to fit in a signed 16bit
 
    function Clip_S16 (V : S32) return S32
-     with Post => Clip_S16'Result in -32_767 .. 32_767,
-          Inline_Always;
+     with Inline_Always;
    --  Clip a value to fit in a signed 16bit
 
    function Mix (A, B, Balance : U16) return U16

@@ -1,22 +1,62 @@
 with Tresses.DSP;
 with Tresses.Resources;
 
+--  This Fixed point FFT package is based on the AVR-FFT implementation by
+--  Klafyvel:
+--   - https://klafyvel.me/blog/articles/fft-arduino/
+--   - https://klafyvel.me/blog/articles/fft-julia/
+--
+--  There are many unusual aspects in this implementation compared to most FFT
+--  implementations you can find. Some of which make the result "approximate".
+--  I will list a few that are important to read and understand the code:
+--
+--  1) Trigonometry is highly optimised, introducing some inacuracies. See:
+--  klafyvel.me/blog/articles/fft-arduino/#trigonometry_can_be_blazingly_fast
+--
+--  2) The output of the FFT fits in the input buffer. Most of the time FFT
+--  implementation will require a work buffer that is twice as big as the
+--  input, to fit both a real and an imaginary components for each element.
+--  In the end you get bin values for positive and negative frequencies.
+--  When the input signal is real, the negative frequency bins are just a
+--  mirror of the positive frequency bins. Klafyvel is using this property
+--  to only compute the postive frequency bins, which means we can
+--  do the computation in-place without using extra space. See:
+--  klafyvel.me/blog/articles/fft-julia/#the_special_case_of_a_real_signal
+--
+--  3) The amplitude (modulus) calculation is also heavily optimized using
+--  aproximation. See: klafyvel.me/blog/articles/approximate-euclidian-norm/
+--
+--  Klafyvel's original goal was to achieve the fastest possible FFT on an
+--  arduino. As a result there are computing and memory space constraints
+--  that are not applicable for this library that we intend to run on 32bits
+--  microcontrollers:
+--
+--  1) For the index bit reversal we use a lookup table rather then computing
+--  the reversal every time. This is a boost in performance at the cost of
+--  increased data size (1024 * 2 bytes in read-only/flash memory).
+--
+--  2) In the original code, multiplications by 0.5 are sometimes used to
+--  divide a value by two. We guess that on an 8bit AVR the division by 2
+--  (right shift by one) is slower than a fixed point multiplication for
+--  16bits integers. This is not the case for us, so we just divide by 2.
+--
+--  3) We apply a Hanning window before the FFT computation.
+
 package body Tresses.FFT.Fixed is
 
    FIXED_ONE         : constant S16 := S16'Last;
    FIXED_ZERO        : constant S16 := 16#0000#;
-   FIXED_HALF        : constant S16 := S16'Last / 2;
    MODULUS_MAGIC     : constant S16 := 16#0347#;
    ONE_OVER_SQRT_TWO : constant S16 := 16#5a82#;
 
    Sines : constant array (Natural range <>) of S16 :=
      (0  => 0,      -- sin(-Pi)
-      1  => -1,     -- sin(-Pi/2)
-      2  => -23169, -- sin(-Pi/4)
-      3  => -12539, -- sin(-Pi/8)
-      4  => -6392,  -- sin(-Pi/16)
-      5  => -6392,  -- sin(-Pi/32)
-      6  => -1607,  -- sin(-Pi/64)
+      1  => -32768, -- sin(-Pi/2)
+      2  => -23170, -- sin(-Pi/4)
+      3  => -12540, -- sin(-Pi/8)
+      4  => -6393,  -- sin(-Pi/16)
+      5  => -3212,  -- sin(-Pi/32)
+      6  => -1608,  -- sin(-Pi/64)
       7  => -804,   -- sin(-Pi/128)
       8  => -402,   -- sin(-Pi/256)
       9  => -201,   -- sin(-Pi/512)
@@ -26,22 +66,25 @@ package body Tresses.FFT.Fixed is
    Two_Sines_SQ : constant array (Natural range <>) of S16 :=
      (0  => 32767, -- 2sin^2(-Pi/2)
       1  => 32767, -- 2sin^2(-Pi/4)
-      2  => 9597,  -- 2sin^2(-Pi/8)
+      2  => 9598,  -- 2sin^2(-Pi/8)
       3  => 2494,  -- 2sin^2(-Pi/16)
-      4  => 629,   -- 2sin^2(-Pi/32)
+      4  => 631,   -- 2sin^2(-Pi/32)
       5  => 158,   -- 2sin^2(-Pi/64)
-      6  => 39,    -- 2sin^2(-Pi/128)
+      6  => 40,    -- 2sin^2(-Pi/128)
       7  => 10,    -- 2sin^2(-Pi/256)
       8  => 2,     -- 2sin^2(-Pi/512)
       9  => 1,     -- 2sin^2(-Pi/1024)
-      10 => 1      -- 2sin^2(-Pi/2048)
+      10 => 0      -- 2sin^2(-Pi/2048)
      );
 
-   function fixed_mul (A, B : S16) return S16
-   is (S16 (S32 (A) * S32 (B) / 2**15));
+   function Mul (A, B : S16) return S16
+   is (S16 ((S32 (A) * S32 (B) / 2**15)));
 
    function Add_Sat (A, B : S16) return S16
    is (S16 (DSP.Clip_S16 (S32 (A) + S32 (B))));
+
+   function Sub_Sat (A, B : S16) return S16
+   is (S16 (DSP.Clip_S16 (S32 (A) - S32 (B))));
 
    ------------------
    -- Apply_Window --
@@ -92,6 +135,7 @@ package body Tresses.FFT.Fixed is
           when 2 => 1024,
           when others => raise Program_Error with "Invalid FFT Size");
 
+   pragma Style_Checks ("M120");
    Bitrev_Table : constant array (Natural range 0 .. 1023) of Natural :=
      (
       16#200#, 16#100#, 16#300#, 16#080#, 16#280#, 16#180#, 16#380#, 16#040#, 16#240#, 16#140#,
@@ -645,7 +689,6 @@ package body Tresses.FFT.Fixed is
       end case;
    end Apply_Window;
 
-
    --  ----------------------
    --  -- Bit_Reverse_Calc --
    --  ----------------------
@@ -703,6 +746,14 @@ package body Tresses.FFT.Fixed is
    --     end case;
    --  end Bit_Reverse_Calc;
 
+   --  procedure Print (X : Mono_Buffer) is
+   --  begin
+   --     for Elt of X loop
+   --        Put (Elt'Img & ", ");
+   --     end loop;
+   --     New_Line;
+   --  end Print;
+
    ---------
    -- FFT --
    ---------
@@ -721,20 +772,23 @@ package body Tresses.FFT.Fixed is
       n_2 : Natural := 1;
 
       --  temporary buffers that should be used right away.
-      tmp, a, b, c, d, k1, k2, k3 : S16;
-      -- Will store angles, and recursion values for cosine calculation
+      Tmp, a, b, c, d : S16;
+      --  Will store angles, and recursion values for cosine calculation
       alpha, beta, cj, sj : S16;
 
       half_size : constant Natural := X'Length / 2;
 
    begin
 
+      --  Put_Line ("_input_");
+      --  Print (X);
+
       Apply_Window (X);
 
       case X'Length is
-         when 2    => array_num_bits := 0;
-         when 4    => array_num_bits := 1;
-         when 8    => array_num_bits := 2;
+         --  when 2    => array_num_bits := 0;
+         --  when 4    => array_num_bits := 1;
+         --  when 8    => array_num_bits := 2;
          when 16   => array_num_bits := 3;
          when 32   => array_num_bits := 4;
          when 64   => array_num_bits := 5;
@@ -753,7 +807,7 @@ package body Tresses.FFT.Fixed is
       begin
          for I in 1 .. half_size - 1 loop
             declare
-               J : constant Natural := BitRev_Table (Bitrev_Index);
+               J : constant Natural := Bitrev_Table (Bitrev_Index);
             begin
                Bitrev_Index := Bitrev_Index + Bitrev_Step;
 
@@ -776,8 +830,8 @@ package body Tresses.FFT.Fixed is
          end loop;
       end;
 
-      -- Actual FFT
-      for I in 0 .. array_num_bits - 1 loop
+      --  Actual FFT
+      for i in 0 .. array_num_bits - 1 loop
          --  n_1 gives the size of the sub-arrays
          n_1 := n_2; -- n_1 = 2^i
 
@@ -785,112 +839,157 @@ package body Tresses.FFT.Fixed is
          --  sub-arrays to another
          n_2 := n_2 * 2; -- n_2 = 2^(i+1)
 
-         alpha := two_sines_sq(i);
-         beta := sines(i);
+         alpha := Two_Sines_SQ (i);
+         beta := Sines (i);
+         --  Put_Line ("alpha:" & alpha'Img);
+         --  Put_Line ("beta:" & beta'Img);
+
          --  Those two will store the cosine and sine 2pij/n_2
          cj := FIXED_ONE;
          sj := FIXED_ZERO;
 
+         --  Put ("_step_");
+         --  Put (i'Img);
+         --  Put_Line ("_pre_scale");
+         --  Print (X);
+
          --  Scale down the array of data before the pass, to ensure no
          --  overflow happens.
-         --  for J in 0 .. half_size - 1 loop
-         --     --  TODO: Why not just / 2 here?
-         --     X (X'First + 2 * j) :=
-         --       fixed_mul (X (X'First + 2 * j), FIXED_HALF);
-         --     X (X'First + 2 * j + 1) :=
-         --       fixed_mul (X (X'First + 2 * j + 1), FIXED_HALF);
-         --  end loop;
          for Elt of X loop
             Elt := Elt / 2;
          end loop;
 
-         -- j will be the index in Xe and Xo
-         for J in 0 .. N_1 - 1 loop
+         --  Put ("_step_");
+         --  Put (i'Img);
+         --  Put_Line ("");
+         --  Put_Line ("n_1:" & n_1'Img);
+         --  Put_Line ("n_2:" & n_2'Img);
+         --  Print (X);
+
+         --  j will be the index in Xe and Xo
+         for j in 0 .. n_1 - 1 loop
             --  We combine the jth elements of each group of sub-arrays
+            --  Put_Line ("j:" & j'Img);
             k := j;
-            while K < half_size loop
+            while k < half_size loop
+               --  Put_Line ("k:" & k'Img);
                --  Now we calculate the next step of the fft process, i.e.
                declare
-                  ai : constant Natural := X'First + k * 2;
-                  bi : constant Natural := X'First + k * 2 + 1;
-                  ci : constant Natural := X'First + (k + n_1) * 2;
-                  di : constant Natural := X'First + (k + n_1) * 2 + 1;
+                  a_off : constant Natural := k * 2;
+                  b_off : constant Natural := k * 2 + 1;
+                  c_off : constant Natural := (k + n_1) * 2;
+                  d_off : constant Natural := (k + n_1) * 2 + 1;
+
+                  ai : constant Natural := X'First + a_off;
+                  bi : constant Natural := X'First + b_off;
+                  ci : constant Natural := X'First + c_off;
+                  di : constant Natural := X'First + d_off;
                begin
+                  --  Put_Line ("----------");
+                  --  Put_Line ("cj:" & cj'Img);
+                  --  Put_Line ("sj:" & sj'Img);
+                  --  Put_Line ("ai:" & a_off'Img);
+                  --  Put_Line ("bi:" & b_off'Img);
+                  --  Put_Line ("ci:" & c_off'Img);
+                  --  Put_Line ("di:" & d_off'Img);
+
                   a := X (ai);
                   b := X (bi);
                   c := X (ci);
                   d := X (di);
 
-                  X (ai) := a + ( fixed_mul(cj, c) - fixed_mul(sj, d));
-                  X (bi) := b + ( fixed_mul(sj, c) + fixed_mul(cj, d));
-                  X (ci) := a + (-fixed_mul(cj, c) + fixed_mul(sj, d));
-                  X (di) := b - ( fixed_mul(sj, c) + fixed_mul(cj, d));
+                  X (ai) := Add_Sat (a, (Mul (cj, c) - Mul (sj, d)));
+                  X (bi) := Add_Sat (b, (Mul (sj, c) + Mul (cj, d)));
+                  X (ci) := Add_Sat (a, (-Mul (cj, c) + Mul (sj, d)));
+                  X (di) := Sub_Sat (b, (Mul (sj, c) + Mul (cj, d)));
                end;
-               K := K + n_2;
+
+               k := k + n_2;
             end loop;
             --  We calculate the next cosine and sine
-            tmp := cj;
-            cj := Add_Sat (cj, -Add_Sat (fixed_mul(alpha, cj), fixed_mul(beta, sj)));
-            sj := Add_Sat (sj, -Add_Sat (fixed_mul(alpha, sj), -fixed_mul(beta, tmp)));
+            Tmp := cj;
+            cj := Add_Sat (cj, -Add_Sat (Mul (alpha, cj), Mul (beta, sj)));
+            sj := Add_Sat (sj, -Add_Sat (Mul (alpha, sj), -Mul (beta, Tmp)));
          end loop;
       end loop;
 
-      --  Scale down the array of data before the pass, to ensure no
-      --  overflow happens.
-      --  for J in 0 .. half_size - 1 loop
-      --     --  TODO: Why not just / 2 here?
-      --     X (X'First + 2 * j) := fixed_mul (X (X'First + 2 * j), FIXED_HALF);
-      --     X (X'First + 2 * j + 1) := fixed_mul (X (X'First + 2 * j + 1), FIXED_HALF);
-      --  end loop;
+      --  Put_Line ("_step_final_pre_scale_");
+      --  Print (X);
+
+      --  Scale down the array of data before the pass, to ensure no overflow
+      --  happens.
       for Elt of X loop
          Elt := Elt / 2;
       end loop;
+
+      --  Put_Line ("_step_final_");
+      --  Print (X);
 
       --  Building the final FT from its entangled version
       --  Special case n=0
       X (X'First) := Add_Sat (X (X'First), X (X'First + 1));
       X (X'First + 1) := FIXED_ZERO;
 
-      alpha := two_sines_sq (array_num_bits);
-      beta := sines (array_num_bits);
+      alpha := Two_Sines_SQ (array_num_bits);
+      beta := Sines (array_num_bits);
       cj := FIXED_ONE;
       sj := FIXED_ZERO;
 
       for J in 1 .. half_size / 2 loop
-         tmp := cj;
-         cj := Add_Sat (cj, -Add_Sat (fixed_mul (alpha, cj), fixed_mul (beta, sj)));
-         cj := Add_Sat (sj, -Add_Sat (fixed_mul (alpha, sj), -fixed_mul (beta, tmp)));
+         --  We calculate the cosine and sine before the main calculation here
+         --  to compensate for the first step of the loop that was skipped.
+         Tmp := cj;
+         cj := Add_Sat (cj, -Add_Sat (Mul (alpha, cj), Mul (beta, sj)));
+         sj := Add_Sat (sj, -Add_Sat (Mul (alpha, sj), -Mul (beta, Tmp)));
+
+         --  Put_Line ("cj:" & cj'Img & " sj:" & sj'Img);
 
          declare
             ai : constant Natural := X'First + J * 2;
             bi : constant Natural := X'First + J * 2 + 1;
             ci : constant Natural := X'First + (half_size - J) * 2;
             di : constant Natural := X'First + (half_size - J) * 2 + 1;
+            t, k1, k2, k3 : S16;
          begin
-            a := X (ai);
-            b := X (bi);
-            c := X (ci);
-            d := X (di);
+            a := X (ai) + X (ci);
+            b := X (bi) - X (di);
+            c := -X (bi) - X (di);
+            d := X (ai) - X (bi);
 
-            X (ai) := fixed_mul ((a + c)
-                                 + (fixed_mul(b, cj) + fixed_mul(a, sj))
-                                 + (fixed_mul(d, cj) - fixed_mul(c, sj)),
-                                 FIXED_HALF);
-            X (bi) := fixed_mul((b - d)
-                                + ((-fixed_mul(a,cj) + fixed_mul(b,sj))
-                                  + (fixed_mul(c,cj) + fixed_mul(d,sj))),
-                                FIXED_HALF);
-            X (ci) := fixed_mul((a + c)
-                                + ((-fixed_mul(d,cj) + fixed_mul(c,sj))
-                                   - (fixed_mul(b,cj) + fixed_mul(a,sj))),
-                                FIXED_HALF);
-            X (di) := fixed_mul((d -b)
-                                + ((fixed_mul(c,cj) + fixed_mul(d,sj))
-                                  + (-fixed_mul(a,cj) + fixed_mul(b,sj))),
-                                FIXED_HALF);
+            k1 := Mul (cj, c + d);
+            k2 := Mul (c, Sub_Sat (sj, cj));
+            k3 := Mul (d, Add_Sat (cj, sj));
+            t := k1 - k3;
+            X (ai) := Sub_Sat (a, t) / 2;
+            X (ci) := (a + t) / 2;
+            t := k1 + k2;
+            X (bi) := Sub_Sat (b, t) / 2;
+            X (di) := (-b - t) / 2;
+
+            --  a := X (ai);
+            --  b := X (bi);
+            --  c := X (ci);
+            --  d := X (di);
+            --
+            --  X (ai) := ((a + c)
+            --             + (Mul (b, cj) + Mul (a, sj))
+            --             + (Mul (d, cj) - Mul (c, sj))) / 2;
+            --  X (bi) := ((b - d)
+            --             + ((-Mul (a, cj) + Mul (b, sj))
+            --               + (Mul (c, cj) + Mul (d, sj)))) / 2;
+            --  X (ci) := ((a + c)
+            --             + ((-Mul (d, cj) + Mul (c, sj))
+            --               - (Mul (b, cj) + Mul (a, sj)))) / 2;
+            --  X (di) := ((d - b)
+            --             + ((Mul (c, cj) + Mul (d, sj))
+            --               + (-Mul (a, cj) + Mul (b, sj)))) / 2;
          end;
 
       end loop;
+
+      --  Put_Line ("_complex_fft_");
+      --  Print (X);
+
       return 1;
    end FFT;
 
@@ -898,31 +997,32 @@ package body Tresses.FFT.Fixed is
    -- Amplitude --
    ---------------
 
-   function Amplitude (X         : in out Mono_Buffer;
-                       Amplitude :    out Mono_Buffer)
+   function Amplitude (Freq_Dom  :     Mono_Buffer;
+                       Amplitude : out Mono_Buffer)
                        return Natural
    is
-      half_size : constant Natural := X'Length / 2;
+      half_size : constant Natural := Freq_Dom'Length / 2;
 
       i_maxi : Natural := 0;
-      a,b : S16;
+      a, b : S16;
       Amp, Maxi : S16 := 0;
    begin
 
       for i in 0 .. half_size - 1 loop
-         a := abs X (X'First + 2 * i);
-         b := abs X (X'First + 2 * i + 1);
+         a := abs Freq_Dom (Freq_Dom'First + 2 * i);
+         b := abs Freq_Dom (Freq_Dom'First + 2 * i + 1);
 
-         X (X'First + i) :=
-           S16'Max (fixed_mul(ONE_OVER_SQRT_TWO, Add_Sat(a, b)),
-                    S16'Max (a, b));
+         Amp := S16'Max (Mul (ONE_OVER_SQRT_TWO, Add_Sat (a, b)),
+                         S16'Max (a, b));
 
          --  The "magic" multiplicative constant is greater than 1, so we
          --  have to use a trick: we instead do x + (magic-1)x
-         Amp := Add_Sat (X (X'First + i),
-                         fixed_mul(MODULUS_MAGIC, X (X'First + i)));
+         Amp := Add_Sat (Amp, Mul (MODULUS_MAGIC, Amp));
 
          Amplitude (Amplitude'First + i) := Amp;
+
+         --  Put_Line ("Bin:" & Integer (Amplitude'First + i)'Img &
+         --              " Amp:" & Amp'Img);
 
          --  Oh yeah, and also look for the maximum
          if Amp > Maxi then
@@ -930,6 +1030,10 @@ package body Tresses.FFT.Fixed is
             i_maxi := i;
          end if;
       end loop;
+
+      --  Put_Line ("_after_modulus_");
+      --  Print (Amplitude);
+
       return Amplitude'First + i_maxi;
    end Amplitude;
 
@@ -957,7 +1061,8 @@ package body Tresses.FFT.Fixed is
 
       Unused := FFT (Time_Domain);
       This.Hop.Frequency_Domain := Time_Domain;
-      This.Max_Bin := Amplitude (Time_Domain, This.Hop.Amplitude);
+      This.Max_Bin := Amplitude (This.Hop.Frequency_Domain,
+                                 This.Hop.Amplitude);
    end Process_FFT;
 
    ----------------
