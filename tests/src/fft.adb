@@ -13,6 +13,7 @@ with Interfaces; use Interfaces;
 with Ada.Unchecked_Conversion;
 
 procedure FFT is
+   --  package FIO is new Ada.Text_IO.Float_IO (Float);
 
    Verbose : constant Boolean := False;
 
@@ -282,7 +283,13 @@ procedure FFT is
       function To_S16
       is new Ada.Unchecked_Conversion (Interfaces.Unsigned_16, S16);
       FFT_Size : constant := 256;
-      FFT : Tresses.FFT.Fixed.Instance (FFT_Size, FFT_Size / 2, FFT_Size);
+
+      FFT      : Tresses.FFT.Fixed.Block_Processing
+        (FFT_Size, FFT_Size / 2, FFT_Size);
+      Freq_Dom : Tresses.FFT.Fixed.Frequency_Domain (FFT.Window_Size);
+      Mag      : Tresses.FFT.Fixed.Magnitudes (FFT.Half_Window_Size);
+      --  Phase    : Tresses.FFT.Fixed.Phases (FFT.Half_Window_Size);
+
       Idx : Natural := Data'First;
    begin
       Put_Line ("256 FFT on AVR-FFT data");
@@ -295,15 +302,43 @@ procedure FFT is
          end if;
       end loop;
 
+      FFT.Process_FFT (Freq_Dom, Apply_Window => True);
+      Freq_Dom.Bin_Magnitudes (Mag);
+      --  Freq_Dom.Bin_Phases (Phase);
+
       for Bin in 1 .. FFT.Half_Window_Size loop
-         for X in 0 .. FFT.Amp (Bin) / 100 loop
+         for X in 0 .. Mag (Bin) / 100 loop
             Put ("-");
          end loop;
          New_Line;
       end loop;
 
+      --  Put_Line ("++++++++++++++++++++++++");
+      --
+      --  for Bin in 1 .. FFT.Half_Window_Size loop
+      --     FIO.Put (Float (Phase (Bin)) / 2.0**13, Fore => 0, Aft => 5,
+      --              Exp => 0);
+      --     New_Line;
+      --  end loop;
+      --
+      --  Put_Line ("++++++++++++++++++++++++");
+
+      --  for Bin in 1 .. FFT.Half_Window_Size loop
+      --     for X in -50 .. 0 loop
+      --        if Phase (Bin) / 1000 > S16 (X) then
+      --           Put (" ");
+      --        else
+      --           Put ("-");
+      --        end if;
+      --     end loop;
+      --     for X in 0 .. Phase (Bin) / 1000 loop
+      --        Put ("-");
+      --     end loop;
+      --     New_Line;
+      --  end loop;
+
       Put_Line ("Max bin center freq: " &
-                  Integer (FFT.Bin_Center_Frequency (FFT.Max_Amp_Bin))'Img);
+                  Integer (FFT.Bin_Center_Frequency (Mag.Max_Mag_Bin))'Img);
    end Simple_FFT_Test;
 
    --------------------
@@ -312,7 +347,10 @@ procedure FFT is
 
    procedure Noise_FFT_Test is
       FFT_Size : constant := 256;
-      FFT : Tresses.FFT.Fixed.Instance (FFT_Size, FFT_Size / 2, FFT_Size);
+      FFT : Tresses.FFT.Fixed.Block_Processing
+        (FFT_Size, FFT_Size / 2, FFT_Size);
+      Freq_Dom : Tresses.FFT.Fixed.Frequency_Domain (FFT.Window_Size);
+      Mag : Tresses.FFT.Fixed.Magnitudes (FFT.Half_Window_Size);
       Rng : Tresses.Random.Instance;
    begin
       Put_Line ("Noise FFT");
@@ -320,8 +358,10 @@ procedure FFT is
          exit when FFT.Push_Frame (Tresses.Random.Get_Sample (Rng));
       end loop;
 
+      FFT.Process_FFT (Freq_Dom, Apply_Window => True);
+      Freq_Dom.Bin_Magnitudes (Mag);
       for Bin in 1 .. FFT.Half_Window_Size loop
-         for X in 0 .. FFT.Amp (Bin) / 10 loop
+         for X in 0 .. Mag (Bin) / 10 loop
             Put ("-");
          end loop;
          New_Line;
@@ -333,18 +373,45 @@ procedure FFT is
    function MIDI_Freq (K : MIDI.MIDI_Key) return Float
    is (440.0 * AF."**"(2.0, (Float (K) - 69.0) / 12.0));
 
+   function Wrap_Phase (P : Float) return Float is
+      R : Float := P;
+   begin
+      if R < 0.0 then
+         while R < -Ada.Numerics.Pi loop
+            R := R + 2.0 * Ada.Numerics.Pi;
+         end loop;
+      elsif R > 0.0 then
+         while R > Ada.Numerics.Pi loop
+            R := R - 2.0 * Ada.Numerics.Pi;
+         end loop;
+      end if;
+
+      return R;
+   end Wrap_Phase;
+   pragma Unreferenced (Wrap_Phase);
+
    --------------
    -- Test_FFT --
    --------------
 
+   type Freq_Detection_Error is record
+      Center_Freq_Error : Float;
+      Adjusted_Error    : Float;
+   end record;
+
    function Test_FFT (FFT_Size : Natural;
                       S        : Shape_Kind;
                       Key      : MIDI.MIDI_Key)
-                      return Float
+                      return Freq_Detection_Error
    is
-      Test_Data : Tresses.Mono_Buffer (0 .. FFT_Size - 1) := (others => 0);
-      Osc : Tresses.Analog_Oscillator.Instance;
-      FFT : Tresses.FFT.Fixed.Instance (FFT_Size, FFT_Size / 2, FFT_Size);
+      Test_Data : Tresses.Mono_Buffer (0 .. FFT_Size * 2 - 1) := (others => 0);
+      Osc       : Tresses.Analog_Oscillator.Instance;
+      FFT       : Tresses.FFT.Fixed.Block_Processing
+        (FFT_Size, FFT_Size / 2, FFT_Size / 2);
+      Freq_Dom  : Tresses.FFT.Fixed.Frequency_Domain (FFT.Window_Size);
+      Mag       : Tresses.FFT.Fixed.Magnitudes (FFT.Half_Window_Size);
+      --  Phase1, Phase2 : Tresses.FFT.Fixed.Phases (FFT.Half_Window_Size);
+      Step1 : Boolean := True;
    begin
       Init (Osc);
       Set_Shape (Osc, S);
@@ -355,33 +422,94 @@ procedure FFT is
 
       for Elt of Test_Data loop
          if FFT.Push_Frame (Elt) then
-            if Verbose then
-               Put_Line ("------------------------------------------");
-               Put_Line ("FFT Size:" & FFT_Size'Img);
-               Put_Line ("MIDI Key:" & Key'Img);
+            if Step1 then
+               FFT.Process_FFT (Freq_Dom, Apply_Window => True);
+               --  Freq_Dom.Bin_Phases (Phase1);
+               Step1 := False;
+            else
+               FFT.Process_FFT (Freq_Dom, Apply_Window => True);
+               Freq_Dom.Bin_Magnitudes (Mag);
+               --  Freq_Dom.Bin_Phases (Phase2);
 
-               Put_Line ("Max Bin:" & FFT.Max_Amp_Bin'Img);
-               Put_Line ("Max Amp:" & FFT.Amp (FFT.Max_Amp_Bin)'Img);
-            end if;
-            declare
-               Expected : constant Float := MIDI_Freq (Key);
-               Actual : constant Float :=
-                 FFT.Bin_Center_Frequency (FFT.Max_Amp_Bin);
-
-               Diff : constant Float := Expected - Actual;
-               Error : constant Float := (abs (Diff / Expected)) * 100.0;
-            begin
                if Verbose then
-                  Put_Line ("Expected frequency  :" & Integer (Expected)'Img);
-                  Put_Line ("Center bin frequency:" & Integer (Actual)'Img);
-                  Put_Line ("Diff:" & Diff'Img);
-                  Put_Line ("Error:" & Integer (Error)'Img & "%");
+                  Put_Line ("------------------------------------------");
+                  Put_Line ("FFT Size:" & FFT_Size'Img);
+                  Put_Line ("MIDI Key:" & Key'Img);
+
+                  Put_Line ("Max Bin:" & Mag.Max_Mag_Bin'Img);
+                  Put_Line ("Max Mag:" & Mag (Mag.Max_Mag_Bin)'Img);
                end if;
-               return Error;
-            end;
+
+               declare
+                  Bin : constant Natural := Mag.Max_Mag_Bin;
+                  Expected : constant Float := MIDI_Freq (Key);
+                  Actual : constant Float :=
+                    FFT.Bin_Center_Frequency (Mag.Max_Mag_Bin);
+
+                  Diff : constant Float := Expected - Actual;
+                  Error : constant Float := (abs (Diff / Expected)) * 100.0;
+                  --  Phase_Diff : constant S32 :=
+                  --    S32 (Phase1 (Bin)) - S32 (Phase2 (Bin));
+
+                  --  Phase_Diff_F : constant Float :=
+                  --    Float (Phase_Diff) / 2.0**13;
+
+                  Centre_Freq : constant Float :=
+                    (2.0 * Ada.Numerics.Pi * Float (Bin - 1))
+                      /
+                    Float (FFT_Size);
+
+                  Expected_Phase_Shift : constant Float :=
+                    Centre_Freq * Float (FFT.Hop_Size);
+                  pragma Unreferenced (Expected_Phase_Shift);
+
+                  --  Phase_Reminder : constant Float :=
+                  --    Phase_Diff_F - Expected_Phase_Shift;
+
+                  --  Wrap_Phase_Reminder : constant Float :=
+                  --    Wrap_Phase (Phase_Reminder);
+
+                  --  Bin_Deviation : constant Float :=
+                  --    Wrap_Phase_Reminder * Float (FFT_Size)
+                  --    /
+                  --    (Float (FFT.Hop_Size) * 2.0 * Ada.Numerics.Pi);
+                  --
+                  --  Frac_Bin : constant Float :=
+                  --    Float (Bin - 1) + Bin_Deviation;
+                  --
+                  --  Actual_Freq : constant Float :=
+                  --    (Frac_Bin * Tresses.Resources.SAMPLE_RATE_REAL)
+                  --    /
+                  --    Float (FFT_Size);
+                  --
+                  --  Diff2 : constant Float := Expected - Actual_Freq;
+                  --  Error2 : constant Float :=
+                  --    (abs (Diff2 / Expected)) * 100.0;
+
+               begin
+                  --  Put ("Phase_Diff:" & Phase_Diff'Img & " (");
+                  --  FIO.Put (Phase_Diff_F, Fore => 0, Aft => 5, Exp => 0);
+                  --  Put_Line (")");
+
+                  --  Put ("Bin deviation:");
+                  --  FIO.Put (Bin_Deviation, Fore => 0, Aft => 5, Exp => 0);
+                  --  Put_Line ("");
+
+                  if Verbose then
+                     Put_Line ("Expected frequency  :" &
+                                 Integer (Expected)'Img);
+                     Put_Line ("Center bin frequency:" &
+                                 Integer (Actual)'Img);
+                     Put_Line ("Diff:" & Diff'Img);
+                     Put_Line ("Error:" & Integer (Error)'Img & "%");
+                     --  Put_Line ("Error2:" & Integer (Error2)'Img & "%");
+                  end if;
+                  return (Error, 0.0); --  Error2);
+               end;
+            end if;
          end if;
       end loop;
-      return 0.0;
+      return (0.0, 0.0);
    end Test_FFT;
 
    --------------------
@@ -397,9 +525,9 @@ procedure FFT is
         is MIDI.MIDI_Key
       range MIDI.Key (Octave, MIDI.C) .. MIDI.Key (Octave, MIDI.B);
 
-      Error : Float;
-      Max_Error : Float := 0.0;
-      Acc_Error : Float := 0.0;
+      Error : Freq_Detection_Error;
+      Max_Error : Freq_Detection_Error := (0.0, 0.0);
+      Acc_Error : Freq_Detection_Error := (0.0, 0.0);
       Unused : Float;
       Count : Natural := 0;
    begin
@@ -407,9 +535,18 @@ procedure FFT is
       for K in Test_Range loop
          Count := Count + 1;
          Error := Test_FFT (FFT_Size, Shape, K);
-         Acc_Error := Acc_Error + Error;
-         if Error > Max_Error then
-            Max_Error := Error;
+
+         Acc_Error.Center_Freq_Error :=
+           Acc_Error.Center_Freq_Error + Error.Center_Freq_Error;
+
+         Acc_Error.Adjusted_Error :=
+           Acc_Error.Adjusted_Error + Error.Adjusted_Error;
+
+         if Error.Center_Freq_Error > Max_Error.Center_Freq_Error then
+            Max_Error.Center_Freq_Error := Error.Center_Freq_Error;
+         end if;
+         if Error.Adjusted_Error > Max_Error.Adjusted_Error then
+            Max_Error.Adjusted_Error := Error.Adjusted_Error;
          end if;
 
       end loop;
@@ -418,17 +555,21 @@ procedure FFT is
          Put_Line ("+++++++++++++++++++++++++++++++++++++++++++");
          Put_Line ("FFT Size:" & FFT_Size'Img);
          Put_Line ("Signal Shape: " & Shape'Img);
-         Put_Line ("Avg Error:" &
-                     Integer (Acc_Error / Float (Count))'Img & "%");
-         Put_Line ("Max Error:" & Integer (Max_Error)'Img & "%");
+         --  Put_Line ("Avg Error:" &
+         --              Integer (Acc_Error / Float (Count))'Img & "%");
+         --  Put_Line ("Max Error:" & Integer (Max_Error)'Img & "%");
       end if;
 
       Table.New_Row;
       Table.Append (FFT_Size'Img);
       Table.Append (Octave'Img);
       Table.Append (Shape'Img);
-      Table.Append (Integer (Acc_Error / Float (Count))'Img & "%");
-      Table.Append (Integer (Max_Error)'Img & "%");
+      Table.Append
+        (Integer (Acc_Error.Center_Freq_Error / Float (Count))'Img & "%");
+      Table.Append (Integer (Max_Error.Center_Freq_Error)'Img & "%");
+      Table.Append
+        (Integer (Acc_Error.Adjusted_Error / Float (Count))'Img & "%");
+      Table.Append (Integer (Max_Error.Adjusted_Error)'Img & "%");
    end Test_FFT_Range;
 
    -------------------
@@ -444,8 +585,10 @@ procedure FFT is
       Table.Append ("FFT Size");
       Table.Append ("Octave");
       Table.Append ("Shape");
-      Table.Append ("Avg Error");
-      Table.Append ("Max Error");
+      Table.Append ("Avg Error (Center)");
+      Table.Append ("Max Error (Center)");
+      Table.Append ("Avg Error (Adj)");
+      Table.Append ("Max Error (Adj)");
 
       for Oct in MIDI.Octaves loop
          for Shape of Shapes loop

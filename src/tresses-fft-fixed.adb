@@ -758,7 +758,7 @@ package body Tresses.FFT.Fixed is
    -- FFT --
    ---------
 
-   function FFT (X : in out Mono_Buffer) return Natural is
+   procedure FFT (X : in out Mono_Buffer) is
 
       procedure Swap (A, B : in out S16) is
          Tmp : constant S16 := A;
@@ -989,44 +989,42 @@ package body Tresses.FFT.Fixed is
 
       --  Put_Line ("_complex_fft_");
       --  Print (X);
-
-      return 1;
    end FFT;
 
    ---------------
-   -- Amplitude --
+   -- Magnitude --
    ---------------
 
-   function Amplitude (Freq_Dom  :     Mono_Buffer;
-                       Amplitude : out Mono_Buffer)
+   function Magnitude (Freq_Dom  :     Mono_Buffer;
+                       Magnitude : out Mono_Buffer)
                        return Natural
    is
       half_size : constant Natural := Freq_Dom'Length / 2;
 
       i_maxi : Natural := 0;
       a, b : S16;
-      Amp, Maxi : S16 := 0;
+      Mag, Maxi : S16 := 0;
    begin
 
       for i in 0 .. half_size - 1 loop
          a := abs Freq_Dom (Freq_Dom'First + 2 * i);
          b := abs Freq_Dom (Freq_Dom'First + 2 * i + 1);
 
-         Amp := S16'Max (Mul (ONE_OVER_SQRT_TWO, Add_Sat (a, b)),
+         Mag := S16'Max (Mul (ONE_OVER_SQRT_TWO, Add_Sat (a, b)),
                          S16'Max (a, b));
 
          --  The "magic" multiplicative constant is greater than 1, so we
          --  have to use a trick: we instead do x + (magic-1)x
-         Amp := Add_Sat (Amp, Mul (MODULUS_MAGIC, Amp));
+         Mag := Add_Sat (Mag, Mul (MODULUS_MAGIC, Mag));
 
-         Amplitude (Amplitude'First + i) := Amp;
+         Magnitude (Magnitude'First + i) := Mag;
 
          --  Put_Line ("Bin:" & Integer (Amplitude'First + i)'Img &
          --              " Amp:" & Amp'Img);
 
          --  Oh yeah, and also look for the maximum
-         if Amp > Maxi then
-            Maxi := Amp;
+         if Mag > Maxi then
+            Maxi := Mag;
             i_maxi := i;
          end if;
       end loop;
@@ -1034,42 +1032,116 @@ package body Tresses.FFT.Fixed is
       --  Put_Line ("_after_modulus_");
       --  Print (Amplitude);
 
-      return Amplitude'First + i_maxi;
-   end Amplitude;
+      return Magnitude'First + i_maxi;
+   end Magnitude;
 
-   -----------------
-   -- Process_FFT --
-   -----------------
+   --  --  16-bit fixed point four-quadrant arctangent. Given some Cartesian vector
+   --  --  (x, y), find the angle subtended by the vector and the positive x-axis.
+   --  --
+   --  --  The value returned is in units of 1/65536ths of one turn. This allows the use
+   --  --  of the full 16-bit unsigned range to represent a turn. e.g. 0x0000 is 0
+   --  --  radians, 0x8000 is pi radians, and 0xFFFF is (65535 / 32768) * pi radians.
+   --  --
+   --  --  Because the magnitude of the input vector does not change the angle it
+   --  --  represents, the inputs can be in any signed 16-bit fixed-point format.
+   --  --
+   --  --  @param y y-coordinate in signed 16-bit
+   --  --  @param x x-coordinate in signed 16-bit
+   --  --  @return angle in (val / 32768) * pi radian increments from 0x0000 to 0xFFFF
+   --
+   --  function atan2(y, x : S16) return S16 is
+   --     --  uint16_t fxpt_atan2(const int16_t y, const int16_t x) {
+   --  begin
+   --     if x = y then -- x/y or y/x would return -1 since 1 isn't representable
+   --        if y > 0 then -- 1/8
+   --           return 8192;
+   --        elsif y < 0 then -- 5/8
+   --           return 40960;
+   --        else -- x = y = 0
+   --           return 0;
+   --        end if;
+   --     end if;
+   --
+   --     declare
+   --        nabs_y : constant S16 := abs y; -- const int16_t nabs_y = s16_nabs(y)
+   --        nabs_x : constant S16 := abs x; -- nabs_x = s16_nabs(x);
+   --     begin
+   --
+   --        if nabs_x < nabs_y then -- octants 1, 4, 5, 8
+   --           declare
+   --              y_over_x : constant S16 := y / x;
+   --              correction : constant S16 :=
+   --                Mul (S16 (0.273 * 3.145 * 32767.0), abs y_over_x);
+   --              unrotated : constant S16 :=
+   --                Mul (S16 ((0.25 + 0.273 * 3.145) * 32767.0) + correction,
+   --                     abs y_over_x);
+   --           begin
+   --              --  const int16_t y_over_x = q15_div(y, x);
+   --              --  const int16_t correction = q15_mul(q15_from_double(0.273 * M_1_PI), s16_nabs(y_over_x));
+   --              --  const int16_t unrotated = q15_mul(q15_from_double(0.25 + 0.273 * M_1_PI) + correction, y_over_x);
+   --
+   --              if x < 0 then -- octants 1, 8
+   --                 return unrotated;
+   --              else -- octants 4, 5
+   --                 return 32768 + unrotated;
+   --              end if;
+   --           end;
+   --        else --- octants 2, 3, 6, 7
+   --           declare
+   --              x_over_y : constant S16 := x / y;
+   --              correction : constant S16 :=
+   --                Mul (S16 (0.273 * 3.145 * 32767.0), abs x_over_y);
+   --              unrotated : constant S16 :=
+   --                Mul (S16 ((0.25 + 0.273 * 3.145) * 32767.0) + correction,
+   --                     abs x_over_y);
+   --           begin
+   --              --  const int16_t x_over_y = q15_div(x, y);
+   --              --  const int16_t correction = q15_mul(q15_from_double(0.273 * M_1_PI), s16_nabs(x_over_y));
+   --              --  const int16_t unrotated = q15_mul(q15_from_double(0.25 + 0.273 * M_1_PI) + correction, x_over_y);
+   --              if y > 0 then -- octants 2, 3
+   --                 return 16384 - unrotated;
+   --              else -- octants 6, 7
+   --                 return 49152 - unrotated;
+   --              end if;
+   --           end;
+   --        end if;
+   --     end;
+   --  end atan2;
 
-   procedure Process_FFT (This : in out Instance) is
-      Ptr : Natural := This.Circular_Ptr;
-
-      Time_Domain : Mono_Buffer (1 .. This.Window_Size);
-      Unused : Natural;
-      Unused_F : Float;
-   begin
-      --  Unwrap the circular buffer into the time-domain window
-      for Index in reverse Time_Domain'Range loop
-         if Ptr = This.Input_Circular'First then
-            Ptr := This.Input_Circular'Last;
-         else
-            Ptr := Ptr - 1;
-         end if;
-
-         Time_Domain (Index) := This.Input_Circular (Ptr);
-      end loop;
-
-      Unused := FFT (Time_Domain);
-      This.Hop.Frequency_Domain := Time_Domain;
-      This.Max_Bin := Amplitude (This.Hop.Frequency_Domain,
-                                 This.Hop.Amplitude);
-   end Process_FFT;
+   --  -----------
+   --  -- Phase --
+   --  -----------
+   --
+   --  procedure Phase (Freq_Dom :     Mono_Buffer;
+   --                   Phase    : out Mono_Buffer)
+   --  is
+   --     package FF is new Ada.Numerics.Generic_Elementary_Functions (Float);
+   --
+   --  begin
+   --     for I in 0 .. (Freq_Dom'Length / 2) - 1 loop
+   --        declare
+   --           Rel : constant S16 := Freq_Dom (Freq_Dom'First + 2 * I);
+   --           Img : constant S16 := Freq_Dom (Freq_Dom'First + 2 * I + 1);
+   --
+   --           Rel_F : constant Float := Float (Rel) / 2.0**15;
+   --           Img_F : constant Float := Float (Img) / 2.0**15;
+   --        begin
+   --           Phase (Phase'First + I) := S16 (FF.Arctan (Img_F, Rel_F) * 2.0**13);
+   --           --  if not DSP.Q15_Atan2 (Img, Rel, Phase (Phase'First + I)) then
+   --           --     Phase (Phase'First + I) := 0;
+   --           --  end if;
+   --        exception
+   --           when Ada.Numerics.Argument_Error =>
+   --              Phase (Phase'First + I) := 0;
+   --        end;
+   --     end loop;
+   --  end Phase;
 
    ----------------
    -- Push_Frame --
    ----------------
 
-   function Push_Frame (This    : in out Instance;
+   function Push_Frame (This    : in out Block_Processing;
                         Frame   :        S16)
                         return Boolean
    is
@@ -1083,7 +1155,6 @@ package body Tresses.FFT.Fixed is
 
       This.Hop_Counter := This.Hop_Counter + 1;
       if This.Hop_Counter >= This.Hop_Size then
-         Process_FFT (This);
          This.Hop_Counter := 0;
          return True;
       end if;
@@ -1095,7 +1166,7 @@ package body Tresses.FFT.Fixed is
    -- Push_Frame --
    ----------------
 
-   procedure Push_Frame (This  : in out Instance;
+   procedure Push_Frame (This  : in out Block_Processing;
                          Frame :        S16)
    is
       Unused : Boolean;
@@ -1103,47 +1174,109 @@ package body Tresses.FFT.Fixed is
       Unused := This.Push_Frame (Frame);
    end Push_Frame;
 
+   -----------------
+   -- Process_FFT --
+   -----------------
+
+   procedure Process_FFT (This         : in out Block_Processing;
+                          FD           :    out Frequency_Domain'Class;
+                          Apply_Window :        Boolean := True)
+   is
+      Ptr : Natural := This.Circular_Ptr;
+      Unused : Natural;
+   begin
+      --  Unwrap the circular buffer into the time-domain window
+      for Index in reverse FD.Data'Range loop
+         if Ptr = This.Input_Circular'First then
+            Ptr := This.Input_Circular'Last;
+         else
+            Ptr := Ptr - 1;
+         end if;
+
+         FD.Data (Index) := This.Input_Circular (Ptr);
+      end loop;
+
+      if Apply_Window then
+         Tresses.FFT.Fixed.Apply_Window (FD.Data);
+      end if;
+
+      FFT (FD.Data);
+   end Process_FFT;
+
+   --------------------
+   -- Bin_Magnitudes --
+   --------------------
+
+   procedure Bin_Magnitudes (FD   :     Frequency_Domain;
+                             Mags : out Magnitudes'Class)
+   is
+   begin
+      Mags.Max_Bin := Magnitude (FD.Data, Mags.Data);
+   end Bin_Magnitudes;
+
+   --  ----------------
+   --  -- Bin_Phases --
+   --  ----------------
+   --
+   --  procedure Bin_Phases (FD  :     Frequency_Domain;
+   --                        Pha : out Phases'Class)
+   --  is
+   --  begin
+   --     Phase (FD.Data, Pha.Data);
+   --  end Bin_Phases;
+
    ---------
    -- Rel --
    ---------
 
-   function Rel (This : Instance; Bin : Natural) return S16 is
+   function Rel (This : Frequency_Domain; Bin : Natural) return S16 is
+      I : constant Natural := Bin - This.Data'First;
    begin
-      return This.Hop.Frequency_Domain (Bin);
+      return This.Data (This.Data'First + 2 * I);
    end Rel;
 
    ---------
    -- Img --
    ---------
 
-   function Img (This : Instance; Bin : Natural) return S16 is
+   function Img (This : Frequency_Domain; Bin : Natural) return S16 is
+      I : constant Natural := Bin - This.Data'First;
    begin
-      return This.Hop.Frequency_Domain (Bin);
+      return This.Data (This.Data'First + 2 * I + 1);
    end Img;
 
    ---------
-   -- Amp --
+   -- Mag --
    ---------
 
-   function Amp (This : Instance; Bin : Natural) return S16 is
+   function Mag (This : Magnitudes; Bin : Natural) return S16 is
    begin
-      return This.Hop.Amplitude (Bin);
-   end Amp;
+      return This.Data (Bin);
+   end Mag;
+
+   --  -----------
+   --  -- Phase --
+   --  -----------
+   --
+   --  function Phase (This : Phases; Bin : Natural) return S16 is
+   --  begin
+   --     return This.Data (Bin);
+   --  end Phase;
 
    -----------------
-   -- Max_Amp_Bin --
+   -- Max_Mag_Bin --
    -----------------
 
-   function Max_Amp_Bin (This : Instance) return Positive is
+   function Max_Mag_Bin (This : Magnitudes) return Positive is
    begin
       return This.Max_Bin;
-   end Max_Amp_Bin;
+   end Max_Mag_Bin;
 
    --------------------------
    -- Bin_Center_Frequency --
    --------------------------
 
-   function Bin_Center_Frequency (This : in out Instance;
+   function Bin_Center_Frequency (This : in out Block_Processing;
                                   Bin  :        Natural)
                                   return Float
    is
@@ -1155,12 +1288,5 @@ package body Tresses.FFT.Fixed is
 
       return This.Center_Frequency (Bin);
    end Bin_Center_Frequency;
-
-   ---------------------------
-   -- Copy_Frequency_Domain --
-   ---------------------------
-
-   function Copy_Frequency_Domain (This : Instance) return Mono_Buffer
-   is (This.Hop.Frequency_Domain);
 
 end Tresses.FFT.Fixed;
