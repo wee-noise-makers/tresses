@@ -7,9 +7,12 @@ with Tresses.Voices.House_Bass;
 with Tresses.Voices.Pluck_Bass;
 with Tresses.Voices.Reese;
 with Tresses.Voices.Screech;
+with Tresses.Voices.Phase_Distortion_Instantiations;
 with Tresses.Macro;
 
 package body Tresses.Voices.Macro is
+
+   package PDVI renames Tresses.Voices.Phase_Distortion_Instantiations;
 
    ------------
    -- Engine --
@@ -215,6 +218,66 @@ package body Tresses.Voices.Macro is
                Env => This.Env0,
                Filter => This.SVF,
                Phase => This.Phase,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_PDR_Sine =>
+            PDVI.Render_Reso_Sine
+              (Buffer,
+               Params => This.Params,
+               Osc => This.PDOsc0,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_PDR_Triangle =>
+            PDVI.Render_Reso_Triangle
+              (Buffer,
+               Params => This.Params,
+               Osc => This.PDOsc0,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_PDR_Sine_Square =>
+            PDVI.Render_Reso_Sine_Square
+              (Buffer,
+               Params => This.Params,
+               Osc => This.PDOsc0,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_PDR_Square_Sine =>
+            PDVI.Render_Reso_Square_Sine
+              (Buffer,
+               Params => This.Params,
+               Osc => This.PDOsc0,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_PDL_Trig_Warp =>
+            PDVI.Render_Lookup_Triangle_Sine2_Warp3
+              (Buffer,
+               Params => This.Params,
+               Osc => This.PDOsc0,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_PDL_Triangle_Screech =>
+            PDVI.Render_Lookup_Sine_Screech
+              (Buffer,
+               Params => This.Params,
+               Osc => This.PDOsc0,
+               Env => This.Env0,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);

@@ -98,6 +98,9 @@ def scale(array, min=-32766, max=32766, center=True, dither_level=2):
 sine = -numpy.sin(numpy.arange(WAVETABLE_SIZE + 1) / float(WAVETABLE_SIZE) * \
                   2 * numpy.pi) * 127.5 + 127.5
 
+cos = -numpy.cos(numpy.arange(WAVETABLE_SIZE + 1) / float(WAVETABLE_SIZE) * \
+                  2 * numpy.pi) * 127.5 + 127.5
+
 def x_warp(x):
   f = 2 * x + 1
   plop = numpy.arange(WAVETABLE_SIZE + 1) / float(WAVETABLE_SIZE)
@@ -140,6 +143,7 @@ screech = signal.sawtooth(arr * 1.3, width = 0.1) * \
            signal.sawtooth(arr * 10.4, width=0.9)
 
 waveforms.append(('sine', scale(sine)))
+waveforms.append(('cos', scale(cos)))
 waveforms.append(('sine_warp1', scale(sine_warp1)))
 waveforms.append(('sine_warp2', scale(sine_warp2)))
 waveforms.append(('sine_warp3', scale(sine_warp3)))
@@ -150,11 +154,57 @@ waveforms.append(('sawtooth', scale(sawtooth)))
 waveforms.append(('triangle', scale(triangle)))
 waveforms.append(('screech', scale(screech)))
 
-# import matplotlib.pyplot as plt
-# plt.plot(scale(screech))
-# plt.plot(scale(sine_warp3))
-# plt.show()
+# Combined waveforms for phase distortion
 
+ramp = numpy.arange(WAVETABLE_SIZE + 1) / float(WAVETABLE_SIZE + 1)
+def sin_saw(x):
+  return numpy.where(x < 0.5,
+
+                     # Half sinusoidal
+                     numpy.sin(x * 2.0 * numpy.pi) / 2.0 + 0.5,
+
+                     # Half saw
+                     x)
+
+def saw_sin(x):
+  return numpy.where(x < 0.5,
+                     # Half saw
+                     x,
+                     # Half sinusoidal
+                     numpy.sin(x * 2.0 * numpy.pi) / 2.0 + 0.5)
+
+def trig_sin(x):
+  xp = [0.0, 0.25, 0.50]
+  fp = [0.5, 1.00, 0.50]
+  return numpy.where(x < 0.5,
+                     # Half saw
+                     numpy.interp(x, xp, fp),
+                     # Half sinusoidal
+                     numpy.sin(x * 2.0 * numpy.pi) / 2.0 + 0.5)
+
+def sin_square(x):
+  xp = [0.50, 0.55, 0.60, 0.90, 0.95, 1.00]
+  fp = [0.50, 1.00, 0.95, 0.95, 1.00, 0.50]
+  return numpy.where(x < 0.5,
+                     # Half sinusoidal
+                     numpy.sin(x * 2.0 * numpy.pi) / 2.0 + 0.5,
+                     # Half square
+                     numpy.interp(x, xp, fp))
+
+def square_sin(x):
+  xp = [0.0, 0.05, 0.10, 0.40, 0.45, 0.50]
+  fp = [0.50, 1.00, 0.95, 0.95, 1.00, 0.50]
+  return numpy.where(x < 0.5,
+                     # Half square
+                     numpy.interp(x, xp, fp),
+                     # Half sinusoidal
+                     numpy.sin(x * 2.0 * numpy.pi) / 2.0 + 0.5)
+
+waveforms.append(('combined_sin_saw', scale(sin_saw(ramp))))
+waveforms.append(('combined_saw_sin', scale(saw_sin(ramp))))
+waveforms.append(('combined_trig_sin', scale(trig_sin(ramp))))
+waveforms.append(('combined_sin_square', scale(sin_square(ramp))))
+waveforms.append(('combined_square_sin', scale(square_sin(ramp))))
 
 # LFO
 arr = numpy.arange(WAVETABLE_SIZE + 1) / float(WAVETABLE_SIZE + 1) * 2 * numpy.pi

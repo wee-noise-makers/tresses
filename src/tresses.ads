@@ -76,33 +76,45 @@ is
                     Voice_House_Bass,
                     Voice_Pluck_Bass,
                     Voice_Reese,
-                    Voice_Screech);
+                    Voice_Screech,
+                    Voice_PDR_Sine,
+                    Voice_PDR_Triangle,
+                    Voice_PDR_Sine_Square,
+                    Voice_PDR_Square_Sine,
+                    Voice_PDL_Trig_Warp,
+                    Voice_PDL_Triangle_Screech);
 
    subtype Drum_Engines is Engines range Drum_Kick .. Drum_Bell;
    subtype Synth_Engines is Engines range Voice_Plucked .. Engines'Last;
 
    function Img (E : Engines) return String
    is (case E is
-          when Drum_Kick          => "Kick",
-          when Drum_Analog_Kick   => "Analog Kick",
-          when Drum_Snare         => "Snare",
-          when Drum_Analog_Snare  => "Analog Snare",
-          when Drum_Clap          => "Clap",
-          when Drum_Cymbal        => "Cymbal",
-          when Drum_Percussion    => "Percussion",
-          when Drum_Bell          => "Bell",
-          when Voice_Plucked      => "Plucked",
-          when Voice_Saw_Swarm    => "Saw Swarm",
-          when Voice_Acid         => "Acid",
-          when Voice_Analog_Buzz  => "Buzz",
-          when Voice_Analog_Morph => "Morph",
-          when Voice_FM2OP        => "FM 2 OP",
-          when Voice_Sand         => "Sand",
-          when Voice_Bass_808     => "808 Bass",
-          when Voice_House_Bass   => "House Bass",
-          when Voice_Pluck_Bass   => "Pluck Bass",
-          when Voice_Reese        => "Reese",
-          when Voice_Screech      => "Screech");
+          when Drum_Kick                  => "Kick",
+          when Drum_Analog_Kick           => "Analog Kick",
+          when Drum_Snare                 => "Snare",
+          when Drum_Analog_Snare          => "Analog Snare",
+          when Drum_Clap                  => "Clap",
+          when Drum_Cymbal                => "Cymbal",
+          when Drum_Percussion            => "Percussion",
+          when Drum_Bell                  => "Bell",
+          when Voice_Plucked              => "Plucked",
+          when Voice_Saw_Swarm            => "Saw Swarm",
+          when Voice_Acid                 => "Acid",
+          when Voice_Analog_Buzz          => "Buzz",
+          when Voice_Analog_Morph         => "Morph",
+          when Voice_FM2OP                => "FM 2 OP",
+          when Voice_Sand                 => "Sand",
+          when Voice_Bass_808             => "808 Bass",
+          when Voice_House_Bass           => "House Bass",
+          when Voice_Pluck_Bass           => "Pluck Bass",
+          when Voice_Reese                => "Reese",
+          when Voice_Screech              => "Screech",
+          when Voice_PDR_Sine             => "PDR Sine",
+          when Voice_PDR_Triangle         => "PDR Triangle",
+          when Voice_PDR_Sine_Square      => "PDR Sine Square",
+          when Voice_PDR_Square_Sine      => "PDR Square Sine",
+          when Voice_PDL_Trig_Warp        => "PDL Trig Warp",
+          when Voice_PDL_Triangle_Screech => "PDL Triangle Screech");
 
    subtype Short_Label is String (1 .. 3);
 

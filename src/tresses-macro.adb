@@ -12,8 +12,12 @@ with Tresses.Voices.House_Bass;
 with Tresses.Voices.Pluck_Bass;
 with Tresses.Voices.Reese;
 with Tresses.Voices.Screech;
+with Tresses.Voices.Phase_Distortion;
+with Tresses.Voices.Phase_Distortion_Instantiations;
 
 package body Tresses.Macro is
+
+   package PDVI renames Tresses.Voices.Phase_Distortion_Instantiations;
 
    ------------
    -- Engine --
@@ -315,6 +319,67 @@ package body Tresses.Macro is
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
+
+         when Voice_PDR_Sine =>
+            PDVI.Render_Reso_Sine
+              (Buffer,
+               Params => This.Params,
+               Osc => This.PDOsc0,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_PDR_Triangle =>
+            PDVI.Render_Reso_Triangle
+              (Buffer,
+               Params => This.Params,
+               Osc => This.PDOsc0,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_PDR_Sine_Square =>
+            PDVI.Render_Reso_Sine_Square
+              (Buffer,
+               Params => This.Params,
+               Osc => This.PDOsc0,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_PDR_Square_Sine =>
+            PDVI.Render_Reso_Square_Sine
+              (Buffer,
+               Params => This.Params,
+               Osc => This.PDOsc0,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_PDL_Trig_Warp =>
+            PDVI.Render_Lookup_Triangle_Sine2_Warp3
+              (Buffer,
+               Params => This.Params,
+               Osc => This.PDOsc0,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_PDL_Triangle_Screech =>
+            PDVI.Render_Lookup_Sine_Screech
+              (Buffer,
+               Params => This.Params,
+               Osc => This.PDOsc0,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
       end case;
    end Render;
 
@@ -388,6 +453,9 @@ package body Tresses.Macro is
 
          when Voice_Screech =>
             return Voices.Screech.Param_Label (Id);
+
+         when Voice_PDR_Sine .. Voice_PDL_Triangle_Screech =>
+            return Voices.Phase_Distortion.Param_Label (Id);
 
       end case;
 
@@ -463,6 +531,9 @@ package body Tresses.Macro is
 
          when Voice_Screech =>
             return Voices.Screech.Param_Short_Label (Id);
+
+         when Voice_PDR_Sine .. Voice_PDL_Triangle_Screech =>
+            return Voices.Phase_Distortion.Param_Short_Label (Id);
 
       end case;
    end Param_Short_Label;

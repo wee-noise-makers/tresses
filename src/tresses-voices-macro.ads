@@ -6,7 +6,7 @@ with Tresses.Envelopes.AR;
 with Tresses.Filters.Ladder;
 with Tresses.Filters.SVF;
 with Tresses.Analog_Oscillator;
-
+with Tresses.Phase_Distortion_Oscillator;
 with Tresses.Interfaces; use Tresses.Interfaces;
 
 package Tresses.Voices.Macro
@@ -56,6 +56,7 @@ private
       Rng         : Random.Instance;
       Env0, Env1  : Envelopes.AR.Instance;
       Osc0, Osc1  : Analog_Oscillator.Instance;
+      PDOsc0      : Phase_Distortion_Oscillator.Instance;
       Ladder      : Filters.Ladder.Instance;
       SVF         : Filters.SVF.Instance;
       LP_State : S32 := 0;
