@@ -56,6 +56,8 @@ package body Tresses.Envelopes.AR is
             return LUT_Env_Increments_1seconds (U8 (A));
          when S_Half_Second =>
             return LUT_Env_Increments_Half_Second (U8 (A));
+         when S_Quarter_Second =>
+            return LUT_Env_Increments_Quarter_Second (U8 (A));
       end case;
    end Get_Increment;
 
@@ -205,5 +207,12 @@ package body Tresses.Envelopes.AR is
       This.LP := This.LP + ((S32 (This.Value) - This.LP) / 2**1);
       return Result;
    end Low_Pass;
+
+   ----------
+   -- LoFi --
+   ----------
+
+   function LoFi (This : Instance) return U16
+   is (This.Value and 2#1111_1000_0000_0000#);
 
 end Tresses.Envelopes.AR;

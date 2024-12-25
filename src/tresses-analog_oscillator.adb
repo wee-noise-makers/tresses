@@ -96,8 +96,9 @@ package body Tresses.Analog_Oscillator is
    -- Render --
    ------------
 
-   procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer)
+   procedure Render (This                : in out Instance;
+                     Buffer              :    out Mono_Buffer;
+                     Set_Phase_Increment :        U32 := 0)
    is
    begin
       if This.Shape /= This.Prev_Shape then
@@ -105,8 +106,12 @@ package body Tresses.Analog_Oscillator is
          This.Prev_Shape := This.Shape;
       end if;
 
-      This.Phase_Increment :=
-        DSP.Compute_Phase_Increment (S16 (This.Pitch));
+      if Set_Phase_Increment /= 0 then
+         This.Phase_Increment := Set_Phase_Increment;
+      else
+         This.Phase_Increment :=
+           DSP.Compute_Phase_Increment (S16 (This.Pitch));
+      end if;
 
       case This.Shape is
          when Saw =>

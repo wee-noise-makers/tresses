@@ -14,15 +14,17 @@ is
 
    subtype U8 is Interfaces.Unsigned_8;
    subtype U16 is Interfaces.Unsigned_16;
-   subtype U32 is Interfaces.Unsigned_32;
+   type U32 is new Interfaces.Unsigned_32;
    subtype U64 is Interfaces.Unsigned_64;
 
    type U7 is mod 2**7 with Size => 7;
 
    subtype S8 is Interfaces.Integer_8;
    subtype S16 is Interfaces.Integer_16;
-   subtype S32 is Interfaces.Integer_32;
+   type S32 is new Interfaces.Integer_32;
    subtype S64 is Interfaces.Integer_64;
+
+   type S8_Array is array (U32 range <>) of S8;
 
    type N16 is new S16 range 0 .. S16'Last;
    --  Natural on 16 bit
@@ -57,13 +59,19 @@ is
    type Mono_Buffer is array (Natural range <>) of Mono_Point;
 
    type Engines is (Drum_Kick,
-                    Drum_Analog_Kick,
+                    Drum_Sine_Kick,
+                    Drum_Triangle_Kick,
+                    Drum_Chip_Kick,
                     Drum_Snare,
-                    Drum_Analog_Snare,
+                    Drum_Sine_Snare,
+                    Drum_Saw_Snare,
+                    Drum_Triangle_Snare,
                     Drum_Clap,
                     Drum_Cymbal,
                     Drum_Percussion,
                     Drum_Bell,
+                    Drum_909_Hats,
+                    Drum_707_Hats,
 
                     Voice_Plucked,
                     Voice_Saw_Swarm,
@@ -82,7 +90,12 @@ is
                     Voice_PDR_Sine_Square,
                     Voice_PDR_Square_Sine,
                     Voice_PDL_Trig_Warp,
-                    Voice_PDL_Triangle_Screech);
+                    Voice_PDL_Triangle_Screech,
+                    Voice_Chip_Glide,
+                    Voice_Chip_Echo_Square,
+                    Voice_Chip_Echo_Square_Saw,
+                    Voice_Chip_Phaser,
+                    Voice_Chip_Bass);
 
    subtype Drum_Engines is Engines range Drum_Kick .. Drum_Bell;
    subtype Synth_Engines is Engines range Voice_Plucked .. Engines'Last;
@@ -90,13 +103,19 @@ is
    function Img (E : Engines) return String
    is (case E is
           when Drum_Kick                  => "Kick",
-          when Drum_Analog_Kick           => "Analog Kick",
+          when Drum_Sine_Kick             => "Sine Kick",
+          when Drum_Triangle_Kick         => "Triangle Kick",
+          when Drum_Chip_Kick             => "Chip Kick",
           when Drum_Snare                 => "Snare",
-          when Drum_Analog_Snare          => "Analog Snare",
+          when Drum_Sine_Snare            => "Sine Snare",
+          when Drum_Saw_Snare             => "Saw Snare",
+          when Drum_Triangle_Snare        => "Triangle Snare",
           when Drum_Clap                  => "Clap",
           when Drum_Cymbal                => "Cymbal",
           when Drum_Percussion            => "Percussion",
           when Drum_Bell                  => "Bell",
+          when Drum_909_Hats              => "909 HiHat",
+          when Drum_707_Hats              => "707 HiHat",
           when Voice_Plucked              => "Plucked",
           when Voice_Saw_Swarm            => "Saw Swarm",
           when Voice_Acid                 => "Acid",
@@ -114,7 +133,12 @@ is
           when Voice_PDR_Sine_Square      => "PDR Sine Square",
           when Voice_PDR_Square_Sine      => "PDR Square Sine",
           when Voice_PDL_Trig_Warp        => "PDL Trig Warp",
-          when Voice_PDL_Triangle_Screech => "PDL Triangle Screech");
+          when Voice_PDL_Triangle_Screech => "PDL Triangle Screech",
+          when Voice_Chip_Glide           => "Chip Glide",
+          when Voice_Chip_Echo_Square     => "Chip Echo Square",
+          when Voice_Chip_Echo_Square_Saw => "Chip Echo Square + Saw",
+          when Voice_Chip_Phaser          => "Chip Phaser",
+          when Voice_Chip_Bass            => "Chip Bass");
 
    subtype Short_Label is String (1 .. 3);
 

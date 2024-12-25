@@ -87,6 +87,8 @@ private
       Pluck_State : Voices.Plucked.Pluck_State;
       KS          : Voices.Plucked.KS_Array;
 
+      Pitch1, Pitch2 : Pitch_Range;
+
       Do_Init : Boolean := True;
 
    end record;

@@ -35,9 +35,12 @@ is
    procedure Set_Shape (This : in out Instance; S : Shape_Kind)
      with Linker_Section => Code_Linker_Section;
 
-   procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer)
+   procedure Render (This                : in out Instance;
+                     Buffer              :    out Mono_Buffer;
+                     Set_Phase_Increment :        U32 := 0)
      with Linker_Section => Code_Linker_Section;
+   --  Use Set_Phase_Increment to control the Phase_Increment of the
+   --  oscillator instead of only controlling the pitch.
 
    procedure Set_Param (This : in out Instance;
                         Id   :        Param_Id;

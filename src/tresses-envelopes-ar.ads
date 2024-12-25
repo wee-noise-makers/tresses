@@ -7,7 +7,8 @@ is
 
    type Segment_Speed is (S_10_Seconds, S_5_Seconds,
                           S_2_Seconds, S_1_Seconds,
-                          S_Half_Second);
+                          S_Half_Second,
+                          S_Quarter_Second);
 
    type Curve is (Exponential, Linear, Logarithmic);
 
@@ -44,6 +45,8 @@ is
    function Value (This : Instance) return U16
      with Inline_Always;
    function Low_Pass (This : in out Instance) return S32
+     with Inline_Always;
+   function LoFi (This : Instance) return U16
      with Inline_Always;
 
 private

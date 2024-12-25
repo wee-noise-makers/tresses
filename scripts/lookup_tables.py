@@ -321,6 +321,11 @@ lookup_tables_32.append(
       env_increments(max_time=0.5))
 )
 
+lookup_tables_32.append(
+    ('env_increments_quarter_second',
+      env_increments(max_time=0.25))
+)
+
 
 """----------------------------------------------------------------------------
 Envelope curves

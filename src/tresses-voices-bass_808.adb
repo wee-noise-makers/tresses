@@ -18,7 +18,8 @@ package body Tresses.Voices.Bass_808 is
       Env                    : in out Envelopes.AR.Instance;
       Pitch                  :        Pitch_Range;
       Do_Init                : in out Boolean;
-      Do_Strike              : in out Strike_State)
+      Do_Strike              : in out Strike_State;
+      Waveform               : not null access constant Resources.Table_257_S16)
    is
       Drive        : Param_Range renames Params (P_Drive);
       Pitch_Decay  : Param_Range renames Params (P_Punch);
@@ -34,15 +35,14 @@ package body Tresses.Voices.Bass_808 is
       if Do_Init then
          Do_Init := False;
 
+         Init (Env,
+               Do_Hold => True);
          Set_Attack (Env, 0);
 
          Target_Phase_Increment := 0;
          Phase := 0;
          Phase_Increment := 0;
       end if;
-
-      Set_Attack (Env, Attack);
-      Set_Release (Env, Release);
 
       case Do_Strike.Event is
          when On =>
@@ -64,9 +64,16 @@ package body Tresses.Voices.Bass_808 is
          when None => null;
       end case;
 
-      Phase_Incr_Delta := (Phase_Increment - Target_Phase_Increment) /
-        (Resources.SAMPLE_RATE / (1 +
-         (U32 (Param_Range'Last - Pitch_Decay)) / 259));
+      Set_Attack (Env, Attack);
+      Set_Release (Env, Release);
+
+      if Pitch_Decay = 0 then
+         Phase_Incr_Delta := Phase_Increment - Target_Phase_Increment;
+      else
+         Phase_Incr_Delta := (Phase_Increment - Target_Phase_Increment) /
+           (Resources.SAMPLE_RATE / (1 +
+            (U32 (Param_Range'Last - Pitch_Decay)) / 259));
+      end if;
 
       --  Control curve: Drive to the power of 2
       Drive_Amount := U32 (Drive);
@@ -81,8 +88,7 @@ package body Tresses.Voices.Bass_808 is
 
          Phase := Phase + Phase_Increment;
 
-         Sample := S32 (DSP.Interpolate824 (Resources.WAV_Sine, Phase));
-         --  Sample := Sample + S32 (Random.Get_Sample (Rng));
+         Sample := S32 (DSP.Interpolate824 (Waveform.all, Phase));
 
          --  Symmetrical soft clipping
          Fuzzed := DSP.Interpolate88

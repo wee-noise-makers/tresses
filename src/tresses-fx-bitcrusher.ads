@@ -3,7 +3,7 @@ with Tresses.Filters.SVF;
 package Tresses.FX.Bitcrusher
 with Preelaborate
 is
-   type Bitdepth is range 1 .. 16;
+   type Bitdepth is new Param_Range;
 
    function Param_To_Depth (P : Param_Range) return Bitdepth
    is (Bitdepth (1 + (P / (Param_Range'Last / 15))));
@@ -11,7 +11,8 @@ is
    type Downsampling is range 1 .. 32;
 
    function Param_To_Downsampling (P : Param_Range) return Downsampling
-   is (Downsampling (1 + (P / (Param_Range'Last / 31))));
+   is (Downsampling
+       (1 + (P / (Param_Range'Last / (Param_Range (Downsampling'Last) - 1)))));
 
    type Instance is private;
 

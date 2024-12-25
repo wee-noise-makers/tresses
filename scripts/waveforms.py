@@ -31,6 +31,8 @@
 import numpy
 import os
 from scipy import signal
+from scipy.io import wavfile
+from scipy.ndimage import zoom
 
 """----------------------------------------------------------------------------
 Waveforms for vowel synthesis
@@ -151,8 +153,25 @@ waveforms.append(('sine2_warp1', scale(sine2_warp1)))
 waveforms.append(('sine2_warp2', scale(sine2_warp2)))
 waveforms.append(('sine2_warp3', scale(sine2_warp3)))
 waveforms.append(('sawtooth', scale(sawtooth)))
-waveforms.append(('triangle', scale(triangle)))
 waveforms.append(('screech', scale(screech)))
+waveforms.append(('triangle', scale(triangle)))
+
+def from_wav_file(filename):
+    samplerate, data = wavfile.read(filename)
+    data = data.astype(numpy.float64)
+    # import matplotlib.pyplot as plt
+    # plt.plot(data)
+    # plt.plot(zoom(data, float((WAVETABLE_SIZE + 1)) / float(len (data))))
+    # plt.show()
+    return scale(zoom(data, float((WAVETABLE_SIZE + 1)) / float(len (data))))
+
+waveforms.append(('chip_triangle', from_wav_file('single_cycle/chip_triangle.wav')))
+waveforms.append(('chip_pulse_50', from_wav_file('single_cycle/chip_pulse_50.wav')))
+waveforms.append(('chip_pulse_25', from_wav_file('single_cycle/chip_pulse_25.wav')))
+
+# import matplotlib.pyplot as plt
+# plt.plot(chip_triangle)
+# plt.show()
 
 # Combined waveforms for phase distortion
 

@@ -10,7 +10,7 @@ is
    type Instance is private;
 
    procedure Init (This : in out Instance)
-     with Linker_Section => Code_Linker_Section;
+     with Inline_Always;
    procedure Set_Frequency (This : in out Instance; Frequency : Param_Range)
      with Inline_Always;
    procedure Set_Resonance (This : in out Instance; Resonance : Param_Range)
@@ -21,7 +21,7 @@ is
      with Inline_Always;
 
    function Process (This : in out Instance; Input : S32) return S32
-     with Linker_Section => Code_Linker_Section;
+     with Inline_Always;
 
 private
 

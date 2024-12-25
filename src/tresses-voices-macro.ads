@@ -59,7 +59,9 @@ private
       PDOsc0      : Phase_Distortion_Oscillator.Instance;
       Ladder      : Filters.Ladder.Instance;
       SVF         : Filters.SVF.Instance;
-      LP_State : S32 := 0;
+      LP_State    : S32 := 0;
+
+      Pitch1, Pitch2 : Pitch_Range;
 
       Phase : U32 := 0;
       Modulator_Phase : U32 := 0;

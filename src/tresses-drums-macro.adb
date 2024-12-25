@@ -1,7 +1,11 @@
 with Tresses.Drums.Kick;
-with Tresses.Drums.Analog_Kick;
+with Tresses.Drums.Sine_Kick;
+with Tresses.Drums.Triangle_Kick;
+with Tresses.Drums.Chip_Kick;
 with Tresses.Drums.Snare;
-with Tresses.Drums.Analog_Snare;
+with Tresses.Drums.Sine_Snare;
+with Tresses.Drums.Saw_Snare;
+with Tresses.Drums.Triangle_Snare;
 with Tresses.Drums.Clap;
 with Tresses.Macro;
 
@@ -82,14 +86,41 @@ package body Tresses.Drums.Macro is
                               Do_Init     => This.Do_Init,
                               Do_Strike   => This.Do_Strike);
 
-         when Drum_Analog_Kick =>
-            Analog_Kick.Render_Analog_Kick
+         when Drum_Sine_Kick =>
+            Sine_Kick.Render_Kick
               (Buffer,
                Params => This.Params,
                Phase => This.Phase,
                Phase_Increment => This.Phase_Increment,
                Target_Phase_Increment => This.Target_Phase_Increment,
                Env => This.Env0,
+               Pitch_Env => This.Env1,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Drum_Triangle_Kick =>
+            Triangle_Kick.Render_Kick
+              (Buffer,
+               Params => This.Params,
+               Phase => This.Phase,
+               Phase_Increment => This.Phase_Increment,
+               Target_Phase_Increment => This.Target_Phase_Increment,
+               Env => This.Env0,
+               Pitch_Env => This.Env1,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Drum_Chip_Kick =>
+            Chip_Kick.Render_Kick
+              (Buffer,
+               Params => This.Params,
+               Phase => This.Phase,
+               Phase_Increment => This.Phase_Increment,
+               Target_Phase_Increment => This.Target_Phase_Increment,
+               Env => This.Env0,
+               Pitch_Env => This.Env1,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
@@ -109,14 +140,41 @@ package body Tresses.Drums.Macro is
                                 Do_Init => This.Do_Init,
                                 Do_Strike => This.Do_Strike);
 
-         when Drum_Analog_Snare =>
-            Analog_Snare.Render_Analog_Snare
+         when Drum_Sine_Snare =>
+            Drums.Sine_Snare.Render_Snare
               (Buffer,
                Params => This.Params,
                Phase => This.Phase,
                Phase_Increment => This.Phase_Increment,
                Target_Phase_Increment => This.Target_Phase_Increment,
-               Filter => This.Filter0,
+               Tone_Env => This.Env0,
+               Noise_Env => This.Env1,
+               Rng => This.Rng,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Drum_Saw_Snare =>
+            Drums.Saw_Snare.Render_Snare
+              (Buffer,
+               Params => This.Params,
+               Phase => This.Phase,
+               Phase_Increment => This.Phase_Increment,
+               Target_Phase_Increment => This.Target_Phase_Increment,
+               Tone_Env => This.Env0,
+               Noise_Env => This.Env1,
+               Rng => This.Rng,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Drum_Triangle_Snare =>
+            Drums.Triangle_Snare.Render_Snare
+              (Buffer,
+               Params => This.Params,
+               Phase => This.Phase,
+               Phase_Increment => This.Phase_Increment,
+               Target_Phase_Increment => This.Target_Phase_Increment,
                Tone_Env => This.Env0,
                Noise_Env => This.Env1,
                Rng => This.Rng,

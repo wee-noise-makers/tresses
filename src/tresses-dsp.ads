@@ -66,4 +66,9 @@ is
    function Tanh (X : S16) return S16
      with Inline_Always;
 
+   function Modulate (A : Param_Range; Param : Param_Range)
+                      return Param_Range;
+   function Modulate (A : U16; Param : Param_Range) return U16;
+   function Modulate (A : U32; Param : Param_Range) return U32;
+
 end Tresses.DSP;

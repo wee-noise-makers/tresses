@@ -1,4 +1,5 @@
 with Tresses.Envelopes.AR;
+with Tresses.Resources;
 
 package Tresses.Voices.Bass_808
 with Preelaborate
@@ -13,7 +14,8 @@ is
       Env                    : in out Envelopes.AR.Instance;
       Pitch                  :        Pitch_Range;
       Do_Init                : in out Boolean;
-      Do_Strike              : in out Strike_State)
+      Do_Strike              : in out Strike_State;
+      Waveform               : not null access constant Resources.Table_257_S16)
      with Linker_Section => Code_Linker_Section;
 
    P_Drive       : constant Param_Id := 1;

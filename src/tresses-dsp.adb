@@ -217,4 +217,27 @@ package body Tresses.DSP is
       return Interpolate88 (LUT_Tanh, U16 (Index));
    end Tanh;
 
+   --------------
+   -- Modulate --
+   --------------
+
+   function Modulate (A : Param_Range; Param : Param_Range)
+                      return Param_Range
+   is (Param_Range ((U32 (A) * U32 (Param)) / 2**15));
+
+   --------------
+   -- Modulate --
+   --------------
+
+   function Modulate (A : U16; Param : Param_Range) return U16
+   is (U16 ((U32 (A) * U32 (Param)) / 2**15));
+
+   --------------
+   -- Modulate --
+   --------------
+
+   function Modulate (A : U32; Param : Param_Range) return U32 is
+   begin
+      return U32 ((U64 (A) * (U64 (Param) * 2**17)) / 2**32);
+   end Modulate;
 end Tresses.DSP;

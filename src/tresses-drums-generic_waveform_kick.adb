@@ -3,29 +3,36 @@ with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 with Tresses.DSP;
 with Tresses.Resources;
 
-package body Tresses.Drums.Analog_Kick is
+package body Tresses.Drums.Generic_Waveform_Kick is
 
-   ------------------------
-   -- Render_Analog_Kick --
-   ------------------------
+   -----------------
+   -- Render_Kick --
+   -----------------
 
-   procedure Render_Analog_Kick
+   procedure Render_Kick
      (Buffer                 :    out Mono_Buffer;
       Params                 :        Param_Array;
       Phase                  : in out U32;
       Phase_Increment        : in out U32;
       Target_Phase_Increment : in out U32;
-      Env                    : in out Envelopes.AR.Instance;
+      Env, Pitch_Env         : in out Envelopes.AR.Instance;
       Pitch                  :        Pitch_Range;
       Do_Init                : in out Boolean;
       Do_Strike              : in out Strike_State)
    is
       Decay        : Param_Range renames Params (P_Decay);
       Drive        : Param_Range renames Params (P_Drive);
-      Pitch_Decay  : Param_Range renames Params (P_Punch);
+      Pitch_Offset : Param_Range renames Params (P_Punch);
+      Pitch_Decay  : Param_Range renames Params (P_Punch_Decay);
 
-      Phase_Incr_Delta : U32 := 0;
+      --  function Bitcrush (P : Param_Range)
+      --                     return Param_Range
+      --  is (Param_Range (U16 (P) and 2#1111_0000_0000_0000#));
+      function Bitcrush (P : Param_Range)
+                         return Param_Range
+      is (P);
 
+      Offset_Pitch_Incr : U32;
       Sample : S32;
       Fuzzed : S16;
       Drive_Amount : U32;
@@ -35,9 +42,14 @@ package body Tresses.Drums.Analog_Kick is
 
          Init (Env,
                Do_Hold => False,
-               Release_Speed => S_1_Seconds);
-
+               Release_Speed => S_2_Seconds);
          Set_Attack (Env, 0);
+
+         Init (Pitch_Env,
+               Do_Hold => False,
+               Release_Speed => S_1_Seconds,
+               Attack_Speed => S_Half_Second);
+         Set_Attack (Pitch_Env, Param_Range'Last / 32);
 
          Target_Phase_Increment := 0;
          Phase := 0;
@@ -48,15 +60,20 @@ package body Tresses.Drums.Analog_Kick is
          when On =>
             Do_Strike.Event := None;
 
-            Set_Release (Env, Decay);
             On (Env, Do_Strike.Velocity);
+            On (Pitch_Env, Do_Strike.Velocity);
 
             Target_Phase_Increment :=
               DSP.Compute_Phase_Increment (S16 (Pitch));
 
-            Phase_Increment :=
+            Offset_Pitch_Incr :=
               DSP.Compute_Phase_Increment
-                (S16 (Add_Sat (Pitch, Octave * 3)));
+                (S16 (Add_Sat (Pitch, Octave * 5)));
+
+            Phase_Increment :=
+              DSP.Mix (Target_Phase_Increment,
+                       Offset_Pitch_Incr,
+                       Pitch_Offset);
 
             Phase := 0;
 
@@ -68,9 +85,8 @@ package body Tresses.Drums.Analog_Kick is
          when None => null;
       end case;
 
-      Phase_Incr_Delta := (Phase_Increment - Target_Phase_Increment) /
-        (Resources.SAMPLE_RATE / (1 +
-         (U32 (Param_Range'Last - Pitch_Decay)) / 259));
+      Set_Release (Env, Decay);
+      Set_Release (Pitch_Env, Pitch_Decay);
 
       --  Control curve: Drive to the power of 2
       Drive_Amount := U32 (Drive);
@@ -79,13 +95,13 @@ package body Tresses.Drums.Analog_Kick is
 
       for Index in Buffer'Range loop
 
-         if Phase_Increment > Target_Phase_Increment then
-            Phase_Increment := Phase_Increment - Phase_Incr_Delta;
-         end if;
+         --  Pitch envolope
+         Render (Pitch_Env);
+         Phase := Phase + DSP.Mix
+           (Target_Phase_Increment, Phase_Increment,
+            Bitcrush (Param_range (Low_Pass (Pitch_Env))));
 
-         Phase := Phase + Phase_Increment;
-
-         Sample := S32 (DSP.Interpolate824 (Resources.WAV_Sine, Phase));
+         Sample := S32 (DSP.Interpolate824 (Tone_Waveform.all, Phase));
 
          --  Symmetrical soft clipping
          Fuzzed := DSP.Interpolate88
@@ -104,25 +120,6 @@ package body Tresses.Drums.Analog_Kick is
          Buffer (Index) := S16 (Sample);
       end loop;
 
-   end Render_Analog_Kick;
+   end Render_Kick;
 
-   ------------
-   -- Render --
-   ------------
-
-   procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer)
-   is
-   begin
-      Render_Analog_Kick (Buffer,
-                          This.Params,
-                          This.Phase,
-                          This.Phase_Increment,
-                          This.Target_Phase_Increment,
-                          This.Env,
-                          This.Pitch,
-                          This.Do_Init,
-                          This.Do_Strike);
-   end Render;
-
-end Tresses.Drums.Analog_Kick;
+end Tresses.Drums.Generic_Waveform_Kick;

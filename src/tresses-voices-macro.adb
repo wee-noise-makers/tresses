@@ -8,7 +8,11 @@ with Tresses.Voices.Pluck_Bass;
 with Tresses.Voices.Reese;
 with Tresses.Voices.Screech;
 with Tresses.Voices.Phase_Distortion_Instantiations;
+with Tresses.Voices.Chip_Portamento;
+with Tresses.Voices.Chip_Echo;
+with Tresses.Voices.Chip_Phaser;
 with Tresses.Macro;
+with Tresses.Resources;
 
 package body Tresses.Voices.Macro is
 
@@ -169,7 +173,21 @@ package body Tresses.Voices.Macro is
                Env => This.Env0,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
-               Do_Strike => This.Do_Strike);
+               Do_Strike => This.Do_Strike,
+               Waveform => Resources.WAV_Sine'Access);
+
+         when Voice_Chip_Bass =>
+            Voices.Bass_808.Render_Bass_808
+              (Buffer,
+               Params => This.Params,
+               Phase => This.Phase,
+               Phase_Increment => This.Phase_Increment,
+               Target_Phase_Increment => This.Target_Phase_Increment,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike,
+               Waveform => Resources.WAV_Chip_Triangle'Access);
 
          when Voice_House_Bass =>
             Voices.House_Bass.Render_House_Bass
@@ -277,6 +295,71 @@ package body Tresses.Voices.Macro is
               (Buffer,
                Params => This.Params,
                Osc => This.PDOsc0,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_Chip_Glide =>
+            Tresses.Voices.Chip_Portamento.Render
+              (Buffer,
+               Params => This.Params,
+               Start_Phase_Incr =>  This.Phase,
+               Current_Phase_Incr => This.Phase_Increment,
+               Target_Phase_Incr => This.Target_Phase_Increment,
+               Osc => This.Osc0,
+               Env => This.Env0,
+               Shape_Env => This.Env1,
+               Filter => This.SVF,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_Chip_Echo_Square =>
+            Voices.Chip_Echo.Render
+              (Buffer, Aux_Buffer,
+               Params => This.Params,
+               Osc_Select =>  This.Phase,
+               Retrig1 => This.Phase_Increment,
+               Retrig2 => This.Target_Phase_Increment,
+               Pitch1 => This.Pitch1,
+               Pitch2 => This.Pitch2,
+               Osc1 => This.Osc0,
+               Osc2 => This.Osc1,
+               Shape1 => Analog_Oscillator.Square,
+               Shape2 => Analog_Oscillator.Square,
+               Env1 => This.Env0,
+               Env2 => This.Env1,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_Chip_Echo_Square_Saw =>
+            Voices.Chip_Echo.Render
+              (Buffer, Aux_Buffer,
+               Params => This.Params,
+               Osc_Select =>  This.Phase,
+               Retrig1 => This.Phase_Increment,
+               Retrig2 => This.Target_Phase_Increment,
+               Pitch1 => This.Pitch1,
+               Pitch2 => This.Pitch2,
+               Osc1 => This.Osc0,
+               Osc2 => This.Osc1,
+               Shape1 => Analog_Oscillator.Square,
+               Shape2 => Analog_Oscillator.Variable_Saw,
+               Env1 => This.Env0,
+               Env2 => This.Env1,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_Chip_Phaser =>
+            Voices.Chip_Phaser.Render
+              (Buffer, Aux_Buffer,
+               Params => This.Params,
+               Phase_Increment => This.Phase_Increment,
+               Osc1 => This.Osc0,
+               Osc2 => This.Osc1,
                Env => This.Env0,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,

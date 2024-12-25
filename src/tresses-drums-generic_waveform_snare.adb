@@ -1,23 +1,22 @@
 with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 
-with Tresses.DSP;
-with Tresses.Resources;
+with Tresses.DSP; use Tresses.DSP;
+
 with Tresses.Filters.SVF; use Tresses.Filters.SVF;
 
-package body Tresses.Drums.Analog_Snare is
+package body Tresses.Drums.Generic_Waveform_Snare is
 
    -------------------------
    -- Render_Analog_Snare --
    -------------------------
 
-   procedure Render_Analog_Snare
+   procedure Render_Snare
      (Buffer                 :    out Mono_Buffer;
       Params                 :        Param_Array;
       Phase                  : in out U32;
       Phase_Increment        : in out U32;
       Target_Phase_Increment : in out U32;
-      Filter                 : in out Tresses.Filters.SVF.Instance;
-      Tone_Env, Noise_Env             : in out Envelopes.AR.Instance;
+      Tone_Env, Noise_Env    : in out Envelopes.AR.Instance;
       Rng                    : in out Random.Instance;
       Pitch                  :        Pitch_Range;
       Do_Init                : in out Boolean;
@@ -40,22 +39,19 @@ package body Tresses.Drums.Analog_Snare is
                Do_Hold       => False,
                Attack_Speed  => S_Half_Second,
                Release_Speed => S_Half_Second);
+         Set_Attack (Tone_Env, Param_Range'Last / 32);
          Set_Attack (Tone_Env, 0);
 
          Init (Noise_Env,
                Do_Hold       => False,
                Attack_Speed  => S_Half_Second,
                Release_Speed => S_Half_Second);
-         Set_Attack (Noise_Env, 20 * 2**8);
+         Set_Attack (Noise_Env, Param_Range'Last / 32);
+         Set_Attack (Noise_Env, 0);
 
          Target_Phase_Increment := 0;
          Phase := 0;
          Phase_Increment := 0;
-
-         Init (Filter);
-         Set_Mode (Filter, High_Pass);
-         Set_Resonance (Filter, 0);
-         Set_Frequency (Filter, Param_Range (MIDI_Pitch (MIDI.G3)));
       end if;
 
       case Do_Strike.Event is
@@ -72,7 +68,7 @@ package body Tresses.Drums.Analog_Snare is
               DSP.Compute_Phase_Increment (S16 (Pitch));
 
             Phase_Increment :=
-              DSP.Compute_Phase_Increment (S16 (Pitch + Octave * 2));
+              DSP.Compute_Phase_Increment (S16 (Add_Sat (Pitch, Octave * 2)));
 
          when Off =>
             Do_Strike.Event := None;
@@ -95,45 +91,21 @@ package body Tresses.Drums.Analog_Snare is
 
          Phase := Phase + Phase_Increment;
 
-         Sample := S32 (DSP.Interpolate824 (Resources.WAV_Sine, Phase));
+         Sample := S32 (DSP.Interpolate824 (Tone_Waveform.all, Phase));
          Render (Tone_Env);
          Sample := (Sample * Low_Pass (Tone_Env)) / 2**15;
 
-         Noise_Sample := S32 (Random.Get_Sample (Rng));
-         Noise_Sample := Process (Filter, Noise_Sample);
          Render (Noise_Env);
+         Noise_Sample := S32 (Random.Get_Sample (Rng));
          Noise_Sample := (Noise_Sample * S32 (Value (Noise_Env))) / 2**15;
 
-         Sample := S32 (DSP.Mix (S16 (Sample), S16 (Noise_Sample),
-                        U16 (Noise)));
+         Sample := Sample + S32 (Noise_Sample * S32 (Noise)) / 2**15;
 
          DSP.Clip_S16 (Sample);
 
          Buffer (Index) := S16 (Sample);
       end loop;
 
-   end Render_Analog_Snare;
+   end Render_Snare;
 
-   ------------
-   -- Render --
-   ------------
-
-   procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer)
-   is
-   begin
-      Render_Analog_Snare (Buffer,
-                           This.Params,
-                           This.Phase,
-                           This.Phase_Increment,
-                           This.Target_Phase_Increment,
-                           This.Filter,
-                           This.Env1,
-                           This.Env2,
-                           This.Rng,
-                           This.Pitch,
-                           This.Do_Init,
-                           This.Do_Strike);
-   end Render;
-
-end Tresses.Drums.Analog_Snare;
+end Tresses.Drums.Generic_Waveform_Snare;

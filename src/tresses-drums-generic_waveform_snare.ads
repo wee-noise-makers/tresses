@@ -2,18 +2,20 @@ with Tresses.Random;
 with Tresses.Filters.SVF;
 with Tresses.Envelopes.AR;
 with Tresses.Interfaces; use Tresses.Interfaces;
+with Tresses.Resources;
 
-package Tresses.Drums.Analog_Snare
+generic
+   Tone_Waveform : not null access constant Tresses.Resources.Table_257_S16;
+package Tresses.Drums.Generic_Waveform_Snare
 with Preelaborate
 is
 
-   procedure Render_Analog_Snare
+   procedure Render_Snare
      (Buffer                 :    out Mono_Buffer;
       Params                 :        Param_Array;
       Phase                  : in out U32;
       Phase_Increment        : in out U32;
       Target_Phase_Increment : in out U32;
-      Filter                 : in out Tresses.Filters.SVF.Instance;
       Tone_Env, Noise_Env    : in out Envelopes.AR.Instance;
       Rng                    : in out Random.Instance;
       Pitch                  :        Pitch_Range;
@@ -40,37 +42,5 @@ is
           when P_Noise => "NOS",
           when P_Punch => "PCH");
 
-   -- Interfaces --
 
-   type Instance
-   is new Four_Params_Voice
-   with private;
-
-   overriding
-   function Param_Label (This : Instance; Id : Param_Id)
-                         return String
-   is (Param_Label (Id));
-
-   overriding
-   function Param_Short_Label (This : Instance; Id : Param_Id)
-                               return Short_Label
-   is (Param_Short_Label (Id));
-
-   procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer);
-
-private
-
-   type Instance
-   is new Four_Params_Voice
-   with record
-      Env1, Env2        : Envelopes.AR.Instance;
-      Phase, Target_Phase_Increment, Phase_Increment : U32 := 0;
-
-      Filter : Tresses.Filters.SVF.Instance;
-      Rng : Tresses.Random.Instance;
-
-      Do_Init        : Boolean := True;
-   end record;
-
-end Tresses.Drums.Analog_Snare;
+end Tresses.Drums.Generic_Waveform_Snare;
