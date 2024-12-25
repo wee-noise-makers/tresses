@@ -1,0 +1,38 @@
+with "config/pgb1_perf_test_config.gpr";
+with "noise_nugget_sdk.gpr";
+
+project Pgb1_Perf_Test is
+
+   for Runtime ("Ada") use Noise_Nugget_SDK'Runtime ("Ada");
+   for Target use Noise_Nugget_SDK'Target;
+
+   for Source_Dirs use ("src/", "config/");
+   for Object_Dir use "obj/" & Pgb1_Perf_Test_Config.Build_Profile;
+   for Create_Missing_Dirs use "True";
+   for Exec_Dir use "bin";
+   for Main use ("pgb1_perf_test.adb");
+
+   package Compiler is
+      for Default_Switches ("Ada") use Pgb1_Perf_Test_Config.Ada_Compiler_Switches;
+   end Compiler;
+
+   package Linker is
+      for Default_Switches ("Ada") use Noise_Nugget_SDK.Linker_Switches &
+      ("-Wl,--print-memory-usage"
+       ,"-Wl,--gc-sections"
+       --  ,"-Wl,--wrap=__aeabi_idiv"
+       --  ,"-Wl,--wrap=__aeabi_idivmod"
+       --  ,"-Wl,--wrap=__aeabi_uidiv"
+       --  ,"-Wl,--wrap=__aeabi_uidivmod"
+      );
+   end Linker;
+
+   package Binder is
+      for Switches ("Ada") use ("-Es"); --  Symbolic traceback
+   end Binder;
+
+   package Install is
+      for Artifacts (".") use ("share");
+   end Install;
+
+end Pgb1_Perf_Test;
