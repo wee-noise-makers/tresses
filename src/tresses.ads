@@ -106,7 +106,7 @@ is
           when Drum_Sine_Kick             => "Sine Kick",
           when Drum_Triangle_Kick         => "Triangle Kick",
           when Drum_Chip_Kick             => "Chip Kick",
-          when Drum_Snare                 => "Snare",
+          when Drum_Snare                 => "Analog Snare",
           when Drum_Sine_Snare            => "Sine Snare",
           when Drum_Saw_Snare             => "Saw Snare",
           when Drum_Triangle_Snare        => "Triangle Snare",

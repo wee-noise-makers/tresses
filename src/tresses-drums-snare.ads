@@ -19,20 +19,24 @@ is
       Do_Strike                      : in out Strike_State)
      with Linker_Section => Code_Linker_Section;
 
-   P_Tone  : constant Param_Id := 1;
-   P_Noise : constant Param_Id := 2;
+   P_Tone   : constant Param_Id := 1;
+   P_Noise  : constant Param_Id := 2;
+   P_Snappy : constant Param_Id := 3;
+   P_Cutoff : constant Param_Id := 4;
 
    function Param_Label (Id : Param_Id) return String
    is (case Id is
-          when P_Tone  => "Tone",
-          when P_Noise => "Noise",
-          when others  => "N/A");
+          when P_Tone   => "Tone",
+          when P_Noise  => "Noise Decay",
+          when P_Snappy => "Snappy",
+          when P_Cutoff => "Cutoff");
 
    function Param_Short_Label (Id : Param_Id) return Short_Label
    is (case Id is
-          when P_Tone  => "TON",
-          when P_Noise => "NOS",
-          when others  => "N/A");
+          when P_Tone   => "TON",
+          when P_Noise  => "NCY",
+          when P_Snappy => "SNP",
+          when P_Cutoff => "CTF");
 
    -- Interfaces --
 

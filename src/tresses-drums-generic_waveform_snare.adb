@@ -23,7 +23,7 @@ package body Tresses.Drums.Generic_Waveform_Snare is
       Do_Strike              : in out Strike_State)
    is
       Decay        : Param_Range renames Params (P_Decay);
-      Noise        : Param_Range renames Params (P_Noise);
+      Noise        : Param_Range renames Params (P_Snappy);
       Noise_Decay  : Param_Range renames Params (P_Noise_Decay);
       Pitch_Decay  : Param_Range renames Params (P_Punch);
 

@@ -28,6 +28,8 @@ package body Tresses.Drums.Snare is
 
       Tone_Param : Param_Range renames Params (P_Tone);
       Noise_Param : Param_Range renames Params (P_Noise);
+      Snappy_Param : Param_Range renames Params (P_Snappy);
+      Cutoff_Param : Param_Range renames Params (P_Cutoff);
    begin
       if Do_Init then
 
@@ -62,37 +64,26 @@ package body Tresses.Drums.Snare is
             Do_Strike.Event := None;
 
             declare
-               Decay : S32 := 49_152 - S32 (Pitch);
+               --  Velocty impacts decay and snap
+
+               Decay : constant S32 :=
+                 (S32 (Noise_Param) * S32 (Do_Strike.Velocity)) / 2**15;
+               Snappy : constant S32 :=
+                 (S32 (Snappy_Param) * S32 (Do_Strike.Velocity)) / 2**15;
             begin
-               Decay := Decay + (if Noise_Param < 16_384
-                                 then 0
-                                 else S32 (Noise_Param) - 16_384);
-
-               if Decay > 65_535 then
-                  Decay := 65_535;
-               end if;
-
                Set_Resonance (Filter0, 29_000 + Param_Range (Decay / 2**5));
                Set_Resonance (Filter1, 26_500 + Param_Range (Decay / 2**5));
 
                --  Pulse3 is used as an envelope
-               Set_Decay (Pulse3, 4_092 + U16 (Decay / 2**14));
+               Set_Decay (Pulse3, 4_092 + U16 (Decay / 2**13));
 
                Trigger (Pulse0, 15 * 32_768);
                Trigger (Pulse1, -1 * 32_768);
                Trigger (Pulse2, 13_107);
 
-               declare
-                  Snappy : S32 := S32 (Do_Strike.Velocity);
-               begin
-                  if Snappy >= 14_336 then
-                     Snappy := 14_336;
-                  end if;
-
-                  --  Higher "Snappy" params means harder hit on the snare
-                  --  "envelope".
-                  Trigger (Pulse3, 512 + (Snappy * 2**1));
-               end;
+               --  Higher "Snappy" params means harder hit on the snare
+               --  "envelope".
+               Trigger (Pulse3, 512 + S32 (Snappy));
             end;
 
          when Off =>
@@ -101,13 +92,16 @@ package body Tresses.Drums.Snare is
          when None => null;
       end case;
 
-      Set_Frequency (Filter0, Param_Range (Pitch + 12 * 2**7));
-      Set_Frequency (Filter1, Param_Range (Pitch + 24 * 2**7));
-      Set_Frequency (Filter2, Param_Range (Pitch + 60 * 2**7));
+      Set_Frequency (Filter0, Param_Range (Add_Sat (Pitch, 12 * 2**7)));
+      Set_Frequency (Filter1, Param_Range (Add_Sat (Pitch, 24 * 2**7)));
+      Set_Frequency (Filter2, Param_Range (Add_Sat (Pitch, 60 * 2**7)));
+      Set_Frequency (Filter2,
+                     Param_Range
+                       (Add_Sat (Pitch, Pitch_Range (Cutoff_Param) / 2)));
 
       declare
-         G1 : constant S32 := 22_000 - S32 (Tone_Param / 2**1);
-         G2 : constant S32 := 22_000 + S32 (Tone_Param / 2**1);
+         G1 : constant S32 := 22_000 - S32 (Tone_Param / 2**0);
+         G2 : constant S32 := 22_000 + S32 (Tone_Param / 2**0);
 
          Index : Natural := Buffer'First;
 
@@ -127,10 +121,6 @@ package body Tresses.Drums.Snare is
                                             then 13107
                                             else 0);
 
-            P3 := Process (Pulse3);
-            Noise_Sample :=
-              (S32 (Get_Sample (Rng)) * P3) / 2**15;
-
             SD := ((Process (Filter0, Excitation_1) + (Excitation_1 / 2**4)) *
                      G1) / 2**15;
 
@@ -138,6 +128,8 @@ package body Tresses.Drums.Snare is
               ((Process (Filter1, Excitation_2) + (Excitation_2 / 2**4)) *
                  G2) / 2**15;
 
+            P3 := Process (Pulse3);
+            Noise_Sample := (S32 (Get_Sample (Rng)) * P3) / 2**15;
             SD := SD + Process (Filter2, Noise_Sample);
 
             DSP.Clip_S16 (SD);
