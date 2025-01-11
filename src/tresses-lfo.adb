@@ -19,9 +19,9 @@ package body Tresses.LFO is
    -- Sync --
    ----------
 
-   procedure Sync (This : in out Instance) is
+   procedure Sync (This : in out Instance; Phase : U32 := 0) is
    begin
-      This.Phase := 0;
+      This.Phase := Phase;
       This.Halt := False;
    end Sync;
 
