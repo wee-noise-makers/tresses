@@ -68,7 +68,7 @@ private
                                 Hold   => U16 (S16'Last),
                                 Release  => 0,
                                 Dead   => 0);
-      Segement : Segment_Kind := Segment_Kind'First;
+      Segement : Segment_Kind := Dead;
       Do_Hold : Boolean := False;
       A, B, Value : U16 := 0;
       LP : S32 := 0;
