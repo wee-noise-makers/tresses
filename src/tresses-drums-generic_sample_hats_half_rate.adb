@@ -1,20 +1,28 @@
 with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 with Tresses.Filters.SVF; use Tresses.Filters.SVF;
+with Tresses.Resources;
+with Tresses.Random; use Tresses.Random;
+with Tresses.DSP;
 
 package body Tresses.Drums.Generic_Sample_Hats_Half_Rate is
+
+   ------------
+   -- Render --
+   ------------
 
    procedure Render
      (Buffer           :    out Mono_Buffer;
       Params           :        Param_Array;
       Filter           : in out Filters.SVF.Instance;
       Env              : in out Envelopes.AR.Instance;
+      Rng              : in out Tresses.Random.Instance;
       Phase            : in out U32;
       Do_Init          : in out Boolean;
       Do_Strike        : in out Strike_State)
    is
       Mix_Param  : Param_Range renames Params (P_Mix);
       Cutoff_Param : Param_Range renames Params (P_Cutoff);
-      Reso_Param   : Param_Range renames Params (P_Resonance);
+      Reso_Param   : Param_Range renames Params (P_Randomness);
       Rel_Param    : Param_Range renames Params (P_Release);
 
       Sample : constant not null access constant S8_Array :=
@@ -33,18 +41,25 @@ package body Tresses.Drums.Generic_Sample_Hats_Half_Rate is
 
          Init (Filter);
          Set_Mode (Filter, Low_Pass);
+         Set_Resonance (Filter, Param_Range'Last / 2);
 
          Init (Env,
                Do_Hold => False,
                Release_Speed => S_1_Seconds);
          Set_Attack (Env, 0);
+
       end if;
 
       case Do_Strike.Event is
          when On =>
             Do_Strike.Event := None;
 
-            Phase := Open_Sample'First;
+            Phase := Open_Sample'First +
+              Get_Word (Rng) mod
+              (1 + DSP.Mix (U32 (0),
+                            Max_Random_Start_Point,
+                            Reso_Param));
+
             On (Env, Do_Strike.Velocity);
 
          when Off =>
@@ -56,7 +71,6 @@ package body Tresses.Drums.Generic_Sample_Hats_Half_Rate is
 
       Set_Release (Env, Rel_Param);
       Set_Frequency (Filter, Param_Range'Last / 4 + Cutoff_Param / 4);
-      Set_Resonance (Filter, Reso_Param);
 
       while Idx <= Buffer'Last loop
          if Phase in Sample'Range then
@@ -77,23 +91,6 @@ package body Tresses.Drums.Generic_Sample_Hats_Half_Rate is
          Buffer (Idx + 1) := S16 (Point_S32);
          Idx := Idx + 2;
       end loop;
-   end Render;
-
-   ------------
-   -- Render --
-   ------------
-
-   procedure Render (This   : in out Instance;
-                     Buffer :    out Mono_Buffer)
-   is
-   begin
-      Render (Buffer,
-              This.Params,
-              This.Filter,
-              This.Env,
-              This.Phase,
-              This.Do_Init,
-              This.Do_Strike);
    end Render;
 
 end Tresses.Drums.Generic_Sample_Hats_Half_Rate;

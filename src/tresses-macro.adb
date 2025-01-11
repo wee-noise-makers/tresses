@@ -244,6 +244,7 @@ package body Tresses.Macro is
                Params => This.Params,
                Filter => This.Filter0,
                Env => This.Env0,
+               Rng => This.Rng,
                Phase =>  This.Phase,
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
@@ -254,6 +255,7 @@ package body Tresses.Macro is
                Params => This.Params,
                Filter => This.Filter0,
                Env => This.Env0,
+               Rng => This.Rng,
                Phase =>  This.Phase,
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);

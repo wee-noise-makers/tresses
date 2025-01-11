@@ -1,5 +1,7 @@
 with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 with Tresses.Filters.SVF; use Tresses.Filters.SVF;
+with Tresses.Random; use Tresses.Random;
+with Tresses.DSP;
 
 package body Tresses.Drums.Generic_Sample_Hats is
 
@@ -8,13 +10,14 @@ package body Tresses.Drums.Generic_Sample_Hats is
       Params           :        Param_Array;
       Filter           : in out Filters.SVF.Instance;
       Env              : in out Envelopes.AR.Instance;
+      Rng              : in out Tresses.Random.Instance;
       Phase            : in out U32;
       Do_Init          : in out Boolean;
       Do_Strike        : in out Strike_State)
    is
-      Mix_Param  : Param_Range renames Params (P_Mix);
+      Mix_Param    : Param_Range renames Params (P_Mix);
       Cutoff_Param : Param_Range renames Params (P_Cutoff);
-      Reso_Param   : Param_Range renames Params (P_Resonance);
+      Rng_Param    : Param_Range renames Params (P_Randomness);
       Rel_Param    : Param_Range renames Params (P_Release);
 
       Sample : constant not null access constant S8_Array :=
@@ -44,7 +47,12 @@ package body Tresses.Drums.Generic_Sample_Hats is
          when On =>
             Do_Strike.Event := None;
 
-            Phase := Open_Sample'First;
+            Phase := Open_Sample'First +
+              Get_Word (Rng) mod
+              (1 + DSP.Mix (U32 (0),
+                            Max_Random_Start_Point,
+                            Rng_Param));
+
             On (Env, Do_Strike.Velocity);
 
          when Off =>
@@ -56,7 +64,7 @@ package body Tresses.Drums.Generic_Sample_Hats is
 
       Set_Release (Env, Rel_Param);
       Set_Frequency (Filter, Param_Range'Last / 4 + Cutoff_Param / 4);
-      Set_Resonance (Filter, Reso_Param);
+      Set_Resonance (Filter, Rng_Param);
 
       while Idx <= Buffer'Last loop
          if Phase in Sample'Range then
