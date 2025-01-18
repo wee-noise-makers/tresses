@@ -36,14 +36,25 @@ lookup_tables_32 = []
 
 sample_rate = int(os.environ['SAMPLE_RATE'])
 excursion = 65536 * 65536.0
-
-# Create table for pitch.
 a4_midi = 69
 a4_pitch = 440.0
-highest_octave = 128
+
+def pitch_to_midi(pitch):
+  return min(int(math.log(nyquist_frequency / a4_pitch) / math.log(2) * 12.0
+                 + float(a4_midi)), 128)
+nyquist_frequency = sample_rate / 2.0
+max_midi_note = pitch_to_midi(nyquist_frequency)
+
+print("------------------------------------")
+print("sample_rate = " + str(sample_rate))
+print("nyquist_frequency = " + str(nyquist_frequency))
+print("max_midi_note = " + str(max_midi_note))
+
+# Create table for pitch.
+highest_note = max_midi_note
 notes = numpy.arange(
-    highest_octave * 128.0,
-    (highest_octave + 12) * 128.0 + 16,
+    highest_note * 128.0,
+    (highest_note + 12) * 128.0 + 16,
     16)
 pitches = a4_pitch * 2 ** ((notes - a4_midi * 128) / (128 * 12))
 increments = excursion / sample_rate * pitches
@@ -52,9 +63,8 @@ delays = sample_rate / pitches * 65536 * 4096
 lookup_tables_32.append(
     ('oscillator_increments', increments.astype(int)))
 
-lookup_tables_32.append(
-    ('oscillator_delays', delays.astype(int)))
-
+# lookup_tables_32.append(
+#     ('oscillator_delays', delays.astype(int)))
 
 
 """----------------------------------------------------------------------------

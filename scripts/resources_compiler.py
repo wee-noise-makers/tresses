@@ -37,6 +37,18 @@ import sys
 def to_ada_case(str):
   return "_".join(e.capitalize() for e in str.split("_"))
 
+def type_range(typ):
+  if typ == "S16":
+    return (-32768, 32767)
+  elif typ == "S32":
+    return (-2147483648, 2147483647)
+  elif typ == "U16":
+    return (0, 65535)
+  elif typ == "U32":
+    return (0, 4294967295)
+  else:
+    raise Exception("Unknown type:%s" % typ)
+
 class ResourceEntry(object):
 
   def __init__(self, index, key, value, dupe_of, table, in_ram):
@@ -49,8 +61,7 @@ class ResourceEntry(object):
 
   @property
   def variable_name(self):
-
-    return '%s_%s' % (self._table.prefix, to_ada_case(self._dupe_of))
+    return '%s_%s' % (self._table.prefix, to_ada_case(self._key))
 
   @property
   def array_type(self):
@@ -108,11 +119,8 @@ class ResourceEntry(object):
       f.write('   %(prefix)s_%(key)s_SIZE : constant := %(size)d;\n' % locals())
 
   def Compile(self, f):
-    # Do not create declaration for dupes.
-    if self._dupe_of != self._key:
-      return
-
     declaration = self.declaration
+
     if self._table.python_type == float:
       f.write('%(declaration)s:= (\n' % locals())
       n_elements = len(self._value)
@@ -129,6 +137,13 @@ class ResourceEntry(object):
       value = self._value
       f.write('%(declaration)s:= "%(value)s";\n' % locals())
     else:
+      first, last = type_range(self._table.ada_type)
+      for v in self._value:
+        int_v = int(v)
+        if int_v < first or int_v > last:
+          raise Exception("%s value %d not in range %d .. %d" %
+                          (self._key, v, first, last))
+
       f.write('%(declaration)s:= (\n' % locals())
       n_elements = len(self._value)
       last = n_elements - 1
@@ -227,6 +242,7 @@ class ResourceLibrary(object):
   def __init__(self, root):
     self._tables = []
     self._root = root
+    self._highest_note = root.highest_note
     # Create resource table objects for all resources.
     for resource_tuple in root.resources:
       # Split a multiline string into a list of strings
@@ -282,6 +298,7 @@ class ResourceLibrary(object):
     f.write("   pragma Style_Checks (Off);\n")
     f.write("   SAMPLE_RATE : constant := %s;\n" % sample_rate)
     f.write("   SAMPLE_RATE_REAL : constant := %s.0;\n" % sample_rate)
+    f.write("   HIGHEST_NOTE: constant := %d;\n" % self._highest_note)
     f.write("   Linker_Section   : constant String := Tresses_Config.Resources_Linker_Section;\n")
 
     self._DeclareArrayTypes(f)
