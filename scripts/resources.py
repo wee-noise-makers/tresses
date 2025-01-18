@@ -68,3 +68,5 @@ resources = [
   # (characters.characters,
   #  'char', 'CHR', 'uint16_t', int, False),
 ]
+
+highest_note = lookup_tables.highest_note
