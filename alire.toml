@@ -10,7 +10,7 @@ maintainers = ["Fabien Chouteau <fabien.chouteau@gmail.com>"]
 maintainers-logins = ["Fabien-Chouteau"]
 
 [[depends-on]]
-midi = "~0.2.0"
+midi = "^1.0.0"
 
 [build-switches]
 release.runtime_checks = "none"

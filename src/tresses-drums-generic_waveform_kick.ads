@@ -13,7 +13,7 @@ is
       Phase                  : in out U32;
       Phase_Increment        : in out U32;
       Target_Phase_Increment : in out U32;
-      Env, Pitch_Env         : in out Envelopes.AR.Instance;
+      Env                    : in out Envelopes.AR.Instance;
       Pitch                  :        Pitch_Range;
       Do_Init                : in out Boolean;
       Do_Strike              : in out Strike_State)
