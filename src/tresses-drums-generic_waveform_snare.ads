@@ -1,7 +1,5 @@
 with Tresses.Random;
-with Tresses.Filters.SVF;
 with Tresses.Envelopes.AR;
-with Tresses.Interfaces; use Tresses.Interfaces;
 with Tresses.Resources;
 
 generic
@@ -41,6 +39,5 @@ is
           when P_Noise_Decay => "NCY",
           when P_Snappy      => "SNP",
           when P_Punch       => "PCH");
-
 
 end Tresses.Drums.Generic_Waveform_Snare;

@@ -1,7 +1,6 @@
 with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 
 with Tresses.DSP;
-with Tresses.Resources;
 
 package body Tresses.Drums.Generic_Waveform_Kick is
 
@@ -24,13 +23,6 @@ package body Tresses.Drums.Generic_Waveform_Kick is
       Drive        : Param_Range renames Params (P_Drive);
       Pitch_Offset : Param_Range renames Params (P_Punch);
       Pitch_Decay  : Param_Range renames Params (P_Punch_Decay);
-
-      --  function Bitcrush (P : Param_Range)
-      --                     return Param_Range
-      --  is (Param_Range (U16 (P) and 2#1111_0000_0000_0000#));
-      function Bitcrush (P : Param_Range)
-                         return Param_Range
-      is (P);
 
       Offset_Pitch_Incr : U32;
       Sample : S32;

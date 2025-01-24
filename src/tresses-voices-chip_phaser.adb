@@ -1,9 +1,6 @@
 with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 
 with Tresses.DSP;
-with Tresses.Resources;
-
-with Ada.Unchecked_Conversion;
 
 package body Tresses.Voices.Chip_Phaser is
 
@@ -58,7 +55,7 @@ package body Tresses.Voices.Chip_Phaser is
       Analog_Oscillator.Render (Osc1, BufferA, Phase_Increment);
       Analog_Oscillator.Set_Param (Osc2, 0, Shape);
       Analog_Oscillator.Render (Osc2, BufferB,
-                                Phase_Increment + u32 (Phaser) * 8);
+                                Phase_Increment + U32 (Phaser) * 8);
 
       Set_Attack (Env, Attack);
       Set_Release (Env, Release);

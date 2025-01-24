@@ -15,7 +15,8 @@ is
       Pitch                  :        Pitch_Range;
       Do_Init                : in out Boolean;
       Do_Strike              : in out Strike_State;
-      Waveform               : not null access constant Resources.Table_257_S16)
+      Waveform               : not null access constant
+                                 Resources.Table_257_S16)
      with Linker_Section => Code_Linker_Section;
 
    P_Drive       : constant Param_Id := 1;

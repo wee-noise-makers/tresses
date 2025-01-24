@@ -83,7 +83,7 @@ package body Tresses.Drums.Snare is
 
                --  Higher "Snappy" params means harder hit on the snare
                --  "envelope".
-               Trigger (Pulse3, 512 + S32 (Snappy));
+               Trigger (Pulse3, 512 + Snappy);
             end;
 
          when Off =>
