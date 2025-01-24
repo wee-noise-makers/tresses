@@ -6,7 +6,7 @@ is
    type Bitdepth is new Param_Range;
 
    function Param_To_Depth (P : Param_Range) return Bitdepth
-   is (Bitdepth (1 + (P / (Param_Range'Last / 15))));
+   is (Bitdepth (16 - (P / (Param_Range'Last / 15))));
 
    type Downsampling is range 1 .. 32;
 
