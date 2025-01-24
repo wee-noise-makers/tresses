@@ -3,8 +3,6 @@ with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 with Tresses.DSP;
 with Tresses.Resources;
 
-with Ada.Unchecked_Conversion;
-
 package body Tresses.Voices.Chip_Echo is
 
    ------------
@@ -40,9 +38,6 @@ package body Tresses.Voices.Chip_Echo is
       Ret2 : Retrig_Info with Address => Retrig2'Address;
 
       SampleA, SampleB : S32;
-
-      Diff : U32;
-      Amount : Param_Range;
 
       Min_Delay : constant := Resources.SAMPLE_RATE / 8;
       Variable_Delay : constant := Resources.SAMPLE_RATE; -- 1.0s

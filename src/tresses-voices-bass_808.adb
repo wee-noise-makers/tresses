@@ -1,7 +1,6 @@
 with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 
 with Tresses.DSP;
-with Tresses.Resources;
 
 package body Tresses.Voices.Bass_808 is
 
@@ -19,7 +18,8 @@ package body Tresses.Voices.Bass_808 is
       Pitch                  :        Pitch_Range;
       Do_Init                : in out Boolean;
       Do_Strike              : in out Strike_State;
-      Waveform               : not null access constant Resources.Table_257_S16)
+      Waveform               : not null access constant
+                                Resources.Table_257_S16)
    is
       Drive        : Param_Range renames Params (P_Drive);
       Pitch_Decay  : Param_Range renames Params (P_Punch);

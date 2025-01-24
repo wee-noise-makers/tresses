@@ -1,6 +1,5 @@
 with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 with Tresses.Filters.SVF; use Tresses.Filters.SVF;
-with Tresses.Resources;
 with Tresses.Random; use Tresses.Random;
 with Tresses.DSP;
 

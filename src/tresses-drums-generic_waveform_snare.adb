@@ -2,8 +2,6 @@ with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 
 with Tresses.DSP; use Tresses.DSP;
 
-with Tresses.Filters.SVF; use Tresses.Filters.SVF;
-
 package body Tresses.Drums.Generic_Waveform_Snare is
 
    -------------------------
