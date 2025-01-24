@@ -15,7 +15,7 @@ package body Tresses.Drums.Generic_Waveform_Kick is
       Phase                  : in out U32;
       Phase_Increment        : in out U32;
       Target_Phase_Increment : in out U32;
-      Env, Pitch_Env         : in out Envelopes.AR.Instance;
+      Env                    : in out Envelopes.AR.Instance;
       Pitch                  :        Pitch_Range;
       Do_Init                : in out Boolean;
       Do_Strike              : in out Strike_State)
@@ -36,6 +36,7 @@ package body Tresses.Drums.Generic_Waveform_Kick is
       Sample : S32;
       Fuzzed : S16;
       Drive_Amount : U32;
+      Phase_Incr_Delta : U32 := 0;
    begin
       if Do_Init then
          Do_Init := False;
@@ -44,12 +45,6 @@ package body Tresses.Drums.Generic_Waveform_Kick is
                Do_Hold => False,
                Release_Speed => S_2_Seconds);
          Set_Attack (Env, 0);
-
-         Init (Pitch_Env,
-               Do_Hold => False,
-               Release_Speed => S_1_Seconds,
-               Attack_Speed => S_Half_Second);
-         Set_Attack (Pitch_Env, Param_Range'Last / 32);
 
          Target_Phase_Increment := 0;
          Phase := 0;
@@ -61,7 +56,6 @@ package body Tresses.Drums.Generic_Waveform_Kick is
             Do_Strike.Event := None;
 
             On (Env, Do_Strike.Velocity);
-            On (Pitch_Env, Do_Strike.Velocity);
 
             Target_Phase_Increment :=
               DSP.Compute_Phase_Increment (S16 (Pitch));
@@ -86,20 +80,22 @@ package body Tresses.Drums.Generic_Waveform_Kick is
       end case;
 
       Set_Release (Env, Decay);
-      Set_Release (Pitch_Env, Pitch_Decay);
 
       --  Control curve: Drive to the power of 2
       Drive_Amount := U32 (Drive);
       Drive_Amount := Shift_Right (Drive_Amount**2, 15);
       Drive_Amount := Drive_Amount * 2;
 
+      Phase_Incr_Delta := (Phase_Increment - Target_Phase_Increment) /
+        (Resources.SAMPLE_RATE / (1 +
+         (U32 (Param_Range'Last - Pitch_Decay)) / 259));
+
       for Index in Buffer'Range loop
 
-         --  Pitch envolope
-         Render (Pitch_Env);
-         Phase := Phase + DSP.Mix
-           (Target_Phase_Increment, Phase_Increment,
-            Bitcrush (Param_range (Low_Pass (Pitch_Env))));
+         if Phase_Increment > Target_Phase_Increment then
+            Phase_Increment := Phase_Increment - Phase_Incr_Delta;
+         end if;
+         Phase := Phase + Phase_Increment;
 
          Sample := S32 (DSP.Interpolate824 (Tone_Waveform.all, Phase));
 
