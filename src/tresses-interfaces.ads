@@ -28,4 +28,12 @@ is
                                return Short_Label
    is abstract;
 
+   type Four_Params_Stereo_FX
+   is abstract new Four_Params_Voice with null record;
+
+   procedure Render (This   : in out Four_Params_Stereo_FX;
+                     Left   : in out Mono_Buffer;
+                     Right  : in out Mono_Buffer)
+   is abstract;
+
 end Tresses.Interfaces;
