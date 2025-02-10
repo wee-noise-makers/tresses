@@ -1,6 +1,6 @@
 name = "tresses"
 description = "Synth library inspired by Mutable Instruments Braids"
-version = "1.0.0-rc1"
+version = "1.0.0"
 
 licenses = "MIT OR Apache-2.0 WITH LLVM-exception"
 tags = ["embedded", "audio", "synthesis", "nostd"]
