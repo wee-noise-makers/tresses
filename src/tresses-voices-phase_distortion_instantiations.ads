@@ -45,6 +45,15 @@ is
    is new PDV.Render (Osc_Render_Reso_Combined_Square_Sine)
      with Linker_Section => Code_Linker_Section;
 
+   -- Reso Combined Square Full Sine  --
+   procedure Osc_Render_Reso_Combined_Square_Full_Sine
+   is new PDO.Render_Resonance_2 (Resources.WAV_Combined_Square_Full_Sin'Access)
+     with Linker_Section => Code_Linker_Section;
+
+   procedure Render_Reso_Square_Full_Sine
+   is new PDV.Render (Osc_Render_Reso_Combined_Square_Full_Sine)
+     with Linker_Section => Code_Linker_Section;
+
    -- Lookup Triangle Sine2_Warp3  --
    function Phase_Distort_Sine2_Warp3
    is new PDO.Phase_Distort_Lookup (Resources.WAV_Sine2_Warp3'Access);

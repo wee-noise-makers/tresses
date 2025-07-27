@@ -280,6 +280,16 @@ package body Tresses.Voices.Macro is
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
 
+         when Voice_PDR_Square_Full_Sine =>
+            PDVI.Render_Reso_Square_Full_Sine
+              (Buffer,
+               Params => This.Params,
+               Osc => This.PDOsc0,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
          when Voice_PDL_Trig_Warp =>
             PDVI.Render_Lookup_Triangle_Sine2_Warp3
               (Buffer,

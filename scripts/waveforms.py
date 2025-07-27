@@ -219,11 +219,21 @@ def square_sin(x):
                      # Half sinusoidal
                      numpy.sin(x * 2.0 * numpy.pi) / 2.0 + 0.5)
 
+def square_full_sin(x):
+  xp = [0.0, 0.05, 0.10, 0.40, 0.45, 0.50]
+  fp = [0.50, 1.00, 0.95, 0.85, 0.90, 0.50]
+  return numpy.where(x < 0.5,
+                     # Half square
+                     numpy.interp(x, xp, fp),
+                     # Half sinusoidal
+                     numpy.sin(x * 4.0 * numpy.pi))
+
 waveforms.append(('combined_sin_saw', scale(sin_saw(ramp))))
 waveforms.append(('combined_saw_sin', scale(saw_sin(ramp))))
 waveforms.append(('combined_trig_sin', scale(trig_sin(ramp))))
 waveforms.append(('combined_sin_square', scale(sin_square(ramp))))
 waveforms.append(('combined_square_sin', scale(square_sin(ramp))))
+waveforms.append(('combined_square_full_sin', scale(square_full_sin(ramp), center=False)))
 
 # LFO
 arr = numpy.arange(WAVETABLE_SIZE + 1) / float(WAVETABLE_SIZE + 1) * 2 * numpy.pi

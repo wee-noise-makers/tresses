@@ -40,6 +40,13 @@ is
                                Amount  :        Param_Range;
                                Release :        Param_Range);
 
+   generic
+      Waveform : not null access constant Tresses.Resources.Table_257_S16;
+   procedure Render_Resonance_2 (This    : in out Instance;
+                                 Buffer  :    out Mono_Buffer;
+                                 Amount  :        Param_Range;
+                                 Release :        Param_Range);
+
    procedure Set_Pitch (This : in out Instance; P : Pitch_Range)
      with Linker_Section => Code_Linker_Section;
 
