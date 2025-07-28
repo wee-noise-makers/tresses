@@ -82,28 +82,30 @@ package body Tresses.Voices.Macro is
    begin
       case This.Engine is
          when Voice_Saw_Swarm =>
-            Saw_Swarm.Render_Saw_Swarm
-              (Buffer,
-               Params    => This.Params,
-               Rng       => This.Rng,
-               Env       => This.Env0,
-               State     => This.Saw_Swarm_State,
-               Phase     => This.Phase,
-               Pitch     => This.Pitch,
-               Do_Init   => This.Do_Init,
-               Do_Strike => This.Do_Strike);
-
+            if This.B /= null then
+               Saw_Swarm.Render_Saw_Swarm
+                 (Buffer,
+                  Params    => This.Params,
+                  Rng       => This.Rng,
+                  Env       => This.Env0,
+                  State     => This.B.Saw_Swarm_State,
+                  Phase     => This.Phase,
+                  Pitch     => This.Pitch,
+                  Do_Init   => This.Do_Init,
+                  Do_Strike => This.Do_Strike);
+            end if;
          when Voice_Plucked =>
-            Plucked.Render_Plucked (Buffer,
-                                    Params    => This.Params,
-                                    Rng       => This.Rng,
-                                    Env       => This.Env0,
-                                    State     => This.Pluck_State,
-                                    KS        => This.KS,
-                                    Pitch     => This.Pitch,
-                                    Do_Init   => This.Do_Init,
-                                    Do_Strike => This.Do_Strike);
-
+            if This.B /= null then
+               Plucked.Render_Plucked (Buffer,
+                                       Params    => This.Params,
+                                       Rng       => This.Rng,
+                                       Env       => This.Env0,
+                                       State     => This.B.Pluck_State,
+                                       KS        => This.B.KS,
+                                       Pitch     => This.Pitch,
+                                       Do_Init   => This.Do_Init,
+                                       Do_Strike => This.Do_Strike);
+            end if;
          when Voice_Acid =>
             Voices.Acid.Render_Acid (Buffer => Buffer,
                                      Params => This.Params,

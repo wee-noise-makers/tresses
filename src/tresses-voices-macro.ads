@@ -14,7 +14,9 @@ with Preelaborate
 is
    --  A macro engine that can play all the synth sounds
 
-   type Instance
+   type Macro_Buffers is private;
+
+   type Instance (B : access Macro_Buffers)
    is new Four_Params_Voice
    with private;
 
@@ -44,15 +46,18 @@ is
 
 private
 
-   type Instance
+   type Macro_Buffers is record
+      Saw_Swarm_State : Saw_Swarm.Saw_Swarm_State;
+      KS              : Plucked.KS_Array;
+      Pluck_State     : Plucked.Pluck_State;
+   end record;
+
+   type Instance (B : access Macro_Buffers)
    is new Four_Params_Voice
    with record
 
       Engine : Synth_Engines := Synth_Engines'First;
 
-      Saw_Swarm_State : Saw_Swarm.Saw_Swarm_State;
-      Pluck_State : Plucked.Pluck_State;
-      KS          : Plucked.KS_Array;
       Rng         : Random.Instance;
       Env0, Env1  : Envelopes.AR.Instance;
       Osc0, Osc1  : Analog_Oscillator.Instance;
