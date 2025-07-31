@@ -23,6 +23,7 @@ with Tresses.Voices.Phase_Distortion_Instantiations;
 with Tresses.Voices.Chip_Portamento;
 with Tresses.Voices.Chip_Echo;
 with Tresses.Voices.Chip_Phaser;
+with Tresses.Voices.Pluck;
 with Tresses.Resources;
 
 package body Tresses.Macro is
@@ -544,10 +545,76 @@ package body Tresses.Macro is
             Voices.Chip_Phaser.Render
               (Buffer, Aux_Buffer,
                Params => This.Params,
+               Wave => Analog_Oscillator.Square,
                Phase_Increment => This.Phase_Increment,
                Osc1 => This.Osc0,
                Osc2 => This.Osc1,
                Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_Sine_Phaser =>
+            Voices.Chip_Phaser.Render
+              (Buffer, Aux_Buffer,
+               Params => This.Params,
+               Wave => Analog_Oscillator.Sine_Fold,
+               Phase_Increment => This.Phase_Increment,
+               Osc1 => This.Osc0,
+               Osc2 => This.Osc1,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_Triangle_Phaser =>
+            Voices.Chip_Phaser.Render
+              (Buffer, Aux_Buffer,
+               Params => This.Params,
+               Wave => Analog_Oscillator.Triangle_Fold,
+               Phase_Increment => This.Phase_Increment,
+               Osc1 => This.Osc0,
+               Osc2 => This.Osc1,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_Sine_Pluck =>
+            Voices.Pluck.Render
+              (Buffer,
+               Params => This.Params,
+               Wave => Analog_Oscillator.Sine_Fold,
+               Osc => This.Osc0,
+               Env => This.Env0,
+               Shape_Env => This.Env0,
+               Filter => This.Filter0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_Triangle_Pluck =>
+            Voices.Pluck.Render
+              (Buffer,
+               Params => This.Params,
+               Wave => Analog_Oscillator.Triangle_Fold,
+               Osc => This.Osc0,
+               Env => This.Env0,
+               Shape_Env => This.Env0,
+               Filter => This.Filter0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_Chip_Pluck =>
+            Voices.Pluck.Render
+              (Buffer,
+               Params => This.Params,
+               Wave => Analog_Oscillator.Square,
+               Osc => This.Osc0,
+               Env => This.Env0,
+               Shape_Env => This.Env0,
+               Filter => This.Filter0,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
@@ -647,8 +714,12 @@ package body Tresses.Macro is
          when Voice_Chip_Echo_Square .. Voice_Chip_Echo_Square_Saw =>
             return Tresses.Voices.Chip_Echo.Param_Label (Id);
 
-         when Voice_Chip_Phaser =>
+         when Voice_Chip_Phaser | Voice_Sine_Phaser | Voice_Triangle_Phaser
+            =>
             return Tresses.Voices.Chip_Phaser.Param_Label (Id);
+
+         when Voice_Sine_Pluck .. Voice_Chip_Pluck =>
+            return Tresses.Voices.Pluck.Param_Label (Id);
       end case;
 
    end Param_Label;
@@ -745,8 +816,12 @@ package body Tresses.Macro is
          when Voice_Chip_Echo_Square .. Voice_Chip_Echo_Square_Saw =>
             return Tresses.Voices.Chip_Echo.Param_Short_Label (Id);
 
-         when Voice_Chip_Phaser =>
+         when Voice_Chip_Phaser | Voice_Sine_Phaser | Voice_Triangle_Phaser
+              =>
             return Tresses.Voices.Chip_Phaser.Param_Short_Label (Id);
+
+         when Voice_Sine_Pluck .. Voice_Chip_Pluck =>
+            return Tresses.Voices.Pluck.Param_Short_Label (Id);
       end case;
    end Param_Short_Label;
 

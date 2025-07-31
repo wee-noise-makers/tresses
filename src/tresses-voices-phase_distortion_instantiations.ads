@@ -47,7 +47,8 @@ is
 
    -- Reso Combined Square Full Sine  --
    procedure Osc_Render_Reso_Combined_Square_Full_Sine
-   is new PDO.Render_Resonance_2 (Resources.WAV_Combined_Square_Full_Sin'Access)
+   is new PDO.Render_Resonance_2
+     (Resources.WAV_Combined_Square_Full_Sin'Access)
      with Linker_Section => Code_Linker_Section;
 
    procedure Render_Reso_Square_Full_Sine

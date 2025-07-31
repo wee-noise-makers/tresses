@@ -58,13 +58,13 @@ private
 
       Engine : Synth_Engines := Synth_Engines'First;
 
-      Rng         : Random.Instance;
-      Env0, Env1  : Envelopes.AR.Instance;
-      Osc0, Osc1  : Analog_Oscillator.Instance;
-      PDOsc0      : Phase_Distortion_Oscillator.Instance;
-      Ladder      : Filters.Ladder.Instance;
-      SVF         : Filters.SVF.Instance;
-      LP_State    : S32 := 0;
+      Rng              : Random.Instance;
+      Env0, Env1       : Envelopes.AR.Instance;
+      Osc0, Osc1, Osc2 : Analog_Oscillator.Instance;
+      PDOsc0           : Phase_Distortion_Oscillator.Instance;
+      Ladder           : Filters.Ladder.Instance;
+      SVF              : Filters.SVF.Instance;
+      LP_State         : S32 := 0;
 
       Pitch1, Pitch2 : Pitch_Range;
 

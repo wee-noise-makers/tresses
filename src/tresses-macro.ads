@@ -68,7 +68,7 @@ private
 
       Pulse0, Pulse1, Pulse2, Pulse3 : Excitation.Instance;
       Filter0, Filter1, Filter3 : Filters.SVF.Instance;
-      Osc0, Osc1 : Analog_Oscillator.Instance;
+      Osc0, Osc1, Osc2 : Analog_Oscillator.Instance;
       PDOsc0 : Phase_Distortion_Oscillator.Instance;
       Rng : Random.Instance;
       Env0, Env1 : Envelopes.AR.Instance;
