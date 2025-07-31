@@ -11,6 +11,7 @@ package body Tresses.Voices.Chip_Phaser is
    procedure Render
      (BufferA, BufferB :    out Mono_Buffer;
       Params           :        Param_Array;
+      Wave             :        Analog_Oscillator.Shape_Kind;
       Phase_Increment  : in out U32;
       Osc1, Osc2       : in out Analog_Oscillator.Instance;
       Env              : in out Envelopes.AR.Instance;
@@ -30,9 +31,9 @@ package body Tresses.Voices.Chip_Phaser is
          Do_Init := False;
 
          Analog_Oscillator.Init (Osc1);
-         Analog_Oscillator.Set_Shape (Osc1, Analog_Oscillator.Square);
+         Analog_Oscillator.Set_Shape (Osc1, Wave);
          Analog_Oscillator.Init (Osc2);
-         Analog_Oscillator.Set_Shape (Osc2, Analog_Oscillator.Square);
+         Analog_Oscillator.Set_Shape (Osc2, Wave);
 
          Init (Env, Do_Hold => True);
       end if;

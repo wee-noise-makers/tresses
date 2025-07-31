@@ -96,7 +96,12 @@ is
                     Voice_Chip_Echo_Square,
                     Voice_Chip_Echo_Square_Saw,
                     Voice_Chip_Phaser,
-                    Voice_Chip_Bass);
+                    Voice_Chip_Bass,
+                    Voice_Sine_Phaser,
+                    Voice_Triangle_Phaser,
+                    Voice_Sine_Pluck,
+                    Voice_Triangle_Pluck,
+                    Voice_Chip_Pluck);
 
    subtype Drum_Engines is Engines range Drum_Kick .. Drum_Bell;
    subtype Synth_Engines is Engines range Voice_Plucked .. Engines'Last;
@@ -140,7 +145,12 @@ is
           when Voice_Chip_Echo_Square     => "Chip Echo Square",
           when Voice_Chip_Echo_Square_Saw => "Chip Echo Square + Saw",
           when Voice_Chip_Phaser          => "Chip Phaser",
-          when Voice_Chip_Bass            => "Chip Bass");
+          when Voice_Chip_Bass            => "Chip Bass",
+          when Voice_Sine_Phaser          => "Sine Phaser",
+          when Voice_Triangle_Phaser      => "Triangle Phaser",
+          when Voice_Sine_Pluck           => "Sine Pluck",
+          when Voice_Triangle_Pluck       => "Triangle Pluck",
+          when Voice_Chip_Pluck           => "Chip Pluck");
 
    subtype Short_Label is String (1 .. 3);
 

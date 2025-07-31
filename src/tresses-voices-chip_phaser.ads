@@ -8,6 +8,7 @@ is
    procedure Render
      (BufferA, BufferB :    out Mono_Buffer;
       Params           :        Param_Array;
+      Wave             :        Analog_Oscillator.Shape_Kind;
       Phase_Increment  : in out U32;
       Osc1, Osc2       : in out Analog_Oscillator.Instance;
       Env              : in out Envelopes.AR.Instance;
