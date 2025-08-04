@@ -114,7 +114,7 @@ package body Tresses.DSP is
    --------------
 
    function Clip_S16 (V : S32) return S32
-   is (Clip (V, -32_767, 32_767));
+   is (Clip (V, S32 (S16'First), S32 (S16'Last)));
 
    ---------
    -- Mix --
