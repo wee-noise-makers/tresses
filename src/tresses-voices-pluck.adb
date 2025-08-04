@@ -1,9 +1,6 @@
 with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 with Tresses.Filters.SVF; use Tresses.Filters.SVF;
 
-with Tresses.DSP;
-with Tresses.Resources;
-
 package body Tresses.Voices.Pluck is
 
    ------------
@@ -15,7 +12,7 @@ package body Tresses.Voices.Pluck is
       Params                 :        Param_Array;
       Wave                   :        Analog_Oscillator.Shape_Kind;
       Osc                    : in out Analog_Oscillator.Instance;
-      Env, Shape_Env         : in out Envelopes.AR.Instance;
+      Env                    : in out Envelopes.AR.Instance;
       Filter                 : in out Filters.SVF.Instance;
       Pitch                  :        Pitch_Range;
       Do_Init                : in out Boolean;

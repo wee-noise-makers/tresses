@@ -7,15 +7,15 @@ with Preelaborate
 is
 
    procedure Render
-     (Buffer                 :    out Mono_Buffer;
-      Params                 :        Param_Array;
-      Wave                   :        Analog_Oscillator.Shape_Kind;
-      Osc                    : in out Analog_Oscillator.Instance;
-      Env, Shape_Env         : in out Envelopes.AR.Instance;
-      Filter                 : in out Filters.SVF.Instance;
-      Pitch                  :        Pitch_Range;
-      Do_Init                : in out Boolean;
-      Do_Strike              : in out Strike_State)
+     (Buffer    :    out Mono_Buffer;
+      Params    :        Param_Array;
+      Wave      :        Analog_Oscillator.Shape_Kind;
+      Osc       : in out Analog_Oscillator.Instance;
+      Env       : in out Envelopes.AR.Instance;
+      Filter    : in out Filters.SVF.Instance;
+      Pitch     :        Pitch_Range;
+      Do_Init   : in out Boolean;
+      Do_Strike : in out Strike_State)
      with Linker_Section => Code_Linker_Section;
 
    P_Shape   : constant Param_Id := 1;
