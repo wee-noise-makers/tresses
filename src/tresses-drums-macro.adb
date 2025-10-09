@@ -2,6 +2,7 @@ with Tresses.Drums.Kick;
 with Tresses.Drums.Sine_Kick;
 with Tresses.Drums.Triangle_Kick;
 with Tresses.Drums.Chip_Kick;
+with Tresses.Drums.Sine_Noise_Kick;
 with Tresses.Drums.Snare;
 with Tresses.Drums.Sine_Snare;
 with Tresses.Drums.Saw_Snare;
@@ -118,6 +119,20 @@ package body Tresses.Drums.Macro is
                Phase_Increment => This.Phase_Increment,
                Target_Phase_Increment => This.Target_Phase_Increment,
                Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Drum_Sine_Noise_Kick =>
+            Sine_Noise_Kick.Render_Kick
+              (Buffer,
+               Params => This.Params,
+               Phase => This.Phase,
+               Phase_Increment => This.Phase_Increment,
+               Target_Phase_Increment => This.Target_Phase_Increment,
+               Env => This.Env0,
+               Noise_Env => This.Env1,
+               RNG => This.Rng,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);

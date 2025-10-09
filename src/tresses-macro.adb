@@ -2,6 +2,7 @@ with Tresses.Drums.Kick;
 with Tresses.Drums.Sine_Kick;
 with Tresses.Drums.Triangle_Kick;
 with Tresses.Drums.Chip_Kick;
+with Tresses.Drums.Sine_Noise_Kick;
 with Tresses.Drums.Snare;
 with Tresses.Drums.Sine_Snare;
 with Tresses.Drums.Saw_Snare;
@@ -118,7 +119,7 @@ package body Tresses.Macro is
                Do_Strike => This.Do_Strike);
 
          when Drum_Triangle_Kick =>
-            Drums.Sine_Kick.Render_Kick
+            Drums.Triangle_Kick.Render_Kick
               (Buffer,
                Params => This.Params,
                Phase => This.Phase,
@@ -130,13 +131,27 @@ package body Tresses.Macro is
                Do_Strike => This.Do_Strike);
 
          when Drum_Chip_Kick =>
-            Drums.Sine_Kick.Render_Kick
+            Drums.Chip_Kick.Render_Kick
               (Buffer,
                Params => This.Params,
                Phase => This.Phase,
                Phase_Increment => This.Phase_Increment,
                Target_Phase_Increment => This.Target_Phase_Increment,
                Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Drum_Sine_Noise_Kick =>
+            Drums.Sine_Noise_Kick.Render_Kick
+              (Buffer,
+               Params => This.Params,
+               Phase => This.Phase,
+               Phase_Increment => This.Phase_Increment,
+               Target_Phase_Increment => This.Target_Phase_Increment,
+               Env => This.Env0,
+               Noise_Env => This.Env1,
+               RNG => This.Rng,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
@@ -631,14 +646,11 @@ package body Tresses.Macro is
          when Drum_Kick =>
             return Drums.Kick.Param_Label (Id);
 
-         when Drum_Sine_Kick =>
+         when Drum_Sine_Kick | Drum_Triangle_Kick | Drum_Chip_Kick =>
             return Drums.Sine_Kick.Param_Label (Id);
 
-         when Drum_Triangle_Kick =>
-            return Drums.Triangle_Kick.Param_Label (Id);
-
-         when Drum_Chip_Kick =>
-            return Drums.Chip_Kick.Param_Label (Id);
+         when Drum_Sine_Noise_Kick =>
+            return Drums.Sine_Noise_Kick.Param_Label (Id);
 
          when Drum_Snare =>
             return Drums.Snare.Param_Label (Id);
@@ -733,14 +745,11 @@ package body Tresses.Macro is
          when Drum_Kick =>
             return Drums.Kick.Param_Short_Label (Id);
 
-         when Drum_Sine_Kick =>
+         when Drum_Sine_Kick | Drum_Triangle_Kick | Drum_Chip_Kick =>
             return Drums.Sine_Kick.Param_Short_Label (Id);
 
-         when Drum_Triangle_Kick =>
-            return Drums.Triangle_Kick.Param_Short_Label (Id);
-
-         when Drum_Chip_Kick =>
-            return Drums.Chip_Kick.Param_Short_Label (Id);
+         when Drum_Sine_Noise_Kick =>
+            return Drums.Sine_Noise_Kick.Param_Short_Label (Id);
 
          when Drum_Snare =>
             return Drums.Snare.Param_Short_Label (Id);
