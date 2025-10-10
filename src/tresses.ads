@@ -42,9 +42,9 @@ is
    function Add_Sat (A, B : Pitch_Range) return Pitch_Range;
    function Sub_Sat (A, B : Pitch_Range) return Pitch_Range;
 
-   Semitone   : constant Pitch_Range := 128;
-   Octave     : constant Pitch_Range := 12 * Semitone;
-   Init_Pitch : constant Pitch_Range := 60 * Semitone;
+   Semitone   : constant := 128;
+   Octave     : constant := 12 * Semitone;
+   Init_Pitch : constant := 60 * Semitone;
 
    function MIDI_Pitch (Key : MIDI.MIDI_Key) return Pitch_Range
    is (Pitch_Range (Key) * 128);

@@ -21,23 +21,23 @@ is
       Do_Strike              : in out Strike_State)
      with Linker_Section => Code_Linker_Section;
 
-   P_Punch       : constant Param_Id := 1;
-   P_Punch_Decay : constant Param_Id := 2;
-   P_Noise       : constant Param_Id := 3;
-   P_Decay       : constant Param_Id := 4;
+   P_Comb_Pitch   : constant Param_Id := 1;
+   P_Comb_Reso    : constant Param_Id := 2;
+   P_Noise_Decay  : constant Param_Id := 3;
+   P_Filter_Pitch : constant Param_Id := 4;
 
    function Param_Label (Id : Param_Id) return String
    is (case Id is
-          when P_Decay       => "Decay",
-          when P_Noise       => "Noise",
-          when P_Punch       => "Punch",
-          when P_Punch_Decay => "Punch Decay");
+          when P_Comb_Pitch   => "Comb Pitch",
+          when P_Comb_Reso    => "Comb Resonance",
+          when P_Noise_Decay  => "Noise Decay",
+          when P_Filter_Pitch => "Filter Pitch");
 
    function Param_Short_Label (Id : Param_Id) return Short_Label
    is (case Id is
-          when P_Decay       => "DCY",
-          when P_Noise       => "NOI",
-          when P_Punch       => "PCH",
-          when P_Punch_Decay => "PDC");
+          when P_Comb_Pitch    => "CBP",
+          when P_Comb_Reso     => "CBR",
+          when P_Noise_Decay   => "NDC",
+          when P_Filter_Pitch  => "FLT");
 
 end Tresses.Drums.Generic_Waveform_Noise_Kick;

@@ -63,8 +63,8 @@ delays = sample_rate / pitches * 65536 * 4096
 lookup_tables_32.append(
     ('oscillator_increments', increments.astype(int)))
 
-# lookup_tables_32.append(
-#     ('oscillator_delays', delays.astype(int)))
+lookup_tables_32.append(
+    ('oscillator_delays', delays.astype(int)))
 
 
 """----------------------------------------------------------------------------

@@ -177,7 +177,6 @@ package body Tresses.DSP is
 
    function Compute_Phase_Increment (Pitch : S16) return U32 is
       Pitch_Table_Start : constant := 128 * Resources.HIGHEST_NOTE;
-      Octave : constant := 12 * 128;
 
       P : S16 := Pitch;
 

@@ -15,17 +15,17 @@ is
    SAMPLE_RATE_REAL : constant := 16000.0;
    HIGHEST_NOTE: constant := 119;
    Linker_Section   : constant String := Tresses_Config.Resources_Linker_Section;
-   type Table_257_S16 is array (U16 range 0 .. 256) of S16;
-   type Table_256_S16 is array (U8 range 0 .. 255) of S16;
-   type Table_513_U16 is array (U16 range 0 .. 512) of U16;
-   type Table_97_U32 is array (U8 range 0 .. 96) of U32;
-   type Table_257_U32 is array (U16 range 0 .. 256) of U32;
-   type Table_128_U32 is array (U8 range 0 .. 127) of U32;
    type Table_152_U16 is array (U8 range 0 .. 151) of U16;
-   type Table_92_U16 is array (U8 range 0 .. 91) of U16;
    type Table_128_U16 is array (U8 range 0 .. 127) of U16;
+   type Table_128_U32 is array (U8 range 0 .. 127) of U32;
+   type Table_513_U16 is array (U16 range 0 .. 512) of U16;
    type Table_129_U16 is array (U8 range 0 .. 128) of U16;
+   type Table_92_U16 is array (U8 range 0 .. 91) of U16;
+   type Table_97_U32 is array (U8 range 0 .. 96) of U32;
+   type Table_257_S16 is array (U16 range 0 .. 256) of S16;
+   type Table_257_U32 is array (U16 range 0 .. 256) of U32;
    type Table_257_U16 is array (U16 range 0 .. 256) of U16;
+   type Table_256_S16 is array (U8 range 0 .. 255) of S16;
    LUT_Resonator_Coefficient : aliased constant Table_129_U16 := (
       65534,  65534,  65534,  65534,
       65533,  65533,  65533,  65532,
@@ -1191,6 +1191,33 @@ is
      4004316220, 4033333146, 4062560341, 4091999328,
      4121651642, 4151518828, 4181602445, 4211904060,
      4242425253)
+     with Linker_Section => Linker_Section;
+   LUT_Oscillator_Delays : aliased constant Table_97_U32 := (
+     543520008, 539609773, 535727669, 531873495,
+     528047048, 524248130, 520476543, 516732089,
+     513014574, 509323804, 505659586, 502021729,
+     498410045, 494824344, 491264439, 487730145,
+     484221278, 480737655, 477279094, 473845415,
+     470436438, 467051987, 463691885, 460355956,
+     457044026, 453755924, 450491477, 447250515,
+     444032870, 440838373, 437666859, 434518161,
+     431392116, 428288561, 425207333, 422148272,
+     419111220, 416096017, 413102506, 410130531,
+     407179937, 404250571, 401342279, 398454911,
+     395588315, 392742342, 389916843, 387111673,
+     384326683, 381561729, 378816668, 376091355,
+     373385648, 370699408, 368032493, 365384764,
+     362756084, 360146315, 357555322, 354982969,
+     352429122, 349893649, 347376416, 344877293,
+     342396149, 339932856, 337487284, 335059306,
+     332648796, 330255627, 327879676, 325520818,
+     323178930, 320853890, 318545578, 316253872,
+     313978653, 311719803, 309477204, 307250738,
+     305040290, 302845745, 300666988, 298503906,
+     296356385, 294224315, 292107583, 290006079,
+     287919694, 285848320, 283791847, 281750169,
+     279723180, 277710773, 275712844, 273729289,
+     271760004)
      with Linker_Section => Linker_Section;
    LUT_Lfo_Increments : aliased constant Table_257_U32 := (
        8388,   8673,   8967,   9271,
