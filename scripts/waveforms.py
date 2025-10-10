@@ -75,13 +75,13 @@ JUNINESS = 1.0
 
 
 def dither(x, order=0, type=numpy.int16):
-  for i in xrange(order):
+  for i in range(order):
     x = numpy.hstack((numpy.zeros(1,), numpy.cumsum(x)))
   x = numpy.round(x)
-  for i in xrange(order):
+  for i in range(order):
     x = numpy.diff(x)
   if any(x < numpy.iinfo(type).min) or any(x > numpy.iinfo(type).max):
-    print 'Clipping occurred!'
+    print('Clipping occurred!')
   x[x < numpy.iinfo(type).min] = numpy.iinfo(type).min
   x[x > numpy.iinfo(type).max] = numpy.iinfo(type).max
   return x.astype(type)
@@ -258,7 +258,7 @@ exp_up = scale((0.5 ** (2 * numpy.pi - arr)) * 2.0 - 1.0, min=0, max=32767, cent
 # # plt.plot(square_round)
 # plt.show()
 
-waveforms.append(('sine_lfo', scale(sine[quadrature], min=0, max=32767)))
+waveforms.append(('sine_lfo', scale(sine[quadrature.astype(int)], min=0, max=32767)))
 waveforms.append(('triangle_lfo', triangle))
 waveforms.append(('ramp_up_lfo', ramp_up))
 waveforms.append(('ramp_down_lfo', ramp_down))
@@ -276,11 +276,11 @@ for zone in range(num_zones):
   i = numpy.arange(-WAVETABLE_SIZE / 2, WAVETABLE_SIZE / 2) / \
       float(WAVETABLE_SIZE)
   pulse = numpy.sin(numpy.pi * i * m) / (m * numpy.sin(numpy.pi * i) + 1e-9)
-  pulse[WAVETABLE_SIZE / 2] = 1.0
+  pulse[int(WAVETABLE_SIZE / 2)] = 1.0
   pulse = pulse[fill]
 
   bl_pulse_tables.append(('bandlimited_comb_%d' % zone,
-                          scale(pulse[quadrature])))
+                          scale(pulse[quadrature.astype(int)])))
 
 waveforms.extend(bl_pulse_tables)
 waveforms.extend(bl_tri_tables)
@@ -291,11 +291,11 @@ Wavetables
 -----------------------------------------------------------------------------"""
 
 wavetable_data = []
-waves = map(ord, file('waves.bin', 'rb').read())
-wavetable_data.append(('waves', waves))
+#waves = map(ord, file('waves.bin', 'rb').read())
+#wavetable_data.append(('waves', waves))
 
-wave_map = map(ord, file('map.bin', 'rb').read())
-wavetable_data.append(('map', wave_map))
+#wave_map = map(ord, file('map.bin', 'rb').read())
+#wavetable_data.append(('map', wave_map))
 
 
 

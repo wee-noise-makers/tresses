@@ -193,7 +193,7 @@ characters = {
 }
 
 character_table = []
-for i in xrange(256):
+for i in range(256):
   segments = characters.get(chr(i), '')
   character_table.append(sum(MASKS[segment] for segment in segments))
   

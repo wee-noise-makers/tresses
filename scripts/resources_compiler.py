@@ -125,11 +125,11 @@ class ResourceEntry(object):
       f.write('%(declaration)s:= (\n' % locals())
       n_elements = len(self._value)
       last = n_elements - 1
-      for i in xrange(0, n_elements, 4):
+      for i in range(0, n_elements, 4):
         f.write('     ');
         f.write(', '.join(
             '% 16.9e' % self._value[j] \
-            for j in xrange(i, min(n_elements, i + 4))))
+            for j in range(i, min(n_elements, i + 4))))
         if i < last - 3:
           f.write(',\n');
       f.write(');\n')
@@ -147,11 +147,11 @@ class ResourceEntry(object):
       f.write('%(declaration)s:= (\n' % locals())
       n_elements = len(self._value)
       last = n_elements - 1
-      for i in xrange(0, n_elements, 4):
+      for i in range(0, n_elements, 4):
         f.write('     ');
         f.write(', '.join(
             '%6d' % self._value[j] \
-            for j in xrange(i, min(n_elements, i + 4))))
+            for j in range(i, min(n_elements, i + 4))))
         if i < last - 3:
           f.write(',\n')
       f.write(')\n')
@@ -194,7 +194,7 @@ class ResourceTable(object):
     in_chr = ''.join(map(chr, range(256)))
     out_chr = [ord('_')] * 256
     # Tolerated characters.
-    for i in string.uppercase + string.lowercase + string.digits:
+    for i in string.ascii_uppercase + string.ascii_lowercase + string.digits:
       out_chr[ord(i)] = ord(i.lower())
 
     # Rewritten characters.
@@ -203,9 +203,9 @@ class ResourceTable(object):
     for rewrite in zip(in_rewritten, out_rewritten):
       out_chr[ord(rewrite[0])] = ord(rewrite[1])
 
-    table = string.maketrans(in_chr, ''.join(map(chr, out_chr)))
     bad_chars = '\t\n\r-:()[]"\',;'
-    self._MakeIdentifier = lambda s:s.translate(table, bad_chars)
+    table = str.maketrans(in_chr, ''.join(map(chr, out_chr)), bad_chars)
+    self._MakeIdentifier = lambda s:s.translate(table)
 
   def DeclareEntries(self, f):
     if self.python_type != str:
@@ -287,7 +287,7 @@ class ResourceLibrary(object):
   def GenerateHeader(self):
     root = self._root
     sample_rate = os.environ['SAMPLE_RATE']
-    f = file(os.path.join(root.target, 'tresses-resources--SR%s.ads' % sample_rate), 'wb')
+    f = open(os.path.join(root.target, 'tresses-resources--SR%s.ads' % sample_rate), 'w', encoding='utf-8')
     # Write header and header guard
     f.write(root.header + '\n')
     # f.write(root.includes + '\n\n')
@@ -312,7 +312,7 @@ class ResourceLibrary(object):
   def GenerateCc(self):
     root = self._root
     file_name = os.path.join(self._root.target, 'tresses-resources.adb')
-    f = file(file_name, 'wb')
+    f = open(file_name, 'w', encoding='utf-8')
     f.write(self._root.header + '\n\n')
     f.write("package body Tresses.Resources is\n")
     f.write("end Tresses.Resources;\n")
@@ -334,7 +334,7 @@ def Compile(path):
 
 
 def main(argv):
-  for i in xrange(1, len(argv)):
+  for i in range(1, len(argv)):
     Compile(argv[i])
 
 
