@@ -55,6 +55,7 @@ is
 
    procedure Render (This    : in out Instance;
                      Buffer  :    out Mono_Buffer;
+                     Wave    :        Wave_Ref;
                      Amount  :        Param_Range;
                      Release :        Param_Range)
    is
@@ -78,7 +79,7 @@ is
            Param_Range ((S32 (Amount) * Low_Pass (This.Shape_Env)) / 2**15);
 
          New_Phase := Phase_Distort (This.Phase, Dist_Amount);
-         Sample := DSP.Interpolate824 (Waveform.all, New_Phase);
+         Sample := DSP.Interpolate824 (Wave.all, New_Phase);
       end loop;
    end Render;
 
@@ -88,6 +89,7 @@ is
 
    procedure Render_Resonance (This    : in out Instance;
                                Buffer  :    out Mono_Buffer;
+                               Wave    :        Wave_Ref;
                                Amount  :        Param_Range;
                                Release :        Param_Range)
    is
@@ -109,7 +111,7 @@ is
            Param_Range ((S32 (Amount) * Low_Pass (This.Shape_Env)) / 2**15);
 
          if This.Phase < U32'Last / 2 then
-            Sample := DSP.Interpolate824 (Waveform.all, This.Phase);
+            Sample := DSP.Interpolate824 (Wave.all, This.Phase);
          else
 
             --  For the second half of the phase we increase the phase rate
@@ -123,7 +125,7 @@ is
             begin
                Phase_U64 := (Phase_U64 * Multiplier) / 2**32;
                New_Phase := U32 (Phase_U64 mod U64 (U32'Last));
-               Sample := DSP.Interpolate824 (Waveform.all, New_Phase);
+               Sample := DSP.Interpolate824 (Wave.all, New_Phase);
             end;
 
             --  This high frequency part of the waveform is then linearly
@@ -149,6 +151,7 @@ is
 
    procedure Render_Resonance_2 (This    : in out Instance;
                                  Buffer  :    out Mono_Buffer;
+                                 Wave    :        Wave_Ref;
                                  Amount  :        Param_Range;
                                  Release :        Param_Range)
    is
@@ -170,7 +173,7 @@ is
            Param_Range ((S32 (Amount) * Low_Pass (This.Shape_Env)) / 2**15);
 
          if This.Phase < U32'Last / 2 then
-            Sample := DSP.Interpolate824 (Waveform.all, This.Phase);
+            Sample := DSP.Interpolate824 (Wave.all, This.Phase);
          else
 
             --  For the second half of the phase we increase the phase rate
@@ -185,7 +188,7 @@ is
                Phase_U64 := (Phase_U64 * Multiplier) / 2**32;
                New_Phase := (U32'Last / 2) +
                  U32 (Phase_U64 mod U64 (U32'Last / 2));
-               Sample := DSP.Interpolate824 (Waveform.all, New_Phase);
+               Sample := DSP.Interpolate824 (Wave.all, New_Phase);
             end;
 
             --  This high frequency part of the waveform is then linearly

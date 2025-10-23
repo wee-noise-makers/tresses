@@ -497,9 +497,10 @@ package body Tresses.Macro is
                Do_Strike => This.Do_Strike);
 
          when Voice_PDR_Sine =>
-            PDVI.Render_Reso_Sine
+            PDVI.Render_Reso
               (Buffer,
                Params => This.Params,
+               Wave => Resources.WAV_Sine'Access,
                Osc => This.PDOsc0,
                Env => This.Env0,
                Pitch => This.Pitch,
@@ -507,9 +508,10 @@ package body Tresses.Macro is
                Do_Strike => This.Do_Strike);
 
          when Voice_PDR_Triangle =>
-            PDVI.Render_Reso_Triangle
+            PDVI.Render_Reso
               (Buffer,
                Params => This.Params,
+               Wave => Resources.WAV_Triangle'Access,
                Osc => This.PDOsc0,
                Env => This.Env0,
                Pitch => This.Pitch,
@@ -517,9 +519,10 @@ package body Tresses.Macro is
                Do_Strike => This.Do_Strike);
 
          when Voice_PDR_Sine_Square =>
-            PDVI.Render_Reso_Sine_Square
+            PDVI.Render_Reso
               (Buffer,
                Params => This.Params,
+               Wave => Resources.WAV_Combined_Sin_Square'Access,
                Osc => This.PDOsc0,
                Env => This.Env0,
                Pitch => This.Pitch,
@@ -527,9 +530,10 @@ package body Tresses.Macro is
                Do_Strike => This.Do_Strike);
 
          when Voice_PDR_Square_Sine =>
-            PDVI.Render_Reso_Square_Sine
+            PDVI.Render_Reso
               (Buffer,
                Params => This.Params,
+               Wave => Resources.WAV_Combined_Square_Sin'Access,
                Osc => This.PDOsc0,
                Env => This.Env0,
                Pitch => This.Pitch,
@@ -537,9 +541,10 @@ package body Tresses.Macro is
                Do_Strike => This.Do_Strike);
 
          when Voice_PDR_Square_Full_Sine =>
-            PDVI.Render_Reso_Square_Full_Sine
+            PDVI.Render_Reso
               (Buffer,
                Params => This.Params,
+               Wave => Resources.WAV_Combined_Square_Full_Sin'Access,
                Osc => This.PDOsc0,
                Env => This.Env0,
                Pitch => This.Pitch,
@@ -547,9 +552,10 @@ package body Tresses.Macro is
                Do_Strike => This.Do_Strike);
 
          when Voice_PDL_Trig_Warp =>
-            PDVI.Render_Lookup_Triangle_Sine2_Warp3
+            PDVI.Render_Lookup_Sine2_Warp3
               (Buffer,
                Params => This.Params,
+               Wave => Resources.WAV_Triangle'Access,
                Osc => This.PDOsc0,
                Env => This.Env0,
                Pitch => This.Pitch,
@@ -557,9 +563,10 @@ package body Tresses.Macro is
                Do_Strike => This.Do_Strike);
 
          when Voice_PDL_Triangle_Screech =>
-            PDVI.Render_Lookup_Sine_Screech
+            PDVI.Render_Lookup_Screech
               (Buffer,
                Params => This.Params,
+               Wave => Resources.WAV_Sine'Access,
                Osc => This.PDOsc0,
                Env => This.Env0,
                Pitch => This.Pitch,
@@ -753,6 +760,18 @@ package body Tresses.Macro is
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
+
+         when Voice_User_Wave_PDR =>
+            PDVI.Render_Reso
+              (Buffer,
+               Params => This.Params,
+               Wave => This.User_Waveform,
+               Osc => This.PDOsc0,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
       end case;
    end Render;
 
@@ -838,7 +857,8 @@ package body Tresses.Macro is
          when Voice_Screech =>
             return Voices.Screech.Param_Label (Id);
 
-         when Voice_PDR_Sine .. Voice_PDL_Triangle_Screech =>
+         when Voice_PDR_Sine .. Voice_PDL_Triangle_Screech |
+              Voice_User_Wave_PDR =>
             return Voices.Phase_Distortion.Param_Label (Id);
 
          when Voice_Chip_Glide =>
@@ -951,7 +971,8 @@ package body Tresses.Macro is
          when Voice_Screech =>
             return Voices.Screech.Param_Short_Label (Id);
 
-         when Voice_PDR_Sine .. Voice_PDL_Triangle_Screech =>
+         when Voice_PDR_Sine .. Voice_PDL_Triangle_Screech |
+              Voice_User_Wave_PDR =>
             return Voices.Phase_Distortion.Param_Short_Label (Id);
 
          when Voice_Chip_Glide =>

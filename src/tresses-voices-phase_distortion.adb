@@ -7,13 +7,14 @@ package body Tresses.Voices.Phase_Distortion is
    ------------
 
    procedure Render
-     (Buffer                 :    out Mono_Buffer;
-      Params                 :        Param_Array;
-      Osc                    : in out Phase_Distortion_Oscillator.Instance;
-      Env                    : in out Envelopes.AR.Instance;
-      Pitch                  :        Pitch_Range;
-      Do_Init                : in out Boolean;
-      Do_Strike              : in out Strike_State)
+     (Buffer    :    out Mono_Buffer;
+      Params    :        Param_Array;
+      Wave      :        Phase_Distortion_Oscillator.Wave_Ref;
+      Osc       : in out Phase_Distortion_Oscillator.Instance;
+      Env       : in out Envelopes.AR.Instance;
+      Pitch     :        Pitch_Range;
+      Do_Init   : in out Boolean;
+      Do_Strike : in out Strike_State)
    is
       Amount        : Param_Range renames Params (P_Distort);
       Shape_Release : Param_Range renames Params (P_Shape_Release);
@@ -48,7 +49,7 @@ package body Tresses.Voices.Phase_Distortion is
 
       PDO.Set_Pitch (Osc, Pitch);
 
-      Render_Osc (Osc, Buffer, Amount, Shape_Release);
+      Render_Osc (Osc, Buffer, Wave, Amount, Shape_Release);
 
       for Sample of Buffer loop
          Render (Env);

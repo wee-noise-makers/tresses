@@ -4,13 +4,15 @@ with Tresses.Resources;
 package Tresses.Phase_Distortion_Oscillator
 with Preelaborate
 is
+   type Wave_Ref is not null access constant Resources.Table_257_S16;
+
    type Instance
    is tagged record
-      Pitch       : Pitch_Range := Init_Pitch;
+      Pitch     : Pitch_Range := Init_Pitch;
 
       Shape_Env : Envelopes.AR.Instance;
 
-      Phase      : U32 := 0;
+      Phase     : U32 := 0;
       Phase_Increment : U32 := 1;
       Prev_Phase_Increment : U32 := 1;
    end record;
@@ -25,25 +27,23 @@ is
      with Linker_Section => Code_Linker_Section;
 
    generic
-      Waveform : not null access constant Tresses.Resources.Table_257_S16;
       with
         function Phase_Distort (Phase : U32; Amount : Param_Range) return U32;
    procedure Render (This    : in out Instance;
                      Buffer  :    out Mono_Buffer;
+                     Wave    :        Wave_Ref;
                      Amount  :        Param_Range;
                      Release :        Param_Range);
 
-   generic
-      Waveform : not null access constant Tresses.Resources.Table_257_S16;
    procedure Render_Resonance (This    : in out Instance;
                                Buffer  :    out Mono_Buffer;
+                               Wave    :        Wave_Ref;
                                Amount  :        Param_Range;
                                Release :        Param_Range);
 
-   generic
-      Waveform : not null access constant Tresses.Resources.Table_257_S16;
    procedure Render_Resonance_2 (This    : in out Instance;
                                  Buffer  :    out Mono_Buffer;
+                                 Wave    :        Wave_Ref;
                                  Amount  :        Param_Range;
                                  Release :        Param_Range);
 

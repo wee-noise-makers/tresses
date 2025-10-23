@@ -109,7 +109,8 @@ is
                     Voice_User_Wave_Glide,
                     Voice_User_Wave_Phaser,
                     Voice_User_Wave_Pluck,
-                    Voice_User_Wave_Echo);
+                    Voice_User_Wave_Echo,
+                    Voice_User_Wave_PDR);
 
    subtype Drum_Engines is Engines range Drum_Kick .. Drum_Bell;
    subtype Synth_Engines is Engines range Voice_Plucked .. Engines'Last;
@@ -166,7 +167,8 @@ is
           when Voice_User_Wave_Glide      => "Custom Waveform Glide",
           When Voice_User_Wave_Phaser     => "Custom Waveform Phaser",
           when Voice_User_Wave_Pluck      => "Custom Waveform Pluck",
-          when Voice_User_Wave_Echo       => "Custom Waveform Echo");
+          when Voice_User_Wave_Echo       => "Custom Waveform Echo",
+          when Voice_User_Wave_PDR        => "Custom Waveform PDR");
 
    subtype Short_Label is String (1 .. 3);
 

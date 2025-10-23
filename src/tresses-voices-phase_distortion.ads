@@ -1,5 +1,6 @@
 with Tresses.Envelopes.AR;
 with Tresses.Phase_Distortion_Oscillator;
+with Tresses.Resources;
 
 package Tresses.Voices.Phase_Distortion
 with Preelaborate
@@ -8,13 +9,16 @@ is
    package PDO renames Tresses.Phase_Distortion_Oscillator;
 
    generic
-      with procedure Render_Osc (This    : in out PDO.Instance;
-                                 Buffer  :    out Mono_Buffer;
-                                 Amount  :        Param_Range;
-                                 Release :        Param_Range);
+      with procedure Render_Osc
+        (This    : in out PDO.Instance;
+         Buffer  :    out Mono_Buffer;
+         Wave    :        Phase_Distortion_Oscillator.Wave_Ref;
+         Amount  :        Param_Range;
+         Release :        Param_Range);
    procedure Render
      (Buffer                 :    out Mono_Buffer;
       Params                 :        Param_Array;
+      Wave                   :        Phase_Distortion_Oscillator.Wave_Ref;
       Osc                    : in out Phase_Distortion_Oscillator.Instance;
       Env                    : in out Envelopes.AR.Instance;
       Pitch                  :        Pitch_Range;
