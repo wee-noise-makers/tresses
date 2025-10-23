@@ -12,6 +12,11 @@ with Tresses.Voices.Chip_Portamento;
 with Tresses.Voices.Chip_Echo;
 with Tresses.Voices.Chip_Phaser;
 with Tresses.Voices.Pluck;
+with Tresses.Voices.Wave_Portamento;
+with Tresses.Voices.Wave_Phaser;
+with Tresses.Voices.Wave_Pluck;
+with Tresses.Voices.Wave_Echo;
+
 with Tresses.Macro;
 with Tresses.Resources;
 
@@ -64,6 +69,18 @@ package body Tresses.Voices.Macro is
       end if;
    end Prev_Engine;
 
+   -----------------------
+   -- Set_User_Waveform --
+   -----------------------
+
+   procedure Set_User_Waveform
+     (This : in out Instance;
+      Wave : not null access constant Resources.Table_257_S16)
+   is
+   begin
+      This.User_Waveform := Wave;
+   end Set_User_Waveform;
+
    ----------
    -- Init --
    ----------
@@ -90,7 +107,7 @@ package body Tresses.Voices.Macro is
                   Rng       => This.Rng,
                   Env       => This.Env0,
                   State     => This.B.Saw_Swarm_State,
-                  Phase     => This.Phase,
+                  Phase     => This.U32_1,
                   Pitch     => This.Pitch,
                   Do_Init   => This.Do_Init,
                   Do_Strike => This.Do_Strike);
@@ -147,8 +164,8 @@ package body Tresses.Voices.Macro is
             Voices.FM_OP2.Render_FM_OP2 (Buffer,
                                          This.Params,
                                          This.Env0,
-                                         This.Phase,
-                                         This.Modulator_Phase,
+                                         This.U32_1,
+                                         This.U32_2,
                                          This.Pitch,
                                          This.Do_Init,
                                          This.Do_Strike);
@@ -170,9 +187,9 @@ package body Tresses.Voices.Macro is
             Voices.Bass_808.Render_Bass_808
               (Buffer,
                Params => This.Params,
-               Phase => This.Phase,
-               Phase_Increment => This.Phase_Increment,
-               Target_Phase_Increment => This.Target_Phase_Increment,
+               Phase => This.U32_1,
+               Phase_Increment => This.U32_2,
+               Target_Phase_Increment => This.U32_3,
                Env => This.Env0,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
@@ -183,9 +200,9 @@ package body Tresses.Voices.Macro is
             Voices.Bass_808.Render_Bass_808
               (Buffer,
                Params => This.Params,
-               Phase => This.Phase,
-               Phase_Increment => This.Phase_Increment,
-               Target_Phase_Increment => This.Target_Phase_Increment,
+               Phase => This.U32_1,
+               Phase_Increment => This.U32_2,
+               Target_Phase_Increment => This.U32_3,
                Env => This.Env0,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
@@ -210,8 +227,8 @@ package body Tresses.Voices.Macro is
             Voices.Pluck_Bass.Pluck_Bass
               (Buffer,
                Params => This.Params,
-               Phase => This.Phase,
-               Phase_Increment => This.Phase_Increment,
+               Phase => This.U32_1,
+               Phase_Increment => This.U32_4,
                Env => This.Env0,
                Shape_Env => This.Env1,
                Filter => This.SVF,
@@ -238,7 +255,7 @@ package body Tresses.Voices.Macro is
                Params => This.Params,
                Env => This.Env0,
                Filter => This.SVF,
-               Phase => This.Phase,
+               Phase => This.U32_1,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
@@ -317,9 +334,9 @@ package body Tresses.Voices.Macro is
             Tresses.Voices.Chip_Portamento.Render
               (Buffer,
                Params => This.Params,
-               Start_Phase_Incr =>  This.Phase,
-               Current_Phase_Incr => This.Phase_Increment,
-               Target_Phase_Incr => This.Target_Phase_Increment,
+               Start_Phase_Incr =>  This.U32_1,
+               Current_Phase_Incr => This.U32_4,
+               Target_Phase_Incr => This.U32_3,
                Osc => This.Osc0,
                Env => This.Env0,
                Shape_Env => This.Env1,
@@ -332,9 +349,9 @@ package body Tresses.Voices.Macro is
             Voices.Chip_Echo.Render
               (Buffer, Aux_Buffer,
                Params => This.Params,
-               Osc_Select =>  This.Phase,
-               Retrig1 => This.Phase_Increment,
-               Retrig2 => This.Target_Phase_Increment,
+               Osc_Select =>  This.U32_1,
+               Retrig1 => This.U32_2,
+               Retrig2 => This.U32_3,
                Pitch1 => This.Pitch1,
                Pitch2 => This.Pitch2,
                Osc1 => This.Osc0,
@@ -351,9 +368,9 @@ package body Tresses.Voices.Macro is
             Voices.Chip_Echo.Render
               (Buffer, Aux_Buffer,
                Params => This.Params,
-               Osc_Select =>  This.Phase,
-               Retrig1 => This.Phase_Increment,
-               Retrig2 => This.Target_Phase_Increment,
+               Osc_Select =>  This.U32_1,
+               Retrig1 => This.U32_2,
+               Retrig2 => This.U32_3,
                Pitch1 => This.Pitch1,
                Pitch2 => This.Pitch2,
                Osc1 => This.Osc0,
@@ -371,7 +388,7 @@ package body Tresses.Voices.Macro is
               (Buffer, Aux_Buffer,
                Params => This.Params,
                Wave => Analog_Oscillator.Square,
-               Phase_Increment => This.Phase_Increment,
+               Phase_Increment => This.U32_1,
                Osc1 => This.Osc0,
                Osc2 => This.Osc1,
                Env => This.Env0,
@@ -384,7 +401,7 @@ package body Tresses.Voices.Macro is
               (Buffer, Aux_Buffer,
                Params => This.Params,
                Wave => Analog_Oscillator.Sine_Fold,
-               Phase_Increment => This.Phase_Increment,
+               Phase_Increment => This.U32_1,
                Osc1 => This.Osc0,
                Osc2 => This.Osc1,
                Env => This.Env0,
@@ -397,7 +414,7 @@ package body Tresses.Voices.Macro is
               (Buffer, Aux_Buffer,
                Params => This.Params,
                Wave => Analog_Oscillator.Triangle_Fold,
-               Phase_Increment => This.Phase_Increment,
+               Phase_Increment => This.U32_1,
                Osc1 => This.Osc0,
                Osc2 => This.Osc1,
                Env => This.Env0,
@@ -441,6 +458,65 @@ package body Tresses.Voices.Macro is
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
 
+         when Voice_User_Wave_Glide =>
+            Voices.Wave_Portamento.Render
+              (Buffer,
+               Params => This.Params,
+               Phase =>  This.U32_1,
+               Start_Phase_Incr => This.U32_2,
+               Current_Phase_Incr => This.U32_3,
+               Target_Phase_Incr => This.U32_4,
+               Wave => This.User_Waveform,
+               Env =>  This.Env0,
+               Shape_Env => This.Env1,
+               Filter => This.SVF,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_User_Wave_Phaser =>
+            Voices.Wave_Phaser.Render
+              (Buffer,
+               Params => This.Params,
+               Phase1 => This.U32_1,
+               Phase2 => This.U32_2,
+               Phase_Increment => This.U32_3,
+               Wave => This.User_Waveform,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_User_Wave_Pluck =>
+            Voices.Wave_Pluck.Render
+              (Buffer,
+               Params => This.Params,
+               Wave => This.User_Waveform,
+               Phase => This.U32_1,
+               Phase_Increment => This.U32_2,
+               Env => This.Env0,
+               Filter => This.SVF,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_User_Wave_Echo =>
+            Voices.Wave_Echo.Render
+              (Buffer,
+               Params => This.Params,
+               Wave => This.User_Waveform,
+               Osc_Select => This.U32_1,
+               Retrig1 => This.U32_2,
+               Retrig2 => This.U32_3,
+               Phase1 => This.U32_4,
+               Phase2 => This.U32_5,
+               Pitch1 => This.Pitch1,
+               Pitch2 => This.Pitch2,
+               Env1 => This.Env0,
+               Env2 => This.Env1,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
       end case;
    end Render;
 

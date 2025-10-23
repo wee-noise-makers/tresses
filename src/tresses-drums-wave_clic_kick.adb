@@ -2,7 +2,7 @@ with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 
 with Tresses.DSP;
 
-package body Tresses.Drums.Generic_Waveform_Noise_Kick is
+package body Tresses.Drums.Wave_Clic_Kick is
 
    -----------------
    -- Render_Kick --
@@ -11,6 +11,7 @@ package body Tresses.Drums.Generic_Waveform_Noise_Kick is
    procedure Render_Kick
      (Buffer                 :    out Mono_Buffer;
       Params                 :        Param_Array;
+      Tone_Waveform          :        Wave_Ref;
       Phase                  : in out U32;
       Phase_Increment        : in out U32;
       Target_Phase_Increment : in out U32;
@@ -21,7 +22,7 @@ package body Tresses.Drums.Generic_Waveform_Noise_Kick is
       Do_Strike              : in out Strike_State)
    is
       Decay        : Param_Range renames Params (P_Decay);
-      Noise        : Param_Range renames Params (P_Noise);
+      Noise        : Param_Range renames Params (P_Click);
       Pitch_Offset : Param_Range renames Params (P_Punch);
       Pitch_Decay  : Param_Range renames Params (P_Punch_Decay);
 
@@ -119,4 +120,4 @@ package body Tresses.Drums.Generic_Waveform_Noise_Kick is
 
    end Render_Kick;
 
-end Tresses.Drums.Generic_Waveform_Noise_Kick;
+end Tresses.Drums.Wave_Clic_Kick;

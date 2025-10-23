@@ -6,7 +6,7 @@ with Tresses.Excitation;
 with Tresses.Random;
 with Tresses.Filters.SVF;
 with Tresses.Envelopes.AR;
-
+with Tresses.Resources;
 with Tresses.Interfaces; use Tresses.Interfaces;
 
 package Tresses.Drums.Macro
@@ -28,6 +28,11 @@ is
      with Linker_Section => Code_Linker_Section;
 
    procedure Init (This : in out Instance)
+     with Linker_Section => Code_Linker_Section;
+
+   procedure Set_User_Waveform
+     (This : in out Instance;
+      Wave : not null access constant Resources.Table_257_S16)
      with Linker_Section => Code_Linker_Section;
 
    procedure Render (This   : in out Instance;
@@ -65,6 +70,8 @@ private
 
       Do_Init : Boolean := True;
 
+      User_Waveform : not null access constant Resources.Table_257_S16 :=
+        Resources.WAV_Sine2_Warp2'Access;
    end record;
 
 end Tresses.Drums.Macro;

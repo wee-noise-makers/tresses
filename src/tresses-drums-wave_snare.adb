@@ -2,7 +2,7 @@ with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 
 with Tresses.DSP; use Tresses.DSP;
 
-package body Tresses.Drums.Generic_Waveform_Snare is
+package body Tresses.Drums.Wave_Snare is
 
    -------------------------
    -- Render_Analog_Snare --
@@ -11,6 +11,7 @@ package body Tresses.Drums.Generic_Waveform_Snare is
    procedure Render_Snare
      (Buffer                 :    out Mono_Buffer;
       Params                 :        Param_Array;
+      Tone_Waveform          :        Wave_Ref;
       Phase                  : in out U32;
       Phase_Increment        : in out U32;
       Target_Phase_Increment : in out U32;
@@ -106,4 +107,4 @@ package body Tresses.Drums.Generic_Waveform_Snare is
 
    end Render_Snare;
 
-end Tresses.Drums.Generic_Waveform_Snare;
+end Tresses.Drums.Wave_Snare;

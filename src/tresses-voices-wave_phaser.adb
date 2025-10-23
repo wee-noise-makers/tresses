@@ -2,40 +2,38 @@ with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 
 with Tresses.DSP;
 
-package body Tresses.Voices.Chip_Phaser is
+package body Tresses.Voices.Wave_Phaser is
 
    ------------
    -- Render --
    ------------
 
    procedure Render
-     (BufferA, BufferB :    out Mono_Buffer;
+     (Buffer           :    out Mono_Buffer;
       Params           :        Param_Array;
-      Wave             :        Analog_Oscillator.Shape_Kind;
+      Phase1, Phase2   : in out U32;
       Phase_Increment  : in out U32;
-      Osc1, Osc2       : in out Analog_Oscillator.Instance;
+      Wave             :        Wave_Ref;
       Env              : in out Envelopes.AR.Instance;
       Pitch            :        Pitch_Range;
       Do_Init          : in out Boolean;
       Do_Strike        : in out Strike_State)
    is
       Phaser  : Param_Range renames Params (P_Phaser);
-      Shape   : Param_Range renames Params (P_Shape);
+      Fold    : Param_Range renames Params (P_Fold);
       Attack  : Param_Range renames Params (P_Attack);
       Release : Param_Range renames Params (P_Release);
 
       SampleA, SampleB : S32;
+      Folded : S16;
+      Phase_Increment2 : U32;
 
    begin
       if Do_Init then
          Do_Init := False;
 
-         Analog_Oscillator.Init (Osc1);
-         Analog_Oscillator.Set_Shape (Osc1, Wave);
-         Analog_Oscillator.Init (Osc2);
-         Analog_Oscillator.Set_Shape (Osc2, Wave);
-
-         Phase_Increment := 0;
+         Phase1 := 0;
+         Phase2 := 0;
 
          Init (Env, Do_Hold => True);
       end if;
@@ -45,8 +43,6 @@ package body Tresses.Voices.Chip_Phaser is
             Do_Strike.Event := None;
             On (Env, Do_Strike.Velocity);
 
-            Phase_Increment := DSP.Compute_Phase_Increment (S16 (Pitch));
-
          when Off =>
             Do_Strike.Event := None;
             Off (Env);
@@ -54,27 +50,29 @@ package body Tresses.Voices.Chip_Phaser is
          when None => null;
       end case;
 
-
-      Analog_Oscillator.Set_Param (Osc1, 0, Shape);
-      Analog_Oscillator.Render (Osc1, BufferA, Phase_Increment);
-      Analog_Oscillator.Set_Param (Osc2, 0, Shape);
-      Analog_Oscillator.Render (Osc2, BufferB,
-                                Phase_Increment + U32 (Phaser) * 8);
+      Phase_Increment := DSP.Compute_Phase_Increment (S16 (Pitch));
+      Phase_Increment2 := Phase_Increment + U32 (Phaser) * 8;
 
       Set_Attack (Env, Attack);
       Set_Release (Env, Release);
 
-      for Index in BufferA'Range loop
-         SampleA := S32 (BufferA (Index));
-         SampleB := S32 (BufferB (Index));
+      for Index in Buffer'Range loop
+         Phase1 := Phase1 + Phase_Increment;
+         Phase2 := Phase2 + Phase_Increment2;
+         SampleA := S32 (DSP.Interpolate824 (Wave.all, Phase1));
+         SampleB := S32 (DSP.Interpolate824 (Wave.all, Phase2));
 
-         --  Envolopes
+         --  Envolope
          Render (Env);
          SampleA := (SampleA + SampleB) / 2;
-         SampleA := (SampleA * S32 (LoFi (Env))) / 2**15;
-         BufferA (Index) := S16 (SampleA);
-      end loop;
 
+         Folded := DSP.Interpolate88 (Resources.WS_Sine_Fold,
+                                      U16 (SampleA + 32_768));
+         --  Mix clean and overdrive signals
+         SampleA := S32 (DSP.Mix (S16 (SampleA), Folded, Fold));
+         SampleA := (SampleA * S32 (Low_Pass (Env))) / 2**15;
+         Buffer (Index) := S16 (SampleA);
+      end loop;
    end Render;
 
-end Tresses.Voices.Chip_Phaser;
+end Tresses.Voices.Wave_Phaser;

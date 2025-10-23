@@ -2,7 +2,7 @@ with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 
 with Tresses.DSP;
 
-package body Tresses.Drums.Generic_Waveform_Kick is
+package body Tresses.Drums.Wave_Kick is
 
    -----------------
    -- Render_Kick --
@@ -11,6 +11,7 @@ package body Tresses.Drums.Generic_Waveform_Kick is
    procedure Render_Kick
      (Buffer                 :    out Mono_Buffer;
       Params                 :        Param_Array;
+      Tone_Waveform          :        Wave_Ref;
       Phase                  : in out U32;
       Phase_Increment        : in out U32;
       Target_Phase_Increment : in out U32;
@@ -110,4 +111,4 @@ package body Tresses.Drums.Generic_Waveform_Kick is
 
    end Render_Kick;
 
-end Tresses.Drums.Generic_Waveform_Kick;
+end Tresses.Drums.Wave_Kick;

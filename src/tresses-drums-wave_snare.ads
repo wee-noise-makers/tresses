@@ -2,15 +2,16 @@ with Tresses.Random;
 with Tresses.Envelopes.AR;
 with Tresses.Resources;
 
-generic
-   Tone_Waveform : not null access constant Tresses.Resources.Table_257_S16;
-package Tresses.Drums.Generic_Waveform_Snare
+package Tresses.Drums.Wave_Snare
 with Preelaborate
 is
+
+   type Wave_Ref is not null access constant Tresses.Resources.Table_257_S16;
 
    procedure Render_Snare
      (Buffer                 :    out Mono_Buffer;
       Params                 :        Param_Array;
+      Tone_Waveform          :        Wave_Ref;
       Phase                  : in out U32;
       Phase_Increment        : in out U32;
       Target_Phase_Increment : in out U32;
@@ -40,4 +41,4 @@ is
           when P_Snappy      => "SNP",
           when P_Punch       => "PCH");
 
-end Tresses.Drums.Generic_Waveform_Snare;
+end Tresses.Drums.Wave_Snare;

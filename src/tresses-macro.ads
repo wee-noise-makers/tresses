@@ -6,6 +6,7 @@ with Tresses.Excitation;
 with Tresses.Random;
 with Tresses.Filters.SVF;
 with Tresses.Filters.Ladder;
+with Tresses.Resources;
 with Tresses.Envelopes.AR;
 with Tresses.Analog_Oscillator;
 with Tresses.Phase_Distortion_Oscillator;
@@ -37,6 +38,11 @@ is
      with Linker_Section => Code_Linker_Section;
 
    procedure Init (This : in out Instance)
+     with Linker_Section => Code_Linker_Section;
+
+   procedure Set_User_Waveform
+     (This : in out Instance;
+      Wave : not null access constant Resources.Table_257_S16)
      with Linker_Section => Code_Linker_Section;
 
    procedure Render (This               : in out Instance;
@@ -79,9 +85,7 @@ private
       Cym_State : Drums.Cymbal.Cymbal_State;
       Bell_State : Drums.Bell.Additive_State;
       Perc_State : Drums.Percussion.Additive_State;
-      Phase : U32 := 0;
-      Modulator_Phase : U32 := 0;
-      Target_Phase_Increment, Phase_Increment : U32 := 0;
+      U32_1, U32_2, U32_3, U32_4, U32_5 : U32 := 0;
 
       Saw_Swarm_State : Voices.Saw_Swarm.Saw_Swarm_State;
       Pluck_State : Voices.Plucked.Pluck_State;
@@ -91,6 +95,8 @@ private
 
       Do_Init : Boolean := True;
 
+      User_Waveform : not null access constant Resources.Table_257_S16 :=
+        Resources.WAV_Sine2_Warp2'Access;
    end record;
 
 end Tresses.Macro;

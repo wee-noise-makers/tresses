@@ -1,14 +1,11 @@
 with Tresses.Drums.Kick;
-with Tresses.Drums.Sine_Kick;
-with Tresses.Drums.Triangle_Kick;
-with Tresses.Drums.Chip_Kick;
-with Tresses.Drums.Sine_Noise_Kick;
+with Tresses.Drums.Wave_Clic_Kick;
+with Tresses.Drums.Wave_Kick;
+with Tresses.Drums.Wave_Snare;
 with Tresses.Drums.Snare;
-with Tresses.Drums.Sine_Snare;
-with Tresses.Drums.Saw_Snare;
-with Tresses.Drums.Triangle_Snare;
 with Tresses.Drums.Clap;
 with Tresses.Macro;
+with Tresses.Resources;
 
 package body Tresses.Drums.Macro is
 
@@ -57,6 +54,18 @@ package body Tresses.Drums.Macro is
       end if;
    end Prev_Engine;
 
+   -----------------------
+   -- Set_User_Waveform --
+   -----------------------
+
+   procedure Set_User_Waveform
+     (This : in out Instance;
+      Wave : not null access constant Resources.Table_257_S16)
+   is
+   begin
+      This.User_Waveform := Wave;
+   end Set_User_Waveform;
+
    ----------
    -- Init --
    ----------
@@ -88,9 +97,10 @@ package body Tresses.Drums.Macro is
                               Do_Strike   => This.Do_Strike);
 
          when Drum_Sine_Kick =>
-            Sine_Kick.Render_Kick
+            Wave_Kick.Render_Kick
               (Buffer,
                Params => This.Params,
+               Tone_Waveform => Resources.WAV_Sine'Access,
                Phase => This.Phase,
                Phase_Increment => This.Phase_Increment,
                Target_Phase_Increment => This.Target_Phase_Increment,
@@ -100,9 +110,10 @@ package body Tresses.Drums.Macro is
                Do_Strike => This.Do_Strike);
 
          when Drum_Triangle_Kick =>
-            Triangle_Kick.Render_Kick
+            Wave_Kick.Render_Kick
               (Buffer,
                Params => This.Params,
+               Tone_Waveform => Resources.WAV_Triangle'Access,
                Phase => This.Phase,
                Phase_Increment => This.Phase_Increment,
                Target_Phase_Increment => This.Target_Phase_Increment,
@@ -112,9 +123,10 @@ package body Tresses.Drums.Macro is
                Do_Strike => This.Do_Strike);
 
          when Drum_Chip_Kick =>
-            Chip_Kick.Render_Kick
+            Wave_Kick.Render_Kick
               (Buffer,
                Params => This.Params,
+               Tone_Waveform => Resources.WAV_Chip_Triangle'Access,
                Phase => This.Phase,
                Phase_Increment => This.Phase_Increment,
                Target_Phase_Increment => This.Target_Phase_Increment,
@@ -123,10 +135,39 @@ package body Tresses.Drums.Macro is
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
 
-         when Drum_Sine_Noise_Kick =>
-            Sine_Noise_Kick.Render_Kick
+         when Drum_User_Wave_Kick =>
+            Wave_Kick.Render_Kick
               (Buffer,
                Params => This.Params,
+               Tone_Waveform => This.User_Waveform,
+               Phase => This.Phase,
+               Phase_Increment => This.Phase_Increment,
+               Target_Phase_Increment => This.Target_Phase_Increment,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Drum_User_Wave_Clic_Kick =>
+            Wave_Clic_Kick.Render_Kick
+              (Buffer,
+               Params => This.Params,
+               Tone_Waveform => This.User_Waveform,
+               Phase => This.Phase,
+               Phase_Increment => This.Phase_Increment,
+               Target_Phase_Increment => This.Target_Phase_Increment,
+               Env => This.Env0,
+               Noise_Env => This.Env1,
+               RNG => This.Rng,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Drum_Sine_Clic_Kick =>
+            Wave_Clic_Kick.Render_Kick
+              (Buffer,
+               Params => This.Params,
+               Tone_Waveform => Resources.WAV_Sine'Access,
                Phase => This.Phase,
                Phase_Increment => This.Phase_Increment,
                Target_Phase_Increment => This.Target_Phase_Increment,
@@ -153,9 +194,10 @@ package body Tresses.Drums.Macro is
                                 Do_Strike => This.Do_Strike);
 
          when Drum_Sine_Snare =>
-            Drums.Sine_Snare.Render_Snare
+            Drums.Wave_Snare.Render_Snare
               (Buffer,
                Params => This.Params,
+               Tone_Waveform => Resources.WAV_Sine'Access,
                Phase => This.Phase,
                Phase_Increment => This.Phase_Increment,
                Target_Phase_Increment => This.Target_Phase_Increment,
@@ -167,9 +209,10 @@ package body Tresses.Drums.Macro is
                Do_Strike => This.Do_Strike);
 
          when Drum_Saw_Snare =>
-            Drums.Saw_Snare.Render_Snare
+            Drums.Wave_Snare.Render_Snare
               (Buffer,
                Params => This.Params,
+               Tone_Waveform => Resources.WAV_Sawtooth'Access,
                Phase => This.Phase,
                Phase_Increment => This.Phase_Increment,
                Target_Phase_Increment => This.Target_Phase_Increment,
@@ -181,9 +224,25 @@ package body Tresses.Drums.Macro is
                Do_Strike => This.Do_Strike);
 
          when Drum_Triangle_Snare =>
-            Drums.Triangle_Snare.Render_Snare
+            Drums.Wave_Snare.Render_Snare
               (Buffer,
                Params => This.Params,
+               Tone_Waveform => Resources.WAV_Triangle'Access,
+               Phase => This.Phase,
+               Phase_Increment => This.Phase_Increment,
+               Target_Phase_Increment => This.Target_Phase_Increment,
+               Tone_Env => This.Env0,
+               Noise_Env => This.Env1,
+               Rng => This.Rng,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Drum_User_Wave_Snare =>
+            Drums.Wave_Snare.Render_Snare
+              (Buffer,
+               Params => This.Params,
+               Tone_Waveform => This.User_Waveform,
                Phase => This.Phase,
                Phase_Increment => This.Phase_Increment,
                Target_Phase_Increment => This.Target_Phase_Increment,

@@ -62,11 +62,14 @@ is
                     Drum_Sine_Kick,
                     Drum_Triangle_Kick,
                     Drum_Chip_Kick,
-                    Drum_Sine_Noise_Kick,
+                    Drum_Sine_Clic_Kick,
+                    Drum_User_Wave_Kick,
+                    Drum_User_Wave_Clic_Kick,
                     Drum_Snare,
                     Drum_Sine_Snare,
                     Drum_Saw_Snare,
                     Drum_Triangle_Snare,
+                    Drum_User_Wave_Snare,
                     Drum_Clap,
                     Drum_Cymbal,
                     Drum_Percussion,
@@ -102,7 +105,11 @@ is
                     Voice_Triangle_Phaser,
                     Voice_Sine_Pluck,
                     Voice_Triangle_Pluck,
-                    Voice_Chip_Pluck);
+                    Voice_Chip_Pluck,
+                    Voice_User_Wave_Glide,
+                    Voice_User_Wave_Phaser,
+                    Voice_User_Wave_Pluck,
+                    Voice_User_Wave_Echo);
 
    subtype Drum_Engines is Engines range Drum_Kick .. Drum_Bell;
    subtype Synth_Engines is Engines range Voice_Plucked .. Engines'Last;
@@ -113,11 +120,14 @@ is
           when Drum_Sine_Kick             => "Sine Kick",
           when Drum_Triangle_Kick         => "Triangle Kick",
           when Drum_Chip_Kick             => "Chip Kick",
-          when Drum_Sine_Noise_Kick       => "Sine Noise Kick",
+          when Drum_Sine_Clic_Kick        => "Sine Click Kick",
+          when Drum_User_Wave_Kick        => "Custom Waveform Kick",
+          when Drum_User_Wave_Clic_Kick   => "Custom Waveform Clic Kick",
           when Drum_Snare                 => "Analog Snare",
           when Drum_Sine_Snare            => "Sine Snare",
           when Drum_Saw_Snare             => "Saw Snare",
           when Drum_Triangle_Snare        => "Triangle Snare",
+          when Drum_User_Wave_Snare       => "Custom Waveform Snare",
           when Drum_Clap                  => "Clap",
           when Drum_Cymbal                => "Cymbal",
           when Drum_Percussion            => "Percussion",
@@ -152,7 +162,11 @@ is
           when Voice_Triangle_Phaser      => "Triangle Phaser",
           when Voice_Sine_Pluck           => "Sine Pluck",
           when Voice_Triangle_Pluck       => "Triangle Pluck",
-          when Voice_Chip_Pluck           => "Chip Pluck");
+          when Voice_Chip_Pluck           => "Chip Pluck",
+          when Voice_User_Wave_Glide      => "Custom Waveform Glide",
+          When Voice_User_Wave_Phaser     => "Custom Waveform Phaser",
+          when Voice_User_Wave_Pluck      => "Custom Waveform Pluck",
+          when Voice_User_Wave_Echo       => "Custom Waveform Echo");
 
    subtype Short_Label is String (1 .. 3);
 

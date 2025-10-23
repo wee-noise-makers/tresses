@@ -1,12 +1,8 @@
 with Tresses.Drums.Kick;
-with Tresses.Drums.Sine_Kick;
-with Tresses.Drums.Triangle_Kick;
-with Tresses.Drums.Chip_Kick;
-with Tresses.Drums.Sine_Noise_Kick;
+with Tresses.Drums.Wave_Kick;
+with Tresses.Drums.Wave_Clic_Kick;
 with Tresses.Drums.Snare;
-with Tresses.Drums.Sine_Snare;
-with Tresses.Drums.Saw_Snare;
-with Tresses.Drums.Triangle_Snare;
+with Tresses.Drums.Wave_Snare;
 with Tresses.Drums.Clap;
 with Tresses.Drums.HH_909_Sampled;
 with Tresses.Drums.HH_707_Sampled;
@@ -25,6 +21,11 @@ with Tresses.Voices.Chip_Portamento;
 with Tresses.Voices.Chip_Echo;
 with Tresses.Voices.Chip_Phaser;
 with Tresses.Voices.Pluck;
+with Tresses.Voices.Wave_Portamento;
+with Tresses.Voices.Wave_Phaser;
+with Tresses.Voices.Wave_Pluck;
+with Tresses.Voices.Wave_Echo;
+
 with Tresses.Resources;
 
 package body Tresses.Macro is
@@ -76,6 +77,18 @@ package body Tresses.Macro is
       end if;
    end Prev_Engine;
 
+   -----------------------
+   -- Set_User_Waveform --
+   -----------------------
+
+   procedure Set_User_Waveform
+     (This : in out Instance;
+      Wave : not null access constant Resources.Table_257_S16)
+   is
+   begin
+      This.User_Waveform := Wave;
+   end Set_User_Waveform;
+
    ----------
    -- Init --
    ----------
@@ -107,48 +120,80 @@ package body Tresses.Macro is
                                     Do_Strike   => This.Do_Strike);
 
          when Drum_Sine_Kick =>
-            Drums.Sine_Kick.Render_Kick
+            Drums.Wave_Kick.Render_Kick
               (Buffer,
                Params => This.Params,
-               Phase => This.Phase,
-               Phase_Increment => This.Phase_Increment,
-               Target_Phase_Increment => This.Target_Phase_Increment,
+               Tone_Waveform => Resources.WAV_Sine'Access,
+               Phase => This.U32_1,
+               Phase_Increment => This.U32_2,
+               Target_Phase_Increment => This.U32_3,
                Env => This.Env0,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
 
          when Drum_Triangle_Kick =>
-            Drums.Triangle_Kick.Render_Kick
+            Drums.Wave_Kick.Render_Kick
               (Buffer,
                Params => This.Params,
-               Phase => This.Phase,
-               Phase_Increment => This.Phase_Increment,
-               Target_Phase_Increment => This.Target_Phase_Increment,
+               Tone_Waveform => Resources.WAV_Triangle'Access,
+               Phase => This.U32_1,
+               Phase_Increment => This.U32_2,
+               Target_Phase_Increment => This.U32_3,
                Env => This.Env0,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
 
          when Drum_Chip_Kick =>
-            Drums.Chip_Kick.Render_Kick
+            Drums.Wave_Kick.Render_Kick
               (Buffer,
                Params => This.Params,
-               Phase => This.Phase,
-               Phase_Increment => This.Phase_Increment,
-               Target_Phase_Increment => This.Target_Phase_Increment,
+               Tone_Waveform => Resources.WAV_Chip_Triangle'Access,
+               Phase => This.U32_1,
+               Phase_Increment => This.U32_2,
+               Target_Phase_Increment => This.U32_3,
                Env => This.Env0,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
 
-         when Drum_Sine_Noise_Kick =>
-            Drums.Sine_Noise_Kick.Render_Kick
+         when Drum_User_Wave_Kick =>
+            Drums.Wave_Kick.Render_Kick
               (Buffer,
                Params => This.Params,
-               Phase => This.Phase,
-               Phase_Increment => This.Phase_Increment,
-               Target_Phase_Increment => This.Target_Phase_Increment,
+               Tone_Waveform => This.User_Waveform,
+               Phase => This.U32_1,
+               Phase_Increment => This.U32_2,
+               Target_Phase_Increment => This.U32_3,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Drum_User_Wave_Clic_Kick =>
+            Drums.Wave_Clic_Kick.Render_Kick
+              (Buffer,
+               Params => This.Params,
+               Tone_Waveform => This.User_Waveform,
+               Phase => This.U32_1,
+               Phase_Increment => This.U32_2,
+               Target_Phase_Increment => This.U32_3,
+               Env => This.Env0,
+               Noise_Env => This.Env1,
+               RNG => This.Rng,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Drum_Sine_Clic_Kick =>
+            Drums.Wave_Clic_Kick.Render_Kick
+              (Buffer,
+               Params => This.Params,
+               Tone_Waveform => Resources.WAV_Sine'Access,
+               Phase => This.U32_1,
+               Phase_Increment => This.U32_2,
+               Target_Phase_Increment => This.U32_3,
                Env => This.Env0,
                Noise_Env => This.Env1,
                RNG => This.Rng,
@@ -172,12 +217,13 @@ package body Tresses.Macro is
                                       Do_Strike => This.Do_Strike);
 
          when Drum_Sine_Snare =>
-            Drums.Sine_Snare.Render_Snare
+            Drums.Wave_Snare.Render_Snare
               (Buffer,
                Params => This.Params,
-               Phase => This.Phase,
-               Phase_Increment => This.Phase_Increment,
-               Target_Phase_Increment => This.Target_Phase_Increment,
+               Tone_Waveform => Resources.WAV_Sine'Access,
+               Phase => This.U32_1,
+               Phase_Increment => This.U32_2,
+               Target_Phase_Increment => This.U32_3,
                Tone_Env => This.Env0,
                Noise_Env => This.Env1,
                Rng => This.Rng,
@@ -186,12 +232,13 @@ package body Tresses.Macro is
                Do_Strike => This.Do_Strike);
 
          when Drum_Saw_Snare =>
-            Drums.Saw_Snare.Render_Snare
+            Drums.Wave_Snare.Render_Snare
               (Buffer,
                Params => This.Params,
-               Phase => This.Phase,
-               Phase_Increment => This.Phase_Increment,
-               Target_Phase_Increment => This.Target_Phase_Increment,
+               Tone_Waveform => Resources.WAV_Sawtooth'Access,
+               Phase => This.U32_1,
+               Phase_Increment => This.U32_2,
+               Target_Phase_Increment => This.U32_3,
                Tone_Env => This.Env0,
                Noise_Env => This.Env1,
                Rng => This.Rng,
@@ -200,12 +247,28 @@ package body Tresses.Macro is
                Do_Strike => This.Do_Strike);
 
          when Drum_Triangle_Snare =>
-            Drums.Triangle_Snare.Render_Snare
+            Drums.Wave_Snare.Render_Snare
               (Buffer,
                Params => This.Params,
-               Phase => This.Phase,
-               Phase_Increment => This.Phase_Increment,
-               Target_Phase_Increment => This.Target_Phase_Increment,
+               Tone_Waveform => Resources.WAV_Triangle'Access,
+               Phase => This.U32_1,
+               Phase_Increment => This.U32_2,
+               Target_Phase_Increment => This.U32_3,
+               Tone_Env => This.Env0,
+               Noise_Env => This.Env1,
+               Rng => This.Rng,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Drum_User_Wave_Snare =>
+            Drums.Wave_Snare.Render_Snare
+              (Buffer,
+               Params => This.Params,
+               Tone_Waveform => This.User_Waveform,
+               Phase => This.U32_1,
+               Phase_Increment => This.U32_2,
+               Target_Phase_Increment => This.U32_3,
                Tone_Env => This.Env0,
                Noise_Env => This.Env1,
                Rng => This.Rng,
@@ -219,7 +282,7 @@ package body Tresses.Macro is
                                     Filter => This.Filter0,
                                     Rng =>  This.Rng,
                                     Env => This.Env0,
-                                    Re_Trig => This.Phase,
+                                    Re_Trig => This.U32_1,
                                     Pitch => This.Pitch,
                                     Do_Init => This.Do_Init,
                                     Do_Strike => This.Do_Strike);
@@ -230,7 +293,7 @@ package body Tresses.Macro is
                                         Filter1 => This.Filter1,
                                         Env => This.Env0,
                                         State => This.Cym_State,
-                                        Phase => This.Phase,
+                                        Phase => This.U32_1,
                                         Pitch => This.Pitch,
                                         Do_Init => This.Do_Init,
                                         Do_Strike => This.Do_Strike);
@@ -258,7 +321,7 @@ package body Tresses.Macro is
                Filter => This.Filter0,
                Env => This.Env0,
                Rng => This.Rng,
-               Phase =>  This.Phase,
+               Phase =>  This.U32_1,
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
 
@@ -269,7 +332,7 @@ package body Tresses.Macro is
                Filter => This.Filter0,
                Env => This.Env0,
                Rng => This.Rng,
-               Phase =>  This.Phase,
+               Phase =>  This.U32_1,
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
 
@@ -280,7 +343,7 @@ package body Tresses.Macro is
                Rng       => This.Rng,
                Env       => This.Env0,
                State     => This.Saw_Swarm_State,
-               Phase     => This.Phase,
+               Phase     => This.U32_1,
                Pitch     => This.Pitch,
                Do_Init   => This.Do_Init,
                Do_Strike => This.Do_Strike);
@@ -337,8 +400,8 @@ package body Tresses.Macro is
             Voices.FM_OP2.Render_FM_OP2 (Buffer,
                                          This.Params,
                                          This.Env0,
-                                         This.Phase,
-                                         This.Modulator_Phase,
+                                         This.U32_1,
+                                         This.U32_2,
                                          This.Pitch,
                                          This.Do_Init,
                                          This.Do_Strike);
@@ -360,9 +423,9 @@ package body Tresses.Macro is
             Voices.Bass_808.Render_Bass_808
               (Buffer,
                Params => This.Params,
-               Phase => This.Phase,
-               Phase_Increment => This.Phase_Increment,
-               Target_Phase_Increment => This.Target_Phase_Increment,
+               Phase => This.U32_1,
+               Phase_Increment => This.U32_4,
+               Target_Phase_Increment => This.U32_3,
                Env => This.Env0,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
@@ -373,9 +436,9 @@ package body Tresses.Macro is
             Voices.Bass_808.Render_Bass_808
               (Buffer,
                Params => This.Params,
-               Phase => This.Phase,
-               Phase_Increment => This.Phase_Increment,
-               Target_Phase_Increment => This.Target_Phase_Increment,
+               Phase => This.U32_1,
+               Phase_Increment => This.U32_4,
+               Target_Phase_Increment => This.U32_3,
                Env => This.Env0,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
@@ -400,8 +463,8 @@ package body Tresses.Macro is
             Voices.Pluck_Bass.Pluck_Bass
               (Buffer,
                Params => This.Params,
-               Phase => This.Phase,
-               Phase_Increment => This.Phase_Increment,
+               Phase => This.U32_1,
+               Phase_Increment => This.U32_4,
                Env => This.Env0,
                Shape_Env => This.Env1,
                Filter => This.Filter0,
@@ -428,7 +491,7 @@ package body Tresses.Macro is
                Params => This.Params,
                Env => This.Env0,
                Filter => This.Filter0,
-               Phase => This.Phase,
+               Phase => This.U32_1,
                Pitch => This.Pitch,
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
@@ -507,9 +570,9 @@ package body Tresses.Macro is
             Voices.Chip_Portamento.Render
               (Buffer,
                Params => This.Params,
-               Start_Phase_Incr =>  This.Phase,
-               Current_Phase_Incr => This.Phase_Increment,
-               Target_Phase_Incr => This.Target_Phase_Increment,
+               Start_Phase_Incr =>  This.U32_1,
+               Current_Phase_Incr => This.U32_4,
+               Target_Phase_Incr => This.U32_3,
                Osc => This.Osc0,
                Env => This.Env0,
                Shape_Env => This.Env1,
@@ -522,9 +585,9 @@ package body Tresses.Macro is
             Voices.Chip_Echo.Render
               (Buffer, Aux_Buffer,
                Params => This.Params,
-               Osc_Select =>  This.Phase,
-               Retrig1 => This.Phase_Increment,
-               Retrig2 => This.Target_Phase_Increment,
+               Osc_Select =>  This.U32_1,
+               Retrig1 => This.U32_4,
+               Retrig2 => This.U32_3,
                Pitch1 => This.Pitch1,
                Pitch2 => This.Pitch2,
                Osc1 => This.Osc0,
@@ -541,9 +604,9 @@ package body Tresses.Macro is
             Voices.Chip_Echo.Render
               (Buffer, Aux_Buffer,
                Params => This.Params,
-               Osc_Select =>  This.Phase,
-               Retrig1 => This.Phase_Increment,
-               Retrig2 => This.Target_Phase_Increment,
+               Osc_Select =>  This.U32_1,
+               Retrig1 => This.U32_4,
+               Retrig2 => This.U32_3,
                Pitch1 => This.Pitch1,
                Pitch2 => This.Pitch2,
                Osc1 => This.Osc0,
@@ -561,7 +624,7 @@ package body Tresses.Macro is
               (Buffer, Aux_Buffer,
                Params => This.Params,
                Wave => Analog_Oscillator.Square,
-               Phase_Increment => This.Phase_Increment,
+               Phase_Increment => This.U32_4,
                Osc1 => This.Osc0,
                Osc2 => This.Osc1,
                Env => This.Env0,
@@ -574,7 +637,7 @@ package body Tresses.Macro is
               (Buffer, Aux_Buffer,
                Params => This.Params,
                Wave => Analog_Oscillator.Sine_Fold,
-               Phase_Increment => This.Phase_Increment,
+               Phase_Increment => This.U32_4,
                Osc1 => This.Osc0,
                Osc2 => This.Osc1,
                Env => This.Env0,
@@ -587,7 +650,7 @@ package body Tresses.Macro is
               (Buffer, Aux_Buffer,
                Params => This.Params,
                Wave => Analog_Oscillator.Triangle_Fold,
-               Phase_Increment => This.Phase_Increment,
+               Phase_Increment => This.U32_4,
                Osc1 => This.Osc0,
                Osc2 => This.Osc1,
                Env => This.Env0,
@@ -631,6 +694,65 @@ package body Tresses.Macro is
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
 
+         when Voice_User_Wave_Glide =>
+            Voices.Wave_Portamento.Render
+              (Buffer,
+               Params => This.Params,
+               Phase =>  This.U32_1,
+               Start_Phase_Incr => This.U32_5,
+               Current_Phase_Incr => This.U32_4,
+               Target_Phase_Incr => This.U32_3,
+               Wave => This.User_Waveform,
+               Env =>  This.Env0,
+               Shape_Env => This.Env1,
+               Filter => This.Filter0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_User_Wave_Phaser =>
+            Voices.Wave_Phaser.Render
+              (Buffer,
+               Params => This.Params,
+               Phase1 => This.U32_1,
+               Phase2 => This.U32_5,
+               Phase_Increment => This.U32_4,
+               Wave => This.User_Waveform,
+               Env => This.Env0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_User_Wave_Pluck =>
+            Voices.Wave_Pluck.Render
+              (Buffer,
+               Params => This.Params,
+               Wave => This.User_Waveform,
+               Phase => This.U32_1,
+               Phase_Increment => This.U32_4,
+               Env => This.Env0,
+               Filter => This.Filter0,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Voice_User_Wave_Echo =>
+            Voices.Wave_Echo.Render
+              (Buffer,
+               Params => This.Params,
+               Wave => This.User_Waveform,
+               Osc_Select => This.U32_1,
+               Retrig1 => This.U32_4,
+               Retrig2 => This.U32_3,
+               Phase1 => This.U32_5,
+               Phase2 => This.U32_2,
+               Pitch1 => This.Pitch1,
+               Pitch2 => This.Pitch2,
+               Env1 => This.Env0,
+               Env2 => This.Env1,
+               Pitch => This.Pitch,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
       end case;
    end Render;
 
@@ -646,17 +768,19 @@ package body Tresses.Macro is
          when Drum_Kick =>
             return Drums.Kick.Param_Label (Id);
 
-         when Drum_Sine_Kick | Drum_Triangle_Kick | Drum_Chip_Kick =>
-            return Drums.Sine_Kick.Param_Label (Id);
+         when Drum_Sine_Clic_Kick | Drum_User_Wave_Clic_Kick =>
+            return Drums.Wave_Clic_Kick.Param_Label (Id);
 
-         when Drum_Sine_Noise_Kick =>
-            return Drums.Sine_Noise_Kick.Param_Label (Id);
+         when Drum_Sine_Kick | Drum_Triangle_Kick | Drum_Chip_Kick |
+              Drum_User_Wave_Kick =>
+            return Drums.Wave_Kick.Param_Label (Id);
 
          when Drum_Snare =>
             return Drums.Snare.Param_Label (Id);
 
-         when Drum_Sine_Snare | Drum_Saw_Snare | Drum_Triangle_Snare =>
-            return Drums.Sine_Snare.Param_Label (Id);
+         when Drum_Sine_Snare | Drum_Saw_Snare | Drum_Triangle_Snare |
+              Drum_User_Wave_Snare =>
+            return Drums.Wave_Snare.Param_Label (Id);
 
          when Drum_Clap =>
             return Drums.Clap.Param_Label (Id);
@@ -729,6 +853,18 @@ package body Tresses.Macro is
 
          when Voice_Sine_Pluck .. Voice_Chip_Pluck =>
             return Tresses.Voices.Pluck.Param_Label (Id);
+
+         when Voice_User_Wave_Glide =>
+            return Voices.Wave_Portamento.Param_Label (Id);
+
+         when Voice_User_Wave_Phaser =>
+            return Voices.Wave_Phaser.Param_Label (Id);
+
+         when Voice_User_Wave_Pluck =>
+            return Voices.Wave_Pluck.Param_Label (Id);
+
+         when Voice_User_Wave_Echo =>
+            return Voices.Wave_Echo.Param_Label (Id);
       end case;
 
    end Param_Label;
@@ -745,17 +881,19 @@ package body Tresses.Macro is
          when Drum_Kick =>
             return Drums.Kick.Param_Short_Label (Id);
 
-         when Drum_Sine_Kick | Drum_Triangle_Kick | Drum_Chip_Kick =>
-            return Drums.Sine_Kick.Param_Short_Label (Id);
+         when Drum_Sine_Clic_Kick | Drum_User_Wave_Clic_Kick =>
+            return Drums.Wave_Clic_Kick.Param_Short_Label (Id);
 
-         when Drum_Sine_Noise_Kick =>
-            return Drums.Sine_Noise_Kick.Param_Short_Label (Id);
+         when Drum_Sine_Kick | Drum_Triangle_Kick | Drum_Chip_Kick |
+            Drum_User_Wave_Kick =>
+            return Drums.Wave_Kick.Param_Short_Label (Id);
 
          when Drum_Snare =>
             return Drums.Snare.Param_Short_Label (Id);
 
-         when Drum_Sine_Snare | Drum_Triangle_Snare | Drum_Saw_Snare =>
-            return Drums.Sine_Snare.Param_Short_Label (Id);
+         when Drum_Sine_Snare | Drum_Triangle_Snare | Drum_Saw_Snare |
+            Drum_User_Wave_Snare =>
+            return Drums.Wave_Snare.Param_Short_Label (Id);
 
          when Drum_Clap =>
             return Drums.Clap.Param_Short_Label (Id);
@@ -828,7 +966,19 @@ package body Tresses.Macro is
 
          when Voice_Sine_Pluck .. Voice_Chip_Pluck =>
             return Tresses.Voices.Pluck.Param_Short_Label (Id);
-      end case;
+
+         when Voice_User_Wave_Glide =>
+            return Voices.Wave_Portamento.Param_Short_Label (Id);
+
+         when Voice_User_Wave_Phaser =>
+            return Voices.Wave_Phaser.Param_Short_Label (Id);
+
+         when Voice_User_Wave_Pluck =>
+            return Voices.Wave_Pluck.Param_Short_Label (Id);
+
+         when Voice_User_Wave_Echo =>
+            return Voices.Wave_Echo.Param_Short_Label (Id);
+    end case;
    end Param_Short_Label;
 
    -----------------
