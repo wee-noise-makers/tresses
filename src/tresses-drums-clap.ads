@@ -20,6 +20,18 @@ is
       Do_Strike : in out Strike_State)
      with Linker_Section => Code_Linker_Section;
 
+   procedure Render_Clap_HP
+     (Buffer    :    out Mono_Buffer;
+      Params    :        Param_Array;
+      Filter    : in out Filters.SVF.Instance;
+      Rng       : in out Random.Instance;
+      Env       : in out Envelopes.AR.Instance;
+      Re_Trig   : in out U32;
+      Pitch     :        Pitch_Range;
+      Do_Init   : in out Boolean;
+      Do_Strike : in out Strike_State)
+     with Linker_Section => Code_Linker_Section;
+
    P_Decay : constant Param_Id := 1;
    P_Sync  : constant Param_Id := 2;
    P_Tone  : constant Param_Id := 3;
