@@ -102,6 +102,103 @@ package body Tresses.Drums.Clap is
       end;
    end Render_Clap;
 
+   --------------------
+   -- Render_Clap_HP --
+   --------------------
+
+   procedure Render_Clap_HP
+     (Buffer    :    out Mono_Buffer;
+      Params    :        Param_Array;
+      Filter    : in out Filters.SVF.Instance;
+      Rng       : in out Random.Instance;
+      Env       : in out Envelopes.AR.Instance;
+      Re_Trig   : in out U32;
+      Pitch     :        Pitch_Range;
+      Do_Init   : in out Boolean;
+      Do_Strike : in out Strike_State)
+   is
+
+      Decay_Param : Param_Range renames Params (P_Decay);
+      Sync_Param : Param_Range renames Params (P_Sync);
+      Tone_Param : Param_Range renames Params (P_Tone);
+      Drive_Param : Param_Range renames Params (P_Drive);
+
+      Drive_Amount : U32;
+
+   begin
+      if Do_Init then
+         Do_Init := False;
+
+         Re_Trig := 0;
+
+         Init (Filter);
+         Set_Mode (Filter, High_Pass);
+
+         Init (Env,
+               Do_Hold       => False,
+               Attack_Speed  => S_Half_Second,
+               Release_Speed => S_Half_Second);
+         Set_Attack (Env, 0);
+      end if;
+
+      --  Strike
+      if Do_Strike.Event = On then
+         Re_Trig := 4;
+         Do_Strike.Event := None;
+
+         --  First claps
+         Set_Release (Env, Sync_Param / 8);
+
+         On (Env, Do_Strike.Velocity);
+      end if;
+
+      Set_Frequency (Filter,
+                     Param_Range (DSP.Mix (S16 (Add_Sat (Pitch, 2 * Octave)),
+                       S16 (Add_Sat (Pitch, 4 * Octave)),
+                       Tone_Param)));
+      Set_Resonance (Filter, Param_Range'Last / 4);
+
+      --  Control curve: Drive to the power of 2
+      Drive_Amount := U32 (Drive_Param);
+      Drive_Amount := Shift_Right (Drive_Amount**2, 15);
+      Drive_Amount := Drive_Amount * 2;
+
+      declare
+         SD, Noise_Sample : S32;
+         Fuzzed : S16;
+      begin
+         for Sample of Buffer loop
+            Render (Env);
+
+            if Re_Trig > 0 and then Value (Env) < 5000 then
+               Re_Trig := Re_Trig - 1;
+
+               if Re_Trig = 0 then
+                  --  Last clap
+                  Set_Release (Env, Decay_Param);
+               end if;
+
+               On (Env, Do_Strike.Velocity);
+            end if;
+
+            Noise_Sample := (S32 (Get_Sample (Rng)) * S32 (Value (Env)) /
+                               2**15);
+
+            SD := Process (Filter, Noise_Sample);
+
+            --  Symmetrical soft clipping
+            Fuzzed := DSP.Interpolate88
+              (Resources.WS_Violent_Overdrive,
+               U16 (SD + 32_768));
+
+            --  Mix clean and overdrive signals
+            SD := S32 (DSP.Mix (S16 (SD), Fuzzed, U16 (Drive_Amount)));
+
+            Sample := S16 (SD);
+         end loop;
+      end;
+   end Render_Clap_HP;
+
    ------------
    -- Render --
    ------------

@@ -286,6 +286,18 @@ package body Tresses.Macro is
                                     Pitch => This.Pitch,
                                     Do_Init => This.Do_Init,
                                     Do_Strike => This.Do_Strike);
+
+         when Drum_Clap_HP =>
+            Drums.Clap.Render_Clap_HP (Buffer,
+                                      Params => This.Params,
+                                      Filter => This.Filter0,
+                                      Rng =>  This.Rng,
+                                      Env => This.Env0,
+                                      Re_Trig => This.U32_1,
+                                      Pitch => This.Pitch,
+                                      Do_Init => This.Do_Init,
+                                      Do_Strike => This.Do_Strike);
+
          when Drum_Cymbal =>
             Drums.Cymbal.Render_Cymbal (Buffer,
                                         Params      => This.Params,
@@ -801,7 +813,7 @@ package body Tresses.Macro is
               Drum_User_Wave_Snare =>
             return Drums.Wave_Snare.Param_Label (Id);
 
-         when Drum_Clap =>
+         when Drum_Clap | Drum_Clap_HP =>
             return Drums.Clap.Param_Label (Id);
 
          when Drum_Cymbal =>
@@ -915,7 +927,7 @@ package body Tresses.Macro is
             Drum_User_Wave_Snare =>
             return Drums.Wave_Snare.Param_Short_Label (Id);
 
-         when Drum_Clap =>
+         when Drum_Clap | Drum_Clap_HP =>
             return Drums.Clap.Param_Short_Label (Id);
 
          when Drum_Cymbal =>

@@ -263,6 +263,18 @@ package body Tresses.Drums.Macro is
                               Pitch => This.Pitch,
                               Do_Init => This.Do_Init,
                               Do_Strike => This.Do_Strike);
+
+         when Drum_Clap_HP =>
+            Clap.Render_Clap_HP (Buffer,
+                                Params => This.Params,
+                                Filter => This.Filter0,
+                                Rng =>  This.Rng,
+                                Env => This.Env0,
+                                Re_Trig => This.Phase,
+                                Pitch => This.Pitch,
+                                Do_Init => This.Do_Init,
+                                Do_Strike => This.Do_Strike);
+
          when Drum_Cymbal =>
             Cymbal.Render_Cymbal (Buffer,
                                   Params => This.Params,
