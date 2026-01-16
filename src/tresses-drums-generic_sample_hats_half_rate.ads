@@ -8,7 +8,6 @@ generic
    Close_Sample : not null access constant S8_Array;
 
    Max_Random_Start_Point : U32 := Resources.SAMPLE_RATE / 4; -- 0.25ms
-
 package Tresses.Drums.Generic_Sample_Hats_Half_Rate
 with Preelaborate
 is
@@ -21,7 +20,8 @@ is
       Rng              : in out Tresses.Random.Instance;
       Phase            : in out U32;
       Do_Init          : in out Boolean;
-      Do_Strike        : in out Strike_State)
+      Do_Strike        : in out Strike_State;
+      Filter_Mode      :        Filters.SVF.Mode_Kind := Filters.SVF.Low_Pass)
      with Linker_Section => Code_Linker_Section;
 
    P_Mix        : constant Param_Id := 1;

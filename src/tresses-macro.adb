@@ -6,6 +6,13 @@ with Tresses.Drums.Wave_Snare;
 with Tresses.Drums.Clap;
 with Tresses.Drums.HH_909_Sampled;
 with Tresses.Drums.HH_707_Sampled;
+with Tresses.Drums.HH_808_Sampled;
+with Tresses.Drums.HH_505_Sampled;
+with Tresses.Drums.HH_LM2_Sampled;
+with Tresses.Drums.HH_MRK2_Sampled;
+with Tresses.Drums.HH_CR78_Sampled;
+with Tresses.Drums.HH_Acoustic_Sampled;
+
 with Tresses.Voices.Analog_Macro;
 with Tresses.Voices.FM_OP2;
 with Tresses.Voices.Acid;
@@ -347,6 +354,264 @@ package body Tresses.Macro is
                Phase =>  This.U32_1,
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
+
+         when Drum_808_Hats =>
+            Drums.HH_808_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Drum_505_Hats =>
+            Drums.HH_505_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Drum_LM2_Hats =>
+            Drums.HH_LM2_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Drum_MRK2_Hats =>
+            Drums.HH_MRK2_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Drum_CR78_Hats =>
+            Drums.HH_CR78_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+         when Drum_Acoustic_Hats =>
+            Drums.HH_Acoustic_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike);
+
+       when Drum_909_Hats_BP =>
+            Drums.HH_909_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike,
+               Filter_Mode => Filters.SVF.Band_Pass);
+
+         when Drum_707_Hats_BP =>
+            Drums.HH_707_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike,
+               Filter_Mode => Filters.SVF.Band_Pass);
+
+         when Drum_808_Hats_BP =>
+            Drums.HH_808_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike,
+               Filter_Mode => Filters.SVF.Band_Pass);
+
+         when Drum_505_Hats_BP =>
+            Drums.HH_505_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike,
+               Filter_Mode => Filters.SVF.Band_Pass);
+
+         when Drum_LM2_Hats_BP =>
+            Drums.HH_LM2_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike,
+               Filter_Mode => Filters.SVF.Band_Pass);
+
+         when Drum_MRK2_Hats_BP =>
+            Drums.HH_MRK2_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike,
+               Filter_Mode => Filters.SVF.Band_Pass);
+
+         when Drum_CR78_Hats_BP =>
+            Drums.HH_CR78_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike,
+               Filter_Mode => Filters.SVF.Band_Pass);
+
+         when Drum_Acoustic_Hats_BP =>
+            Drums.HH_Acoustic_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike,
+               Filter_Mode => Filters.SVF.Band_Pass);
+
+       when Drum_909_Hats_HP =>
+            Drums.HH_909_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike,
+               Filter_Mode => Filters.SVF.High_Pass);
+
+         when Drum_707_Hats_HP =>
+            Drums.HH_707_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike,
+               Filter_Mode => Filters.SVF.High_Pass);
+
+         when Drum_808_Hats_HP =>
+            Drums.HH_808_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike,
+               Filter_Mode => Filters.SVF.High_Pass);
+
+         when Drum_505_Hats_HP =>
+            Drums.HH_505_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike,
+               Filter_Mode => Filters.SVF.High_Pass);
+
+         when Drum_LM2_Hats_HP =>
+            Drums.HH_LM2_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike,
+               Filter_Mode => Filters.SVF.High_Pass);
+
+         when Drum_MRK2_Hats_HP =>
+            Drums.HH_MRK2_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike,
+               Filter_Mode => Filters.SVF.High_Pass);
+
+         when Drum_CR78_Hats_HP =>
+            Drums.HH_CR78_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike,
+               Filter_Mode => Filters.SVF.High_Pass);
+
+         when Drum_Acoustic_Hats_HP =>
+            Drums.HH_Acoustic_Sampled.Render
+              (Buffer,
+               Params => This.Params,
+               Filter => This.Filter0,
+               Env => This.Env0,
+               Rng => This.Rng,
+               Phase =>  This.U32_1,
+               Do_Init => This.Do_Init,
+               Do_Strike => This.Do_Strike,
+               Filter_Mode => Filters.SVF.High_Pass);
 
          when Voice_Saw_Swarm =>
             Voices.Saw_Swarm.Render_Saw_Swarm
@@ -825,11 +1090,8 @@ package body Tresses.Macro is
          when Drum_Bell =>
             return  Drums.Bell.Param_Label (Id);
 
-         when Drum_909_Hats =>
+         when Drum_909_Hats .. Drum_Acoustic_Hats_HP =>
             return Drums.HH_909_Sampled.Param_Label (Id);
-
-         when Drum_707_Hats =>
-            return Drums.HH_707_Sampled.Param_Label (Id);
 
          when Voice_Saw_Swarm =>
             return Voices.Saw_Swarm.Param_Label (Id);
@@ -939,11 +1201,8 @@ package body Tresses.Macro is
          when Drum_Bell =>
             return  Drums.Bell.Param_Short_Label (Id);
 
-         when Drum_909_Hats =>
+         when Drum_909_Hats .. Drum_Acoustic_Hats_HP =>
             return Drums.HH_909_Sampled.Param_Short_Label (Id);
-
-         when Drum_707_Hats =>
-            return Drums.HH_707_Sampled.Param_Short_Label (Id);
 
          when Voice_Saw_Swarm =>
             return Voices.Saw_Swarm.Param_Short_Label (Id);

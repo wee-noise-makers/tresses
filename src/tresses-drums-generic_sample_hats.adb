@@ -13,7 +13,8 @@ package body Tresses.Drums.Generic_Sample_Hats is
       Rng              : in out Tresses.Random.Instance;
       Phase            : in out U32;
       Do_Init          : in out Boolean;
-      Do_Strike        : in out Strike_State)
+      Do_Strike        : in out Strike_State;
+      Filter_Mode      :        Filters.SVF.Mode_Kind := Filters.SVF.Low_Pass)
    is
       Mix_Param    : Param_Range renames Params (P_Mix);
       Cutoff_Param : Param_Range renames Params (P_Cutoff);
@@ -35,7 +36,7 @@ package body Tresses.Drums.Generic_Sample_Hats is
          Phase := U32'Last;
 
          Init (Filter);
-         Set_Mode (Filter, Low_Pass);
+         Set_Mode (Filter, Filter_Mode);
 
          Init (Env,
                Do_Hold => False,
