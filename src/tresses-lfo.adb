@@ -22,7 +22,13 @@ package body Tresses.LFO is
    procedure Sync (This : in out Instance; Phase : U32 := 0) is
    begin
       This.Phase := Phase;
-      This.Halt := False;
+
+      if This.Loop_Mode = One_Shot and then This.Shape = Random then
+         This.Last_RNG := abs Tresses.Random.Get_Sample (This.RNG);
+         This.Halt := True;
+      else
+         This.Halt := False;
+      end if;
    end Sync;
 
    ---------------
@@ -99,6 +105,10 @@ package body Tresses.LFO is
       type Wave_Access is access constant Resources.Table_257_S16;
       Wave : Wave_Access := null;
 
+      Prev_Phase : constant U32 := This.Phase;
+
+      RNG_Base_Rate : constant U32 := U32'Last / 3;
+      --  Trigger every X times during a wave cycle
    begin
 
       if not This.Halt then
@@ -113,22 +123,42 @@ package body Tresses.LFO is
          end if;
       end if;
 
-      Wave := (case This.Shape is
-                  when Sine      => Resources.WAV_Sine_Lfo'Access,
-                  when Triangle  => Resources.WAV_Triangle_Lfo'Access,
-                  when Ramp_Up   => Resources.WAV_Ramp_Up_Lfo'Access,
-                  when Ramp_Down => Resources.WAV_Ramp_Down_Lfo'Access,
-                  when Exp_Up    => Resources.WAV_Exp_Up_Lfo'Access,
-                  when Exp_Down  => Resources.WAV_Exp_Down_Lfo'Access);
+      if This.Shape = Random then
+         if not This.Halt
+           and then
+             (This.Phase_Increment >= RNG_Base_Rate
+              or else
+              (This.Phase mod RNG_Base_Rate) < (Prev_Phase mod RNG_Base_Rate))
+         then
+            This.Last_RNG := abs Tresses.Random.Get_Sample (This.RNG);
+            if This.Loop_Mode = One_Shot then
+               This.Halt := True;
+            end if;
+         end if;
 
-      Sample := S32 (DSP.Interpolate824 (Wave.all, This.Phase));
-      Sample := (Sample * S32 (This.Amplitude)) / 2**15;
+         Sample := S32 (This.Last_RNG);
+
+      else
+
+         Wave :=
+           (case This.Shape is
+               when Sine               => Resources.WAV_Sine_Lfo'Access,
+               when Triangle           => Resources.WAV_Triangle_Lfo'Access,
+               when Ramp_Up            => Resources.WAV_Ramp_Up_Lfo'Access,
+               when Ramp_Down          => Resources.WAV_Ramp_Down_Lfo'Access,
+               when Exp_Up             => Resources.WAV_Exp_Up_Lfo'Access,
+               when Exp_Down | Random  => Resources.WAV_Exp_Down_Lfo'Access);
+
+         Sample := S32 (DSP.Interpolate824 (Wave.all, This.Phase));
+      end if;
 
       case This.Amp_Mode is
          when Positive => null;
-         when Center => Sample := Sample - S32 (S16'Last / 2);
+         when Center => Sample := (Sample - S32 (S16'Last / 2)) * 2;
          when Negative => Sample := -Sample;
       end case;
+
+      Sample := (Sample * S32 (This.Amplitude)) / 2**15;
 
       return S16 (Sample);
    end Render;

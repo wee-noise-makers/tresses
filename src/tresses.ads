@@ -55,6 +55,11 @@ is
        (Param_Range'Last / Param_Range (MIDI.MIDI_Data'Last)));
    --  Convert a MIDI Data to Tresses Param_Range
 
+   function Param_MIDI (Val : Param_Range) return MIDI.MIDI_Data
+   is (MIDI.MIDI_Data (Param_Range (Val) /
+       (Param_Range'Last / Param_Range (MIDI.MIDI_Data'Last))));
+   --  Convert a Tresses Param_Range to MIDI Data
+
    subtype Mono_Point is S16;
    type Mono_Buffer is array (Natural range <>) of Mono_Point;
 

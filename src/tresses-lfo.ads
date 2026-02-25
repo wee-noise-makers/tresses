@@ -1,8 +1,11 @@
+with Tresses.Random;
+
 package Tresses.LFO
 with Preelaborate
 is
 
-   type Shape_Kind is (Sine, Triangle, Ramp_Up, Ramp_Down, Exp_Up, Exp_Down);
+   type Shape_Kind is (Sine, Triangle, Ramp_Up, Ramp_Down, Exp_Up, Exp_Down,
+                       Random);
    type Amplitude_Kind is (Positive, Center, Negative);
    type Loop_Kind is (Repeat, One_Shot);
 
@@ -53,6 +56,9 @@ private
 
       Phase      : U32 := 0;
       Phase_Increment : U32 := 1;
+
+      RNG : Tresses.Random.Instance;
+      Last_RNG : S16 := 0;
    end record;
 
 end Tresses.LFO;
