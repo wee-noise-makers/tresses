@@ -54,7 +54,6 @@ package body Tresses.Voices.Chip_Phaser is
          when None => null;
       end case;
 
-
       Analog_Oscillator.Set_Param (Osc1, 0, Shape);
       Analog_Oscillator.Render (Osc1, BufferA, Phase_Increment);
       Analog_Oscillator.Set_Param (Osc2, 0, Shape);

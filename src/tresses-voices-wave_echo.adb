@@ -1,7 +1,6 @@
 with Tresses.Envelopes.AR; use Tresses.Envelopes.AR;
 
 with Tresses.DSP;
-with Tresses.Resources;
 
 package body Tresses.Voices.Wave_Echo is
 
@@ -137,8 +136,8 @@ package body Tresses.Voices.Wave_Echo is
          Render (Env1);
          Render (Env2);
 
-         SampleA := (SampleA * S32 (Low_Pass (Env1))) / 2**15;
-         SampleB := (SampleB * S32 (Low_Pass (Env2))) / 2**15;
+         SampleA := (SampleA * Low_Pass (Env1)) / 2**15;
+         SampleB := (SampleB * Low_Pass (Env2)) / 2**15;
          Buffer (Index) := S16 ((SampleA + SampleB) / 2);
       end loop;
 

@@ -1,6 +1,5 @@
 with Tresses.Envelopes.AR;
 with Tresses.Filters.SVF;
-with Tresses.Analog_Oscillator;
 with Tresses.Resources;
 
 package Tresses.Voices.Wave_Pluck

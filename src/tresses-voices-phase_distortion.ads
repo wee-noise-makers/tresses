@@ -1,6 +1,5 @@
 with Tresses.Envelopes.AR;
 with Tresses.Phase_Distortion_Oscillator;
-with Tresses.Resources;
 
 package Tresses.Voices.Phase_Distortion
 with Preelaborate

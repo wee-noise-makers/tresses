@@ -1,7 +1,6 @@
 with Tresses.Envelopes.AR;
 with Tresses.Resources;
 with Tresses.Random;
-with Tresses.Resources;
 
 package Tresses.Drums.Wave_Clic_Kick
 with Preelaborate
