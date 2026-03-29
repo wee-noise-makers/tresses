@@ -56,7 +56,7 @@ is
    --  Convert a MIDI Data to Tresses Param_Range
 
    function Param_MIDI (Val : Param_Range) return MIDI.MIDI_Data
-   is (MIDI.MIDI_Data (Param_Range (Val) /
+   is (MIDI.MIDI_Data (Val /
        (Param_Range'Last / Param_Range (MIDI.MIDI_Data'Last))));
    --  Convert a Tresses Param_Range to MIDI Data
 
@@ -221,7 +221,7 @@ is
           when Voice_Triangle_Pluck       => "Triangle Pluck",
           when Voice_Chip_Pluck           => "Chip Pluck",
           when Voice_User_Wave_Glide      => "Custom Waveform Glide",
-          When Voice_User_Wave_Phaser     => "Custom Waveform Phaser",
+          when Voice_User_Wave_Phaser     => "Custom Waveform Phaser",
           when Voice_User_Wave_Pluck      => "Custom Waveform Pluck",
           when Voice_User_Wave_Echo       => "Custom Waveform Echo",
           when Voice_User_Wave_PDR        => "Custom Waveform PDR");

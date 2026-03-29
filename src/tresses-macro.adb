@@ -33,8 +33,6 @@ with Tresses.Voices.Wave_Phaser;
 with Tresses.Voices.Wave_Pluck;
 with Tresses.Voices.Wave_Echo;
 
-with Tresses.Resources;
-
 package body Tresses.Macro is
 
    package PDVI renames Tresses.Voices.Phase_Distortion_Instantiations;
@@ -421,7 +419,7 @@ package body Tresses.Macro is
                Do_Init => This.Do_Init,
                Do_Strike => This.Do_Strike);
 
-       when Drum_909_Hats_BP =>
+         when Drum_909_Hats_BP =>
             Drums.HH_909_Sampled.Render
               (Buffer,
                Params => This.Params,
@@ -517,7 +515,7 @@ package body Tresses.Macro is
                Do_Strike => This.Do_Strike,
                Filter_Mode => Filters.SVF.Band_Pass);
 
-       when Drum_909_Hats_HP =>
+         when Drum_909_Hats_HP =>
             Drums.HH_909_Sampled.Render
               (Buffer,
                Params => This.Params,
@@ -1270,7 +1268,7 @@ package body Tresses.Macro is
 
          when Voice_User_Wave_Echo =>
             return Voices.Wave_Echo.Param_Short_Label (Id);
-    end case;
+      end case;
    end Param_Short_Label;
 
    -----------------

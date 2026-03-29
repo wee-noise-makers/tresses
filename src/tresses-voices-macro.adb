@@ -18,7 +18,6 @@ with Tresses.Voices.Wave_Pluck;
 with Tresses.Voices.Wave_Echo;
 
 with Tresses.Macro;
-with Tresses.Resources;
 
 package body Tresses.Voices.Macro is
 

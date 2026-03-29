@@ -43,5 +43,4 @@ is
    is new PDV.Render (Osc_Render_Lookup_Screech)
      with Linker_Section => Code_Linker_Section;
 
-
 end Tresses.Voices.Phase_Distortion_Instantiations;

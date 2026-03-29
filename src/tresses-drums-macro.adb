@@ -5,7 +5,6 @@ with Tresses.Drums.Wave_Snare;
 with Tresses.Drums.Snare;
 with Tresses.Drums.Clap;
 with Tresses.Macro;
-with Tresses.Resources;
 
 package body Tresses.Drums.Macro is
 

@@ -70,7 +70,7 @@ package body Tresses.Voices.Wave_Phaser is
                                       U16 (SampleA + 32_768));
          --  Mix clean and overdrive signals
          SampleA := S32 (DSP.Mix (S16 (SampleA), Folded, Fold));
-         SampleA := (SampleA * S32 (Low_Pass (Env))) / 2**15;
+         SampleA := (SampleA * Low_Pass (Env)) / 2**15;
          Buffer (Index) := S16 (SampleA);
       end loop;
    end Render;

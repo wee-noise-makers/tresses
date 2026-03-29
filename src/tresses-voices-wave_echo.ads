@@ -1,5 +1,4 @@
 with Tresses.Envelopes.AR;
-with Tresses.Analog_Oscillator;
 with Tresses.Resources;
 
 package Tresses.Voices.Wave_Echo
